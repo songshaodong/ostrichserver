@@ -1,0 +1,1 @@
+/usr/bin/gcc     CMakeFiles/os.dir/os.o CMakeFiles/os.dir/config_parser.o CMakeFiles/os.dir/memory.o CMakeFiles/os.dir/core_log.o CMakeFiles/os.dir/error_log.o CMakeFiles/os.dir/access_log.o  -o os -rdynamic 

@@ -15,13 +15,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef __COMMON_H__
+#define __COMMON_H__
 
-#include <common.h>
-#include <config_parser.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <sys/types.h>
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
-    
-    return 0;
-}
+#endif

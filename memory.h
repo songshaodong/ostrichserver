@@ -15,13 +15,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+void *os_malloc(size_t size);
 
-#include <common.h>
-#include <config_parser.h>
-
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
-    
-    return 0;
-}
+void os_free(void *ptr);

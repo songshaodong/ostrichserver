@@ -15,13 +15,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include <common.h>
-#include <config_parser.h>
 
-int main()
+#define DEFAULT_CONFIG   "main.config"
+
+enum config_errno
 {
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
-    
-    return 0;
-}
+  CONF_OK = 0,
+  CONF_ERR = -1
+};
+
+int config_parser(char *filepath, size_t len);

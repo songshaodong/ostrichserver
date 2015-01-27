@@ -15,13 +15,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include <common.h>
 #include <config_parser.h>
+#include <memory.h>
 
-int main()
+static int 
+config_loadfile(char *filepath, size_t len, char **config_buf, 
+    size_t bufsize);
+
+// don't forget free the memory
+static int
+config_loadfile(char *filepath, size_t len, char **config_buf, 
+    size_t bufsize)
 {
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+    struct stat statbuf;
+
+    stat(filepath, &statbuf);
     
-    return 0;
+    return CONF_OK;
+}
+
+int config_parser(char *filepath, size_t len)
+{
+    char   *fbuf = NULL;
+    size_t  bufsize = 0; 
+    int     ret;
+    
+    ret = config_loadfile(filepath, len, &fbuf, &bufsize);
+    if (ret != CONF_OK) {
+        return ret;
+    }
+    
+    return CONF_OK;
 }

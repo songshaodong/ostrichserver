@@ -15,13 +15,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <memory.h>
 
-#include <common.h>
-#include <config_parser.h>
-
-int main()
+void *os_malloc(size_t size)
 {
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
-    
-    return 0;
+}
+
+void os_free(void *ptr)
+{
 }

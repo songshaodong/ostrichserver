@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/root/ostrichserver/config_parser.c
+config_parser.h
+-
+
+/root/ostrichserver/memory.c
+
+/root/ostrichserver/os.c
+common.h
+-
+config_parser.h
+-
+
+common.h
+stdlib.h
+-
+string.h
+-
+
+config_parser.h
+common.h
+-
+
