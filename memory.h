@@ -15,6 +15,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <common.h>
+
 void *os_malloc(size_t size);
 
 void os_free(void *ptr);

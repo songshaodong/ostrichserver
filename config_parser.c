@@ -18,19 +18,51 @@
 #include <common.h>
 #include <config_parser.h>
 #include <memory.h>
-
-static int 
-config_loadfile(char *filepath, size_t len, char **config_buf, 
-    size_t bufsize);
+#include <core_log.h>
 
 // don't forget free the memory
 static int
 config_loadfile(char *filepath, size_t len, char **config_buf, 
-    size_t bufsize)
+    size_t *bufsize)
 {
-    struct stat statbuf;
+    struct  stat statbuf;
+    int     ret;
+    int     fd;
+    size_t  filesize;
+    ssize_t readsize;
+    char   *buf;
 
-    stat(filepath, &statbuf);
+    fd = open(filepath, O_RDONLY);
+    if (fd < 0) {
+        log_debug("open \"%s\" failed\n", filepath);
+        return CONF_ERR;
+    }
+    
+    ret = fstat(fd, &statbuf);
+    if (ret < 0) {
+        log_debug("load file \"%s\" failed\n", filepath);
+        return ret;
+    }
+
+    filesize = statbuf.st_size;
+
+    buf = os_malloc(filesize + 1);
+    if (!buf) {
+        log_debug("os_malloc %d failed\n", filesize + 1);
+        return CONF_ERR;
+    }
+    
+    readsize = read(fd, buf, filesize);
+    if (readsize < 0 || readsize != filesize) {
+        log_debug("read failed\n");
+        return CONF_ERR;
+    }
+
+    buf[readsize] = 0;
+
+    *config_buf = buf;
+    
+    *bufsize = readsize;
     
     return CONF_OK;
 }
@@ -45,6 +77,7 @@ int config_parser(char *filepath, size_t len)
     if (ret != CONF_OK) {
         return ret;
     }
+
     
     return CONF_OK;
 }

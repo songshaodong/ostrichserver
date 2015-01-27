@@ -20,8 +20,20 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <errno.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <fcntl.h>
+
+
+#ifndef likely
+#define likely(x)	__builtin_expect (!!(x), 1)
+#endif
+
+#ifndef unlikely
+#define unlikely(x)	__builtin_expect (!!(x), 0)
+#endif
 
 #endif

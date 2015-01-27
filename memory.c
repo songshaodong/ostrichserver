@@ -19,8 +19,14 @@
 
 void *os_malloc(size_t size)
 {
+    void *ptr;
+    
+    ptr = malloc(size);
+    
+    return ptr;
 }
 
 void os_free(void *ptr)
 {
+    free(ptr);
 }

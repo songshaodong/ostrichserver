@@ -6,11 +6,25 @@
 
 #IncludeRegexTransform: 
 
+/root/ostrichserver/access_log.c
+
 /root/ostrichserver/config_parser.c
+common.h
+-
 config_parser.h
 -
+memory.h
+-
+core_log.h
+-
+
+/root/ostrichserver/core_log.c
+
+/root/ostrichserver/error_log.c
 
 /root/ostrichserver/memory.c
+memory.h
+-
 
 /root/ostrichserver/os.c
 common.h
@@ -23,8 +37,28 @@ stdlib.h
 -
 string.h
 -
+stdio.h
+-
+errno.h
+-
+sys/stat.h
+-
+unistd.h
+-
+sys/types.h
+-
+fcntl.h
+-
 
 config_parser.h
+common.h
+-
+
+core_log.h
+common.h
+-
+
+memory.h
 common.h
 -
 
