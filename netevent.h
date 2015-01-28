@@ -15,21 +15,21 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef __NETEVENT_H__
+#define __NETEVENT_H__
+
 #include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+#define  DEFAULT_EVENTLIST  1024
 
-    signals_init();
+typedef struct {
+    void         *eventbase;
+    int           fd;
+    int           event;
+    uint32_t      active:1;
+} netevent;
 
-    threadpool_init();
+int netevent_create();
+int netevent_init();
 
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
-}
+#endif

@@ -15,21 +15,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef __EVENTPOLL_H__
+#define __EVENTPOLL_H__
+
 #include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+enum EPTRIGGER {
+    EPLEVEL = 0x00000001,
+    EPEDGE = 0x00000002
+};
 
-    signals_init();
+#define EPREAD     EPOLLIN
+#define EPWRITE    EPOLLOUT
 
-    threadpool_init();
+typedef struct {
+    int                 epfd;
+    int                 evsize;
+    int                 eflags;
+    struct epoll_event *evlist;
+} epbase;
 
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
-}
+int epoll_init(int size);
+
+#endif

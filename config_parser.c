@@ -17,8 +17,6 @@
 
 #include <common.h>
 #include <config_parser.h>
-#include <memory.h>
-#include <core_log.h>
 
 // don't forget free the memory
 static int
@@ -34,27 +32,23 @@ config_loadfile(char *filepath, size_t len, char **config_buf,
 
     fd = open(filepath, O_RDONLY);
     if (fd < 0) {
-        log_debug("open \"%s\" failed\n", filepath);
         return CONF_ERR;
     }
     
     ret = fstat(fd, &statbuf);
     if (ret < 0) {
-        log_debug("load file \"%s\" failed\n", filepath);
         return ret;
     }
 
     filesize = statbuf.st_size;
 
-    buf = os_malloc(filesize + 1);
+    buf = os_calloc(filesize + 1);
     if (!buf) {
-        log_debug("os_malloc %d failed\n", filesize + 1);
         return CONF_ERR;
     }
     
     readsize = read(fd, buf, filesize);
     if (readsize < 0 || readsize != filesize) {
-        log_debug("read failed\n");
         return CONF_ERR;
     }
 
@@ -65,6 +59,12 @@ config_loadfile(char *filepath, size_t len, char **config_buf,
     *bufsize = readsize;
     
     return CONF_OK;
+}
+
+static int 
+config_parse_buffer(char *buf, size_t size)
+{
+    return CONF_ERR;   
 }
 
 int config_parser(char *filepath, size_t len)
@@ -78,6 +78,9 @@ int config_parser(char *filepath, size_t len)
         return ret;
     }
 
+    ret = config_parse_buffer(fbuf, bufsize);
+
+    os_free(fbuf);
     
     return CONF_OK;
 }

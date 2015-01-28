@@ -16,20 +16,6 @@
 */
 
 #include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+event_engine main_event_engine;
 
-    signals_init();
-
-    threadpool_init();
-
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
-}

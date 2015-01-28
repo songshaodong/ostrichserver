@@ -14,22 +14,20 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef __EVENT_H__
+#define __EVENT_H__
 
-#include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
+typedef struct {
+} event;
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+typedef int (*evhandler)(event *);
 
-    signals_init();
+typedef struct {
+   evhandler dispatch;
+   evhandler event_add;
+   evhandler event_del;
+   evhandler event_mod;
+   evhandler event_init;
+} event_engine;
 
-    threadpool_init();
-
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
-}
+#endif

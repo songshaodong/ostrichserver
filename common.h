@@ -26,7 +26,15 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
-
+#include <pthread.h>
+#include <memory.h>
+#include <signal.h>
+#include <core_log.h>
+#include <event.h>
+#include <evthread.h>
+#include <assert.h>
+#include <sys/epoll.h>
+#include <stdint.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
@@ -35,5 +43,11 @@
 #ifndef unlikely
 #define unlikely(x)	__builtin_expect (!!(x), 0)
 #endif
+
+enum OS_ERRNO {
+    OS_OK = 0,
+    OS_ERR = -1
+};
+
 
 #endif

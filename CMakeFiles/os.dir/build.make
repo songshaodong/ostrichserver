@@ -46,168 +46,324 @@ include CMakeFiles/os.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/os.dir/flags.make
 
-CMakeFiles/os.dir/os.o: CMakeFiles/os.dir/flags.make
-CMakeFiles/os.dir/os.o: os.c
+CMakeFiles/os.dir/os.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/os.c.o: os.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/os.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/os.o   -c /root/ostrichserver/os.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/os.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/os.c.o   -c /root/ostrichserver/os.c
 
-CMakeFiles/os.dir/os.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/os.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/os.c > CMakeFiles/os.dir/os.i
+CMakeFiles/os.dir/os.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/os.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/os.c > CMakeFiles/os.dir/os.c.i
 
-CMakeFiles/os.dir/os.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/os.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/os.c -o CMakeFiles/os.dir/os.s
+CMakeFiles/os.dir/os.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/os.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/os.c -o CMakeFiles/os.dir/os.c.s
 
-CMakeFiles/os.dir/os.o.requires:
-.PHONY : CMakeFiles/os.dir/os.o.requires
+CMakeFiles/os.dir/os.c.o.requires:
+.PHONY : CMakeFiles/os.dir/os.c.o.requires
 
-CMakeFiles/os.dir/os.o.provides: CMakeFiles/os.dir/os.o.requires
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.o.provides.build
-.PHONY : CMakeFiles/os.dir/os.o.provides
+CMakeFiles/os.dir/os.c.o.provides: CMakeFiles/os.dir/os.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/os.c.o.provides
 
-CMakeFiles/os.dir/os.o.provides.build: CMakeFiles/os.dir/os.o
-.PHONY : CMakeFiles/os.dir/os.o.provides.build
+CMakeFiles/os.dir/os.c.o.provides.build: CMakeFiles/os.dir/os.c.o
+.PHONY : CMakeFiles/os.dir/os.c.o.provides.build
 
-CMakeFiles/os.dir/config_parser.o: CMakeFiles/os.dir/flags.make
-CMakeFiles/os.dir/config_parser.o: config_parser.c
+CMakeFiles/os.dir/config_parser.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/config_parser.c.o: config_parser.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/config_parser.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/config_parser.o   -c /root/ostrichserver/config_parser.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/config_parser.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/config_parser.c.o   -c /root/ostrichserver/config_parser.c
 
-CMakeFiles/os.dir/config_parser.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/config_parser.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/config_parser.c > CMakeFiles/os.dir/config_parser.i
+CMakeFiles/os.dir/config_parser.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/config_parser.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/config_parser.c > CMakeFiles/os.dir/config_parser.c.i
 
-CMakeFiles/os.dir/config_parser.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/config_parser.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/config_parser.c -o CMakeFiles/os.dir/config_parser.s
+CMakeFiles/os.dir/config_parser.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/config_parser.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/config_parser.c -o CMakeFiles/os.dir/config_parser.c.s
 
-CMakeFiles/os.dir/config_parser.o.requires:
-.PHONY : CMakeFiles/os.dir/config_parser.o.requires
+CMakeFiles/os.dir/config_parser.c.o.requires:
+.PHONY : CMakeFiles/os.dir/config_parser.c.o.requires
 
-CMakeFiles/os.dir/config_parser.o.provides: CMakeFiles/os.dir/config_parser.o.requires
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.o.provides.build
-.PHONY : CMakeFiles/os.dir/config_parser.o.provides
+CMakeFiles/os.dir/config_parser.c.o.provides: CMakeFiles/os.dir/config_parser.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/config_parser.c.o.provides
 
-CMakeFiles/os.dir/config_parser.o.provides.build: CMakeFiles/os.dir/config_parser.o
-.PHONY : CMakeFiles/os.dir/config_parser.o.provides.build
+CMakeFiles/os.dir/config_parser.c.o.provides.build: CMakeFiles/os.dir/config_parser.c.o
+.PHONY : CMakeFiles/os.dir/config_parser.c.o.provides.build
 
-CMakeFiles/os.dir/memory.o: CMakeFiles/os.dir/flags.make
-CMakeFiles/os.dir/memory.o: memory.c
+CMakeFiles/os.dir/memory.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/memory.c.o: memory.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_3)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/memory.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/memory.o   -c /root/ostrichserver/memory.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/memory.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/memory.c.o   -c /root/ostrichserver/memory.c
 
-CMakeFiles/os.dir/memory.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/memory.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/memory.c > CMakeFiles/os.dir/memory.i
+CMakeFiles/os.dir/memory.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/memory.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/memory.c > CMakeFiles/os.dir/memory.c.i
 
-CMakeFiles/os.dir/memory.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/memory.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/memory.c -o CMakeFiles/os.dir/memory.s
+CMakeFiles/os.dir/memory.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/memory.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/memory.c -o CMakeFiles/os.dir/memory.c.s
 
-CMakeFiles/os.dir/memory.o.requires:
-.PHONY : CMakeFiles/os.dir/memory.o.requires
+CMakeFiles/os.dir/memory.c.o.requires:
+.PHONY : CMakeFiles/os.dir/memory.c.o.requires
 
-CMakeFiles/os.dir/memory.o.provides: CMakeFiles/os.dir/memory.o.requires
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.o.provides.build
-.PHONY : CMakeFiles/os.dir/memory.o.provides
+CMakeFiles/os.dir/memory.c.o.provides: CMakeFiles/os.dir/memory.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/memory.c.o.provides
 
-CMakeFiles/os.dir/memory.o.provides.build: CMakeFiles/os.dir/memory.o
-.PHONY : CMakeFiles/os.dir/memory.o.provides.build
+CMakeFiles/os.dir/memory.c.o.provides.build: CMakeFiles/os.dir/memory.c.o
+.PHONY : CMakeFiles/os.dir/memory.c.o.provides.build
 
-CMakeFiles/os.dir/core_log.o: CMakeFiles/os.dir/flags.make
-CMakeFiles/os.dir/core_log.o: core_log.c
+CMakeFiles/os.dir/core_log.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/core_log.c.o: core_log.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_4)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/core_log.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/core_log.o   -c /root/ostrichserver/core_log.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/core_log.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/core_log.c.o   -c /root/ostrichserver/core_log.c
 
-CMakeFiles/os.dir/core_log.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/core_log.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/core_log.c > CMakeFiles/os.dir/core_log.i
+CMakeFiles/os.dir/core_log.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/core_log.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/core_log.c > CMakeFiles/os.dir/core_log.c.i
 
-CMakeFiles/os.dir/core_log.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/core_log.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/core_log.c -o CMakeFiles/os.dir/core_log.s
+CMakeFiles/os.dir/core_log.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/core_log.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/core_log.c -o CMakeFiles/os.dir/core_log.c.s
 
-CMakeFiles/os.dir/core_log.o.requires:
-.PHONY : CMakeFiles/os.dir/core_log.o.requires
+CMakeFiles/os.dir/core_log.c.o.requires:
+.PHONY : CMakeFiles/os.dir/core_log.c.o.requires
 
-CMakeFiles/os.dir/core_log.o.provides: CMakeFiles/os.dir/core_log.o.requires
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.o.provides.build
-.PHONY : CMakeFiles/os.dir/core_log.o.provides
+CMakeFiles/os.dir/core_log.c.o.provides: CMakeFiles/os.dir/core_log.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/core_log.c.o.provides
 
-CMakeFiles/os.dir/core_log.o.provides.build: CMakeFiles/os.dir/core_log.o
-.PHONY : CMakeFiles/os.dir/core_log.o.provides.build
+CMakeFiles/os.dir/core_log.c.o.provides.build: CMakeFiles/os.dir/core_log.c.o
+.PHONY : CMakeFiles/os.dir/core_log.c.o.provides.build
 
-CMakeFiles/os.dir/error_log.o: CMakeFiles/os.dir/flags.make
-CMakeFiles/os.dir/error_log.o: error_log.c
+CMakeFiles/os.dir/error_log.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/error_log.c.o: error_log.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_5)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/error_log.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/error_log.o   -c /root/ostrichserver/error_log.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/error_log.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/error_log.c.o   -c /root/ostrichserver/error_log.c
 
-CMakeFiles/os.dir/error_log.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/error_log.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/error_log.c > CMakeFiles/os.dir/error_log.i
+CMakeFiles/os.dir/error_log.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/error_log.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/error_log.c > CMakeFiles/os.dir/error_log.c.i
 
-CMakeFiles/os.dir/error_log.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/error_log.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/error_log.c -o CMakeFiles/os.dir/error_log.s
+CMakeFiles/os.dir/error_log.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/error_log.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/error_log.c -o CMakeFiles/os.dir/error_log.c.s
 
-CMakeFiles/os.dir/error_log.o.requires:
-.PHONY : CMakeFiles/os.dir/error_log.o.requires
+CMakeFiles/os.dir/error_log.c.o.requires:
+.PHONY : CMakeFiles/os.dir/error_log.c.o.requires
 
-CMakeFiles/os.dir/error_log.o.provides: CMakeFiles/os.dir/error_log.o.requires
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.o.provides.build
-.PHONY : CMakeFiles/os.dir/error_log.o.provides
+CMakeFiles/os.dir/error_log.c.o.provides: CMakeFiles/os.dir/error_log.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/error_log.c.o.provides
 
-CMakeFiles/os.dir/error_log.o.provides.build: CMakeFiles/os.dir/error_log.o
-.PHONY : CMakeFiles/os.dir/error_log.o.provides.build
+CMakeFiles/os.dir/error_log.c.o.provides.build: CMakeFiles/os.dir/error_log.c.o
+.PHONY : CMakeFiles/os.dir/error_log.c.o.provides.build
 
-CMakeFiles/os.dir/access_log.o: CMakeFiles/os.dir/flags.make
-CMakeFiles/os.dir/access_log.o: access_log.c
+CMakeFiles/os.dir/access_log.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/access_log.c.o: access_log.c
 	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_6)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/access_log.o"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/access_log.o   -c /root/ostrichserver/access_log.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/access_log.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/access_log.c.o   -c /root/ostrichserver/access_log.c
 
-CMakeFiles/os.dir/access_log.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/access_log.i"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/access_log.c > CMakeFiles/os.dir/access_log.i
+CMakeFiles/os.dir/access_log.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/access_log.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/access_log.c > CMakeFiles/os.dir/access_log.c.i
 
-CMakeFiles/os.dir/access_log.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/access_log.s"
-	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/access_log.c -o CMakeFiles/os.dir/access_log.s
+CMakeFiles/os.dir/access_log.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/access_log.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/access_log.c -o CMakeFiles/os.dir/access_log.c.s
 
-CMakeFiles/os.dir/access_log.o.requires:
-.PHONY : CMakeFiles/os.dir/access_log.o.requires
+CMakeFiles/os.dir/access_log.c.o.requires:
+.PHONY : CMakeFiles/os.dir/access_log.c.o.requires
 
-CMakeFiles/os.dir/access_log.o.provides: CMakeFiles/os.dir/access_log.o.requires
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.o.provides.build
-.PHONY : CMakeFiles/os.dir/access_log.o.provides
+CMakeFiles/os.dir/access_log.c.o.provides: CMakeFiles/os.dir/access_log.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/access_log.c.o.provides
 
-CMakeFiles/os.dir/access_log.o.provides.build: CMakeFiles/os.dir/access_log.o
-.PHONY : CMakeFiles/os.dir/access_log.o.provides.build
+CMakeFiles/os.dir/access_log.c.o.provides.build: CMakeFiles/os.dir/access_log.c.o
+.PHONY : CMakeFiles/os.dir/access_log.c.o.provides.build
+
+CMakeFiles/os.dir/event.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/event.c.o: event.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_7)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/event.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/event.c.o   -c /root/ostrichserver/event.c
+
+CMakeFiles/os.dir/event.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/event.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/event.c > CMakeFiles/os.dir/event.c.i
+
+CMakeFiles/os.dir/event.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/event.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/event.c -o CMakeFiles/os.dir/event.c.s
+
+CMakeFiles/os.dir/event.c.o.requires:
+.PHONY : CMakeFiles/os.dir/event.c.o.requires
+
+CMakeFiles/os.dir/event.c.o.provides: CMakeFiles/os.dir/event.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/event.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/event.c.o.provides
+
+CMakeFiles/os.dir/event.c.o.provides.build: CMakeFiles/os.dir/event.c.o
+.PHONY : CMakeFiles/os.dir/event.c.o.provides.build
+
+CMakeFiles/os.dir/eventpoll.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/eventpoll.c.o: eventpoll.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_8)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/eventpoll.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/eventpoll.c.o   -c /root/ostrichserver/eventpoll.c
+
+CMakeFiles/os.dir/eventpoll.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/eventpoll.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/eventpoll.c > CMakeFiles/os.dir/eventpoll.c.i
+
+CMakeFiles/os.dir/eventpoll.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/eventpoll.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/eventpoll.c -o CMakeFiles/os.dir/eventpoll.c.s
+
+CMakeFiles/os.dir/eventpoll.c.o.requires:
+.PHONY : CMakeFiles/os.dir/eventpoll.c.o.requires
+
+CMakeFiles/os.dir/eventpoll.c.o.provides: CMakeFiles/os.dir/eventpoll.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/eventpoll.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/eventpoll.c.o.provides
+
+CMakeFiles/os.dir/eventpoll.c.o.provides.build: CMakeFiles/os.dir/eventpoll.c.o
+.PHONY : CMakeFiles/os.dir/eventpoll.c.o.provides.build
+
+CMakeFiles/os.dir/signal.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/signal.c.o: signal.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_9)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/signal.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/signal.c.o   -c /root/ostrichserver/signal.c
+
+CMakeFiles/os.dir/signal.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/signal.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/signal.c > CMakeFiles/os.dir/signal.c.i
+
+CMakeFiles/os.dir/signal.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/signal.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/signal.c -o CMakeFiles/os.dir/signal.c.s
+
+CMakeFiles/os.dir/signal.c.o.requires:
+.PHONY : CMakeFiles/os.dir/signal.c.o.requires
+
+CMakeFiles/os.dir/signal.c.o.provides: CMakeFiles/os.dir/signal.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/signal.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/signal.c.o.provides
+
+CMakeFiles/os.dir/signal.c.o.provides.build: CMakeFiles/os.dir/signal.c.o
+.PHONY : CMakeFiles/os.dir/signal.c.o.provides.build
+
+CMakeFiles/os.dir/evthread.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/evthread.c.o: evthread.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_10)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/evthread.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/evthread.c.o   -c /root/ostrichserver/evthread.c
+
+CMakeFiles/os.dir/evthread.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/evthread.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/evthread.c > CMakeFiles/os.dir/evthread.c.i
+
+CMakeFiles/os.dir/evthread.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/evthread.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/evthread.c -o CMakeFiles/os.dir/evthread.c.s
+
+CMakeFiles/os.dir/evthread.c.o.requires:
+.PHONY : CMakeFiles/os.dir/evthread.c.o.requires
+
+CMakeFiles/os.dir/evthread.c.o.provides: CMakeFiles/os.dir/evthread.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/evthread.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/evthread.c.o.provides
+
+CMakeFiles/os.dir/evthread.c.o.provides.build: CMakeFiles/os.dir/evthread.c.o
+.PHONY : CMakeFiles/os.dir/evthread.c.o.provides.build
+
+CMakeFiles/os.dir/netevent.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/netevent.c.o: netevent.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_11)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/netevent.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/netevent.c.o   -c /root/ostrichserver/netevent.c
+
+CMakeFiles/os.dir/netevent.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/netevent.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/netevent.c > CMakeFiles/os.dir/netevent.c.i
+
+CMakeFiles/os.dir/netevent.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/netevent.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/netevent.c -o CMakeFiles/os.dir/netevent.c.s
+
+CMakeFiles/os.dir/netevent.c.o.requires:
+.PHONY : CMakeFiles/os.dir/netevent.c.o.requires
+
+CMakeFiles/os.dir/netevent.c.o.provides: CMakeFiles/os.dir/netevent.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/netevent.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/netevent.c.o.provides
+
+CMakeFiles/os.dir/netevent.c.o.provides.build: CMakeFiles/os.dir/netevent.c.o
+.PHONY : CMakeFiles/os.dir/netevent.c.o.provides.build
+
+CMakeFiles/os.dir/acceptor.c.o: CMakeFiles/os.dir/flags.make
+CMakeFiles/os.dir/acceptor.c.o: acceptor.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /root/ostrichserver/CMakeFiles $(CMAKE_PROGRESS_12)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/os.dir/acceptor.c.o"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/os.dir/acceptor.c.o   -c /root/ostrichserver/acceptor.c
+
+CMakeFiles/os.dir/acceptor.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/os.dir/acceptor.c.i"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /root/ostrichserver/acceptor.c > CMakeFiles/os.dir/acceptor.c.i
+
+CMakeFiles/os.dir/acceptor.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/os.dir/acceptor.c.s"
+	/usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /root/ostrichserver/acceptor.c -o CMakeFiles/os.dir/acceptor.c.s
+
+CMakeFiles/os.dir/acceptor.c.o.requires:
+.PHONY : CMakeFiles/os.dir/acceptor.c.o.requires
+
+CMakeFiles/os.dir/acceptor.c.o.provides: CMakeFiles/os.dir/acceptor.c.o.requires
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/acceptor.c.o.provides.build
+.PHONY : CMakeFiles/os.dir/acceptor.c.o.provides
+
+CMakeFiles/os.dir/acceptor.c.o.provides.build: CMakeFiles/os.dir/acceptor.c.o
+.PHONY : CMakeFiles/os.dir/acceptor.c.o.provides.build
 
 # Object files for target os
 os_OBJECTS = \
-"CMakeFiles/os.dir/os.o" \
-"CMakeFiles/os.dir/config_parser.o" \
-"CMakeFiles/os.dir/memory.o" \
-"CMakeFiles/os.dir/core_log.o" \
-"CMakeFiles/os.dir/error_log.o" \
-"CMakeFiles/os.dir/access_log.o"
+"CMakeFiles/os.dir/os.c.o" \
+"CMakeFiles/os.dir/config_parser.c.o" \
+"CMakeFiles/os.dir/memory.c.o" \
+"CMakeFiles/os.dir/core_log.c.o" \
+"CMakeFiles/os.dir/error_log.c.o" \
+"CMakeFiles/os.dir/access_log.c.o" \
+"CMakeFiles/os.dir/event.c.o" \
+"CMakeFiles/os.dir/eventpoll.c.o" \
+"CMakeFiles/os.dir/signal.c.o" \
+"CMakeFiles/os.dir/evthread.c.o" \
+"CMakeFiles/os.dir/netevent.c.o" \
+"CMakeFiles/os.dir/acceptor.c.o"
 
 # External object files for target os
 os_EXTERNAL_OBJECTS =
 
-os: CMakeFiles/os.dir/os.o
-os: CMakeFiles/os.dir/config_parser.o
-os: CMakeFiles/os.dir/memory.o
-os: CMakeFiles/os.dir/core_log.o
-os: CMakeFiles/os.dir/error_log.o
-os: CMakeFiles/os.dir/access_log.o
+os: CMakeFiles/os.dir/os.c.o
+os: CMakeFiles/os.dir/config_parser.c.o
+os: CMakeFiles/os.dir/memory.c.o
+os: CMakeFiles/os.dir/core_log.c.o
+os: CMakeFiles/os.dir/error_log.c.o
+os: CMakeFiles/os.dir/access_log.c.o
+os: CMakeFiles/os.dir/event.c.o
+os: CMakeFiles/os.dir/eventpoll.c.o
+os: CMakeFiles/os.dir/signal.c.o
+os: CMakeFiles/os.dir/evthread.c.o
+os: CMakeFiles/os.dir/netevent.c.o
+os: CMakeFiles/os.dir/acceptor.c.o
 os: CMakeFiles/os.dir/build.make
 os: CMakeFiles/os.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking C executable os"
@@ -217,12 +373,18 @@ os: CMakeFiles/os.dir/link.txt
 CMakeFiles/os.dir/build: os
 .PHONY : CMakeFiles/os.dir/build
 
-CMakeFiles/os.dir/requires: CMakeFiles/os.dir/os.o.requires
-CMakeFiles/os.dir/requires: CMakeFiles/os.dir/config_parser.o.requires
-CMakeFiles/os.dir/requires: CMakeFiles/os.dir/memory.o.requires
-CMakeFiles/os.dir/requires: CMakeFiles/os.dir/core_log.o.requires
-CMakeFiles/os.dir/requires: CMakeFiles/os.dir/error_log.o.requires
-CMakeFiles/os.dir/requires: CMakeFiles/os.dir/access_log.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/os.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/config_parser.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/memory.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/core_log.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/error_log.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/access_log.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/event.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/eventpoll.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/signal.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/evthread.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/netevent.c.o.requires
+CMakeFiles/os.dir/requires: CMakeFiles/os.dir/acceptor.c.o.requires
 .PHONY : CMakeFiles/os.dir/requires
 
 CMakeFiles/os.dir/clean:

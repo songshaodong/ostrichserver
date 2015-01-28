@@ -16,20 +16,29 @@
 */
 
 #include <common.h>
-#include <signal.h>
+#include <netevent.h>
 #include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
 
-int main()
+extern event_engine main_event_engine;
+
+int netevent_create()
 {
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+    netevent *ne;
 
-    signals_init();
+    ne = os_calloc(sizeof(netevent));
+    if (ne == NULL) {
+        return OS_ERR;
+    }
 
-    threadpool_init();
+    ne->eventbase = &main_event_engine;
+    ne->fd = -1;
 
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
+    return OS_OK;
+}
+
+int netevent_init()
+{
+    epoll_init(DEFAULT_EVENTLIST);
+
+    return OS_OK;
 }

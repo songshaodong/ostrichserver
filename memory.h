@@ -18,5 +18,7 @@
 #include <common.h>
 
 void *os_malloc(size_t size);
+void *os_calloc(size_t size);
+void *os_memset(void *s, int c, size_t n);
 
 void os_free(void *ptr);

@@ -15,21 +15,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef __EVTHREAD_H__
+#define __EVTHREAD_H__
+
 #include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+#define DEFAULT_THREADS  4
 
-    signals_init();
+#define STACK_SIZE  (4 * 1024 * 1024)
+#define thread_key_t pthread_key_t 
+#define thread_t     pthread_t
 
-    threadpool_init();
+enum THREAD_TYPE {
+    REGULAR,
+    DEDICATED
+};
 
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
-}
+typedef void *(*threadhanlder)(void *);
+
+typedef struct {
+    int             type;
+    thread_key_t    private_key;
+    thread_t        tid;
+    void           *eventbase;
+    event_engine   *evengine;
+    threadhanlder   handler;
+} evthread;
+
+evthread *current_thread(thread_key_t key);
+int threadpool_init();
+int thread_create(evthread *evt, int stacksize, int detached, int type);
+int thread_local_init();
+
+#endif

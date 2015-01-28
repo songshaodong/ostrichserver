@@ -15,6 +15,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef __CORE_LOG_H__
+#define __CORE_LOG_H__
+
+#endif
+
 #include <common.h>
 
 #define log_debug(...)   fprintf(stderr, __VA_ARGS__)

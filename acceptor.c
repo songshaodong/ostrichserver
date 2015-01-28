@@ -16,20 +16,26 @@
 */
 
 #include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
 #include <acceptor.h>
 
-int main()
+void *accept_main(void *data) 
 {
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+   do {
+       sleep(1);
+   } while (1);
+}
 
-    signals_init();
+int accept_thread_init(int n)
+{
+    int i;
 
-    threadpool_init();
+    evthread *evt;
 
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
+    for (i = 0; i < n; i++) {
+        evt = os_calloc(sizeof(evthread));
+        evt->handler = accept_main;
+        thread_create(evt, STACK_SIZE, 0, DEDICATED);
+    }
+
+    return OS_OK;
 }

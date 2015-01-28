@@ -108,95 +108,293 @@ os/fast:
 	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/build
 .PHONY : os/fast
 
+acceptor.o: acceptor.c.o
+.PHONY : acceptor.o
+
 # target to build an object file
-access_log.o:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.o
+acceptor.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/acceptor.c.o
+.PHONY : acceptor.c.o
+
+acceptor.i: acceptor.c.i
+.PHONY : acceptor.i
+
+# target to preprocess a source file
+acceptor.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/acceptor.c.i
+.PHONY : acceptor.c.i
+
+acceptor.s: acceptor.c.s
+.PHONY : acceptor.s
+
+# target to generate assembly for a file
+acceptor.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/acceptor.c.s
+.PHONY : acceptor.c.s
+
+access_log.o: access_log.c.o
 .PHONY : access_log.o
 
-# target to preprocess a source file
-access_log.i:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.i
+# target to build an object file
+access_log.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.c.o
+.PHONY : access_log.c.o
+
+access_log.i: access_log.c.i
 .PHONY : access_log.i
 
-# target to generate assembly for a file
-access_log.s:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.s
+# target to preprocess a source file
+access_log.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.c.i
+.PHONY : access_log.c.i
+
+access_log.s: access_log.c.s
 .PHONY : access_log.s
 
-# target to build an object file
-config_parser.o:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.o
+# target to generate assembly for a file
+access_log.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/access_log.c.s
+.PHONY : access_log.c.s
+
+config_parser.o: config_parser.c.o
 .PHONY : config_parser.o
 
-# target to preprocess a source file
-config_parser.i:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.i
+# target to build an object file
+config_parser.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.c.o
+.PHONY : config_parser.c.o
+
+config_parser.i: config_parser.c.i
 .PHONY : config_parser.i
 
-# target to generate assembly for a file
-config_parser.s:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.s
+# target to preprocess a source file
+config_parser.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.c.i
+.PHONY : config_parser.c.i
+
+config_parser.s: config_parser.c.s
 .PHONY : config_parser.s
 
-# target to build an object file
-core_log.o:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.o
+# target to generate assembly for a file
+config_parser.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/config_parser.c.s
+.PHONY : config_parser.c.s
+
+core_log.o: core_log.c.o
 .PHONY : core_log.o
 
-# target to preprocess a source file
-core_log.i:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.i
+# target to build an object file
+core_log.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.c.o
+.PHONY : core_log.c.o
+
+core_log.i: core_log.c.i
 .PHONY : core_log.i
 
-# target to generate assembly for a file
-core_log.s:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.s
+# target to preprocess a source file
+core_log.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.c.i
+.PHONY : core_log.c.i
+
+core_log.s: core_log.c.s
 .PHONY : core_log.s
 
-# target to build an object file
-error_log.o:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.o
+# target to generate assembly for a file
+core_log.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/core_log.c.s
+.PHONY : core_log.c.s
+
+error_log.o: error_log.c.o
 .PHONY : error_log.o
 
-# target to preprocess a source file
-error_log.i:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.i
+# target to build an object file
+error_log.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.c.o
+.PHONY : error_log.c.o
+
+error_log.i: error_log.c.i
 .PHONY : error_log.i
 
-# target to generate assembly for a file
-error_log.s:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.s
+# target to preprocess a source file
+error_log.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.c.i
+.PHONY : error_log.c.i
+
+error_log.s: error_log.c.s
 .PHONY : error_log.s
 
+# target to generate assembly for a file
+error_log.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/error_log.c.s
+.PHONY : error_log.c.s
+
+event.o: event.c.o
+.PHONY : event.o
+
 # target to build an object file
-memory.o:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.o
+event.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/event.c.o
+.PHONY : event.c.o
+
+event.i: event.c.i
+.PHONY : event.i
+
+# target to preprocess a source file
+event.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/event.c.i
+.PHONY : event.c.i
+
+event.s: event.c.s
+.PHONY : event.s
+
+# target to generate assembly for a file
+event.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/event.c.s
+.PHONY : event.c.s
+
+eventpoll.o: eventpoll.c.o
+.PHONY : eventpoll.o
+
+# target to build an object file
+eventpoll.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/eventpoll.c.o
+.PHONY : eventpoll.c.o
+
+eventpoll.i: eventpoll.c.i
+.PHONY : eventpoll.i
+
+# target to preprocess a source file
+eventpoll.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/eventpoll.c.i
+.PHONY : eventpoll.c.i
+
+eventpoll.s: eventpoll.c.s
+.PHONY : eventpoll.s
+
+# target to generate assembly for a file
+eventpoll.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/eventpoll.c.s
+.PHONY : eventpoll.c.s
+
+evthread.o: evthread.c.o
+.PHONY : evthread.o
+
+# target to build an object file
+evthread.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/evthread.c.o
+.PHONY : evthread.c.o
+
+evthread.i: evthread.c.i
+.PHONY : evthread.i
+
+# target to preprocess a source file
+evthread.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/evthread.c.i
+.PHONY : evthread.c.i
+
+evthread.s: evthread.c.s
+.PHONY : evthread.s
+
+# target to generate assembly for a file
+evthread.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/evthread.c.s
+.PHONY : evthread.c.s
+
+memory.o: memory.c.o
 .PHONY : memory.o
 
-# target to preprocess a source file
-memory.i:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.i
+# target to build an object file
+memory.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.c.o
+.PHONY : memory.c.o
+
+memory.i: memory.c.i
 .PHONY : memory.i
 
-# target to generate assembly for a file
-memory.s:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.s
+# target to preprocess a source file
+memory.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.c.i
+.PHONY : memory.c.i
+
+memory.s: memory.c.s
 .PHONY : memory.s
 
+# target to generate assembly for a file
+memory.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/memory.c.s
+.PHONY : memory.c.s
+
+netevent.o: netevent.c.o
+.PHONY : netevent.o
+
 # target to build an object file
-os.o:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.o
-.PHONY : os.o
+netevent.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/netevent.c.o
+.PHONY : netevent.c.o
+
+netevent.i: netevent.c.i
+.PHONY : netevent.i
 
 # target to preprocess a source file
-os.i:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.i
-.PHONY : os.i
+netevent.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/netevent.c.i
+.PHONY : netevent.c.i
+
+netevent.s: netevent.c.s
+.PHONY : netevent.s
 
 # target to generate assembly for a file
-os.s:
-	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.s
+netevent.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/netevent.c.s
+.PHONY : netevent.c.s
+
+os.o: os.c.o
+.PHONY : os.o
+
+# target to build an object file
+os.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.c.o
+.PHONY : os.c.o
+
+os.i: os.c.i
+.PHONY : os.i
+
+# target to preprocess a source file
+os.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.c.i
+.PHONY : os.c.i
+
+os.s: os.c.s
 .PHONY : os.s
+
+# target to generate assembly for a file
+os.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/os.c.s
+.PHONY : os.c.s
+
+signal.o: signal.c.o
+.PHONY : signal.o
+
+# target to build an object file
+signal.c.o:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/signal.c.o
+.PHONY : signal.c.o
+
+signal.i: signal.c.i
+.PHONY : signal.i
+
+# target to preprocess a source file
+signal.c.i:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/signal.c.i
+.PHONY : signal.c.i
+
+signal.s: signal.c.s
+.PHONY : signal.s
+
+# target to generate assembly for a file
+signal.c.s:
+	$(MAKE) -f CMakeFiles/os.dir/build.make CMakeFiles/os.dir/signal.c.s
+.PHONY : signal.c.s
 
 # Help Target
 help:
@@ -207,6 +405,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... os"
 	@echo "... rebuild_cache"
+	@echo "... acceptor.o"
+	@echo "... acceptor.i"
+	@echo "... acceptor.s"
 	@echo "... access_log.o"
 	@echo "... access_log.i"
 	@echo "... access_log.s"
@@ -219,12 +420,27 @@ help:
 	@echo "... error_log.o"
 	@echo "... error_log.i"
 	@echo "... error_log.s"
+	@echo "... event.o"
+	@echo "... event.i"
+	@echo "... event.s"
+	@echo "... eventpoll.o"
+	@echo "... eventpoll.i"
+	@echo "... eventpoll.s"
+	@echo "... evthread.o"
+	@echo "... evthread.i"
+	@echo "... evthread.s"
 	@echo "... memory.o"
 	@echo "... memory.i"
 	@echo "... memory.s"
+	@echo "... netevent.o"
+	@echo "... netevent.i"
+	@echo "... netevent.s"
 	@echo "... os.o"
 	@echo "... os.i"
 	@echo "... os.s"
+	@echo "... signal.o"
+	@echo "... signal.i"
+	@echo "... signal.s"
 .PHONY : help
 
 

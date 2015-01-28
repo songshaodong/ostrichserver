@@ -15,21 +15,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <signal.h>
-#include <eventpoll.h>
-#include <config_parser.h>
-#include <acceptor.h>
+#ifndef __SIGNAL_H__
+#define __SIGNAL_H__
 
-int main()
-{
-    config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
+int signals_init(); 
 
-    signals_init();
-
-    threadpool_init();
-
-    accept_thread_init(DEFAULT_ACCEPT_THREADS);
-    
-    return 0;
-}
+#endif

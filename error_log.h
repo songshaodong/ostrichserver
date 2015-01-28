@@ -15,3 +15,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef __ERROR_LOG_H__
+#define __ERROR_LOG_H__
+#endif
