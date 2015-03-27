@@ -21,6 +21,7 @@
 #include <config_parser.h>
 #include <acceptor.h>
 
+// test main
 int main()
 {
     config_parser(DEFAULT_CONFIG, strlen(DEFAULT_CONFIG));
