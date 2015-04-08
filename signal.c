@@ -22,3 +22,4 @@ int signals_init()
 {
     return OS_OK;
 }
+
