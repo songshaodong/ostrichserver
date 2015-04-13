@@ -15,3 +15,17 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _NET_H_
+#define _NET_H_
+
+typedef struct ioctx_netconn  netconn;
+typedef struct conninfo       conninfo;
+
+struct ioctx_netconn {
+    int           protocol;
+    int           status;
+    conninfo      info;
+};
+
+#endif
