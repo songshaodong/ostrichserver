@@ -32,4 +32,4 @@ struct ioctx {
     void  *private_data;
 };
 
-#endif _EVENT_H_
+#endif
