@@ -16,7 +16,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-int main()
-{
-    return 0;
-}
+#ifndef _EVENT_H_
+#define _EVENT_H_
+
+typedef struct ioevent event;
+typedef struct ioctx   ioctx;
+
+struct ioevent {
+    int     type;
+    ioctx   ctx;
+};
+
+struct ioctx {
+    int    fd;
+    void  *private_data;
+};
+
+#endif _EVENT_H_
