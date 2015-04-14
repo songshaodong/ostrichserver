@@ -16,11 +16,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include <thread.h>
 
-typedef struct ioscheduler {
-    int (*dispatch)(event *ev);
-} scheduler;
+int thread_create(evthread *evt, int stacksize, int detached)
+{
+    int ret;
+    
+    pthread_attr_t attr;
 
-#endif
+    pthread_attr_init(&attr);
+  
+    pthread_attr_setstacksize(&attr, stacksize);
+
+    if (detached) {
+        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    }
+    
+    ret = pthread_create(&evt->tid, &attr, evt->execute, evt);
+    if (ret < 0) {
+        return OS_ERR;
+    }
+
+    pthread_attr_destroy(&attr);
+
+    return OS_OK;
+}

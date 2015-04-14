@@ -19,12 +19,24 @@
 #ifndef _EVENT_H_
 #define _EVENT_H_
 
+#include <thread.h>
+
 typedef struct ioevent event;
 typedef struct ioctx   ioctx;
+typedef struct evtype  evtype;
+
+typedef void (*type_handler)();
+typedef int (*evhandler)();
+
+struct evtype {
+    type_handler  set; 
+};
 
 struct ioevent {
-    int     type;
-    ioctx   ctx;
+    int      type;
+    ioctx    ctx;
+    thread  *t;
+    evtype   want;
 };
 
 struct ioctx {

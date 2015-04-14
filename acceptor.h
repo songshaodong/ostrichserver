@@ -16,11 +16,3 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
-
-typedef struct ioscheduler {
-    int (*dispatch)(event *ev);
-} scheduler;
-
-#endif

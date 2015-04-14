@@ -15,12 +15,31 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _THREAD_H_
+#define _THREAD_H_
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include <event.h>
+#include <pthread.h>
 
-typedef struct ioscheduler {
-    int (*dispatch)(event *ev);
-} scheduler;
+typedef struct thread evthread;
+typedef struct thread_processor processor;
+typedef struct external_queue   externalq;
+
+struct external_queue {
+} externalq;
+
+struct thread_processor {
+    externalq   pushqueue;
+    evhandler   process_event;
+} processor;
+
+struct thread {
+    int             type;
+    thread_key_t    private_key;
+    thread_t        tid;
+    void         *(*execute)(void *);
+};
+
+int thread_create(evthread *evt, int stacksize, int detached);
 
 #endif
