@@ -18,7 +18,7 @@
 
 #include <thread.h>
 
-int thread_create(evthread *evt, int stacksize, int detached)
+int thread_create(evthread *evt, int stacksize, int detached, int type)
 {
     int ret;
     
@@ -40,4 +40,28 @@ int thread_create(evthread *evt, int stacksize, int detached)
     pthread_attr_destroy(&attr);
 
     return OS_OK;
+}
+
+evthread *make_thread_pool(threadproc exec, int evtype, int num)
+{
+    evthread *evt;
+    evthread *t;
+    int       i;
+    int       ret;
+    
+    evt = os_malloc(num * sizeof(evthread));
+    if (evt == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; i < num; i++) {
+        t = evt + i;
+        t->execute = exec;
+        ret = thread_create(evt, STACK_SIZE, 1, evtype);
+        if (ret == OS_ERR) {
+            return NULL;
+        }
+    }
+    
+    return evt;
 }

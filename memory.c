@@ -15,7 +15,39 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <acceptor.h>
-#include <thread.h>
 
-thread_processor acceptor;
+
+#include <memory.h>
+
+void *os_malloc(size_t size)
+{
+    void *ptr;
+    
+    ptr = malloc(size);
+    
+    return ptr;
+}
+
+void *os_calloc(size_t size)
+{
+    void *ptr;
+    
+    ptr = malloc(size);
+    if (ptr) {
+        memset(ptr, 0, size);
+    }
+    
+    return ptr;
+}
+
+void *os_memset(void *s, int c, size_t n)
+{
+    assert(s != NULL);
+
+    return memset(s, c, n);
+}
+
+void os_free(void *ptr)
+{
+    free(ptr);
+}

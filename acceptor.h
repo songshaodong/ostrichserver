@@ -16,3 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _ACCEPTOR_H_
+#define _ACCEPTOR_H_
+
+
+
+#endif

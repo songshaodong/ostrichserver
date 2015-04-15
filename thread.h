@@ -24,6 +24,13 @@
 typedef struct thread evthread;
 typedef struct thread_processor processor;
 typedef struct external_queue   externalq;
+typedef void *(*threadproc)(void *);
+
+#define DEFAULT_THREADS  4
+
+#define STACK_SIZE  (4 * 1024 * 1024)
+#define thread_key_t pthread_key_t 
+#define thread_t     pthread_t
 
 struct external_queue {
 } externalq;
@@ -31,15 +38,23 @@ struct external_queue {
 struct thread_processor {
     externalq   pushqueue;
     evhandler   process_event;
+    evthread   *workerpool;
 } processor;
 
 struct thread {
     int             type;
     thread_key_t    private_key;
     thread_t        tid;
-    void         *(*execute)(void *);
+    threadproc      execute;
 };
 
-int thread_create(evthread *evt, int stacksize, int detached);
+enum THREAD_TYPE {
+    REGULAR,
+    DEDICATED
+};
+
+
+evthread *thread_create(evthread *evt, int stacksize, int detached, int type);
+int make_thread_pool(threadproc exec, int evtype, int num);
 
 #endif
