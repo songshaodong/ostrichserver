@@ -16,41 +16,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _COMMON_H_
-#define _COMMON_H_
+#ifndef _DICT_H_
+#define _DICT_H_
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <memory.h>
-#include <signal.h>
-#include <core_log.h>
-#include <event.h>
-#include <evthread.h>
-#include <assert.h>
-#include <sys/epoll.h>
-#include <stdint.h>
-#include <ctype.h>
+#define MAXHASHTABLELEN 1024
 
-#ifndef likely
-#define likely(x)	__builtin_expect (!!(x), 1)
-#endif
-
-#ifndef unlikely
-#define unlikely(x)	__builtin_expect (!!(x), 0)
-#endif
-
-enum OS_ERRNO {
-    OS_OK = 0,
-    OS_ERR = -1
-
-};
-
+typedef struct {
+    int32_t    nhashA;
+    int32_t    nhashB;
+    uint32_t   exists;
+} hashtable;
 
 #endif

@@ -19,3 +19,8 @@
 #include <thread.h>
 
 thread_processor acceptor;
+
+void acceptor_init()
+{
+	
+}
