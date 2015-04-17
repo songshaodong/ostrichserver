@@ -21,4 +21,19 @@
 #include <hashtable.h>
 #include <config.h>
 
+union config_data {
+    int     config_int;
+    float   config_float;
+    char   *config_string;
+};
+
+typedef struct {
+    config_data data;
+    char       *name;
+} config_record;
+
+int config_hashtable_init();
+
+int config_parse_file();
+    
 #endif

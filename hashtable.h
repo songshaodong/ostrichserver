@@ -24,7 +24,13 @@
 typedef struct {
     int32_t    nhashA;
     int32_t    nhashB;
-    uint32_t   exists;
+    uint8_t    exists;
+    void      *data;
+} hashitem;
+
+typedef struct {
+    hashitem  *buckets;
+    uint32_t   size;
 } hashtable;
 
 #endif

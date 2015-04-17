@@ -23,9 +23,9 @@
 
 int crypttable[0x500];
 
-int init_crypttable()
+int crypttable_init()
 {
-    uint32_t  seed = 0x00100001;
+    uint32_t  seed = 0x00100001; // is just good as any other
     uint32_t  index1 = 0;
     uint32_t  index2 = 0;
     uint32_t  i;
@@ -34,10 +34,18 @@ int init_crypttable()
         for (index2 = index1, i = 0; i < 5; i++, index2 += 0x100) {
             uint32_t  t1;
             uint32_t  t2;
+            
+            // 0x2AAAAB=2796203 is prime and iterating 
+            // seed = (seed * 125 + 3) % 0x2AAAAB will give you 
+            // pseudo-random sequence of numbers from 0...2796202
             seed = (seed * 125 + 3) % 0x2AAAAB;
-            t1 = (seed & 0xFFFF) << 0x10;
+
+            // seed & 0xFFFF will give you 16 bits of pseudo random numbers
+            t1 = (seed & 0xFFFF) << 0x10; 
+            
             seed = (seed * 125 + 3) % 0x2AAAAB;
             t2 = (seed & 0xFFFF);
+            
             crypttable[index2] = (t1 | t2);
         }
     }
@@ -61,15 +69,15 @@ int hashstring(char *string, int hashtype)
 }
 
 
-int hashtable_init(char **pphashtable, int ntablelength)
+int hashtable_init(hashitem **pphashtable, int ntablelength)
 {
     int        i = 0;
     char      *p = NULL;
     hashtable *ptable = NULL;
 
-    init_crypttable();
+    crypttable_init();
 
-    p = (hashtable *)os_malloc(ntablelength * sizeof(hashtable);
+    p = (hashitem *)os_malloc(ntablelength * sizeof(hashitem));
     if (p = NULL) {
         return 0;
     }
@@ -92,21 +100,21 @@ void hashtable_free(char *phashtable) {
     }
 }
 
-int hashtable_add(char *string, char *phashtable)
+int hashtable_add(char *string, hashtable *htable)
 {
-    uint32_t hashoffset = 0;
-    uint32_t hashA = 1;
-    uint32_t hashB = 2;
+    uint32_t   hashoffset = 0;
+    uint32_t   hashA = 1;
+    uint32_t   hashB = 2;
 
-    uint32_t nhash = hashstring(string, hashoffset);
-    uint32_t nhashA = hashstring(string, hashA);
-    uint32_t nhashB = hashstring(string, hashB);
-    uint32_t nhashstart = nhash % MAXHASHTABLELEN;
-    uint32_t nhashpos = nhashstart;
-    hashtable *_phtable = (hashtable *)phashtable;
+    uint32_t   nhash = hashstring(string, hashoffset);
+    uint32_t   nhashA = hashstring(string, hashA);
+    uint32_t   nhashB = hashstring(string, hashB);
+    uint32_t   nhashstart = nhash % htable->size;
+    uint32_t   nhashpos = nhashstart;
+    hashitem  *_phtable = htable->buckets;
 
     while ((_phtable + nhashpos)->exists) {
-        nhashpos = (nhashpos + 1) % MAXHASHTABLELEN;
+        nhashpos = (nhashpos + 1) % _phtable->size;
         if (nhashpos == nhashstart) {
             return 0;
         }
@@ -119,7 +127,7 @@ int hashtable_add(char *string, char *phashtable)
     return 1;
 }
 
-int hashtable_isexist(char *string, char *phashtable)
+int hashtable_isexist(char *string, hashitem *htable)
 {
     uint32_t hashoffset = 0;
     uint32_t hashA = 1;
@@ -128,9 +136,9 @@ int hashtable_isexist(char *string, char *phashtable)
     uint32_t nhash = hashstring(string, hashoffset);
     uint32_t nhashA = hashstring(string, hashA);
     uint32_t nhashB = hashstring(string, hashB);
-    uint32_t nhashstart = nhash % MAXHASHTABLELEN;
+    uint32_t nhashstart = nhash % htable->size;
     uint32_t nhashpos = nhashstart;
-    hashtable *_phtable = (hashtable *)phashtable;
+    hashitem *_phtable = htable->buckets;
 
     while ((_phtable + nhashpos)->exist) {
         if (((_phtable + nhashpos)->nhashA == nhashA) &&
