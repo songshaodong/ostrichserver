@@ -28,6 +28,11 @@ typedef struct evtype  evtype;
 typedef void (*type_handler)();
 typedef int (*evhandler)();
 
+struct ioctx {
+    int    fd;
+    void  *private_data;
+};
+
 struct evtype {
     type_handler  set; 
 };
@@ -39,9 +44,5 @@ struct ioevent {
     evtype   want;
 };
 
-struct ioctx {
-    int    fd;
-    void  *private_data;
-};
 
 #endif
