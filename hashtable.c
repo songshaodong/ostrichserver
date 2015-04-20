@@ -100,7 +100,7 @@ void hashtable_free(char *phashtable) {
     }
 }
 
-int hashtable_add(char *string, hashtable *htable)
+int hashtable_add(char *string, void *data, hashtable *htable)
 {
     uint32_t   hashoffset = 0;
     uint32_t   hashA = 1;
@@ -123,6 +123,8 @@ int hashtable_add(char *string, hashtable *htable)
     (_phtable + nhashpos)->nhashA = nhashA;
     (_phtable + nhashpos)->nhashB = nhashB;
     (_phtable + nhashpos)->exists = 1;
+
+    (_phtable + nhashpos)->data = data;
 
     return 1;
 }

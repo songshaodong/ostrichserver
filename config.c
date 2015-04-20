@@ -21,9 +21,17 @@
 
 hashtable config_record_hashtable;
 
-int config_hashtable_init()
+#define iter_to_next_line(curline, nextline)         \
+        do {                                         \
+            curline = nextline;                      \
+            strtok_r(NULL, "\n", &nextline);         \
+        } while (0);
+
+int config_hashtable_init(int size)
 {
     int result;
+
+    (void) size;
     
     config_record_hashtable.size = MAXHASHTABLELEN;
     
@@ -79,6 +87,43 @@ int config_init(char *path, char **fbuf)
     return OS_OK;
 }
 
+int record_make(record **rc, char *name, char *type, char *value)
+{
+    record   temp;
+    record  *pr;
+
+    if (!strcmp(type, "STRING")) {
+        temp.data.config_string = os_strdup(value);
+    } else if (!strcmp(type, "INT")) {
+        temp.data.config_int = os_atoi(value);
+    } else if (!strcmp(type, "FLOAT") {
+        temp.data.config_float = atof(value);
+    } else {
+        return OS_ERR;;
+    }
+
+    if (temp.data.config_string == NULL) {
+        return OS_ERR;
+    }
+
+    if (temp.data.config_int < 0) {
+        return OS_ERR;
+    }
+
+    if (temp.data.config_float < 0) {
+        return OS_ERR;
+    }
+
+    pr = os_malloc(sizeof(record));
+
+    pr->name = os_strdup(name);
+    
+    memcpy(&pr->data, &temp.data, sizeof(config_data));
+    
+    *rc = pr;
+    
+    return OS_OK;
+}
 
 int config_parse_file(char *path)
 {
@@ -87,7 +132,13 @@ int config_parse_file(char *path)
     char *pbuf = NULL;
     char *line = NULL;
     char *name = NULL;
-    char *next = NULL;
+    char *nextln = NULL;
+    char *nextblk = NULL;
+    char *type = NULL;
+    char *value = NULL;
+    record *rc;
+
+    config_hashtable_init(1);
     
     result = config_init(path, &pbuf);
 
@@ -95,15 +146,38 @@ int config_parse_file(char *path)
         return OS_ERR;
     }
 
-    line = strtok_r(pbuf, "\r\n", &next);
-    if (line == NULL) {
-        return OS_ERR; // empty config file
-    }
+    line = strtok_r(pbuf, "\n", &nextln);
     
-    while (*next != '\0') {
-        name = strtok_r(NULL, " \t", &next);
-        if (name == NULL) {
+    while (line != NULL) {
+        
+        while (*line == '\n') { // skip empty line and get a new line.
+            line++;
         }
+
+        if (*line = '#') {
+            iter_to_next_line(line, nextln);
+            continue;
+        }
+        
+        name = strtok_r(line, " \t", &nextblk);
+        
+        type = strtok_r(NULL, " \t", &nextblk);
+
+        value = strtok_r(NULL, " \t", &nextblk);
+
+        if (hashtable_isexist(name, config_record_hashtable) != -1) {
+            return OS_ERR; // duplicate config.
+        }
+
+        record_make(&rc, name, type, value); 
+        
+        hashtable_add(name, rc, config_record_hashtable);
+
+        if (nextblk != NULL) { // todo: support more than tree args.
+            return OS_ERR;
+        }
+        
+        iter_to_next_line(line, nextln);
     }
 }
 

@@ -29,8 +29,9 @@ union config_data {
 
 typedef struct {
     config_data data;
+    //int         type;
     char       *name;
-} config_record;
+} record;
 
 int config_hashtable_init();
 

@@ -52,5 +52,9 @@ enum OS_ERRNO {
 
 };
 
-
+char *os_strdup(char *str);
+char *os_strndup(char *str, size_t n);
+ssize_t os_natoi(char *line, size_t n);
+ssize_t os_atoi(char *line);
+    
 #endif
