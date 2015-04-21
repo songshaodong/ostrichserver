@@ -32,7 +32,7 @@ struct external_queue {
 
 struct thread_processor {
     externalq   pushqueue;
-    //evhandler   process_event;
+    evhandler   process_event;
     evthread   *workerpool;
 };
 
