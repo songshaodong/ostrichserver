@@ -16,8 +16,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _DICT_H_
-#define _DICT_H_
+#ifndef _HASHTABLE_H_
+#define _HASHTABLE_H_
 
 #include <common.h>
 
