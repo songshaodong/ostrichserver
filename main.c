@@ -20,7 +20,7 @@
 #include <config.h>
 #include <hashtable.h>
 
-extern hashtable config_record_hashtable;
+extern hashtable *config_record_hashtable;
 
 int main()
 {
@@ -29,10 +29,10 @@ int main()
     
     rc = config_parse_file("a.txt");
 
-    rc = hashtable_isexist("net.tcp.connection", &config_record_hashtable);
+    rc = hashtable_isexist("net.tcp.connection", config_record_hashtable);
 
     if (rc != -1) {
-        hi = config_record_hashtable.buckets + rc;
+        hi = config_record_hashtable->buckets + rc;
         printf("name: %s\n", ((record *)hi->data)->name);
     }
     

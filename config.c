@@ -19,7 +19,7 @@
 #include <common.h>
 #include <config.h>
 
-hashtable config_record_hashtable;
+hashtable *config_record_hashtable;
 
 #define iter_to_next_line(curline, nextline)         \
         do {                                         \
@@ -32,11 +32,12 @@ int config_hashtable_init(int size)
     int result;
 
     (void) size;
+
+    config_record_hashtable = os_calloc(sizeof(hashtable));
+    config_record_hashtable->size = MAXHASHTABLELEN;
     
-    config_record_hashtable.size = MAXHASHTABLELEN;
-    
-    result = hashtable_init(&config_record_hashtable.buckets, 
-        config_record_hashtable.size);
+    result = hashtable_init(&config_record_hashtable->buckets, 
+        config_record_hashtable->size);
     
     if (!result) {
         return OS_ERR;
@@ -153,7 +154,7 @@ int config_parse_file(char *path)
 
         value = strtok_r(NULL, " \t", &nextblk);
 
-        if (hashtable_isexist(name, &config_record_hashtable) != -1) {
+        if (hashtable_isexist(name, config_record_hashtable) != -1) {
             return OS_ERR; // duplicate config.
         }
 
@@ -161,7 +162,7 @@ int config_parse_file(char *path)
             return OS_ERR;
         }
         
-        hashtable_add(name, rc, &config_record_hashtable);
+        hashtable_add(name, rc, config_record_hashtable);
 
         if (*nextblk != '\0') { // todo: support more than tree args.
             return OS_ERR;
