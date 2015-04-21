@@ -35,7 +35,7 @@ int config_hashtable_init(int size)
     
     config_record_hashtable.size = MAXHASHTABLELEN;
     
-    result = hashtable_init(config_record_hashtable.buckets, 
+    result = hashtable_init(&config_record_hashtable.buckets, 
         config_record_hashtable.size);
     
     if (!result) {
@@ -89,36 +89,24 @@ int config_init(char *path, char **fbuf)
 
 int record_make(record **rc, char *name, char *type, char *value)
 {
-    record   temp;
     record  *pr;
 
-    if (!strcmp(type, "STRING")) {
-        temp.data.config_string = os_strdup(value);
-    } else if (!strcmp(type, "INT")) {
-        temp.data.config_int = os_atoi(value);
-    } else if (!strcmp(type, "FLOAT")) {
-        temp.data.config_float = atof(value);
-    } else {
-        return OS_ERR;;
-    }
-
-    if (temp.data.config_string == NULL) {
-        return OS_ERR;
-    }
-
-    if (temp.data.config_int < 0) {
-        return OS_ERR;
-    }
-
-    if (temp.data.config_float < 0) {
-        return OS_ERR;
-    }
-
-    pr = os_malloc(sizeof(record));
+    pr = os_calloc(sizeof(record));
 
     pr->name = os_strdup(name);
     
-    memcpy(&pr->data, &temp.data, sizeof(config_data));
+    if (!strcmp(type, "STRING")) {
+        pr->data.config_string = os_strdup(value);
+        pr->type = RECORD_STRING;
+    } else if (!strcmp(type, "INT")) {
+        pr->data.config_int = os_atoi(value);
+        pr->type = RECORD_INT;
+    } else if (!strcmp(type, "FLOAT")) {
+        pr->data.config_float = atof(value);
+        pr->type = RECORD_FLOAT;
+    } else {
+        return OS_ERR;;
+    }
     
     *rc = pr;
     
@@ -136,7 +124,7 @@ int config_parse_file(char *path)
     char   *nextblk = NULL;
     char   *type = NULL;
     char   *value = NULL;
-    record *rc;
+    record *rc = NULL;
 
     config_hashtable_init(1);
     
@@ -148,13 +136,13 @@ int config_parse_file(char *path)
 
     line = strtok_r(pbuf, "\n", &nextln);
     
-    while (line != NULL) {
+    while (*line != '\0') {
         
         while (*line == '\n') { // skip empty line and get a new line.
             line++;
         }
 
-        if (*line = '#') {
+        if (*line == '#') {
             iter_to_next_line(line, nextln);
             continue;
         }
@@ -165,18 +153,20 @@ int config_parse_file(char *path)
 
         value = strtok_r(NULL, " \t", &nextblk);
 
-        if (hashtable_isexist(name, config_record_hashtable) != -1) {
+        if (hashtable_isexist(name, &config_record_hashtable) != -1) {
             return OS_ERR; // duplicate config.
         }
 
-        record_make(&rc, name, type, value); 
-        
-        hashtable_add(name, rc, config_record_hashtable);
-
-        if (nextblk != NULL) { // todo: support more than tree args.
+        if (record_make(&rc, name, type, value) == OS_ERR) {
             return OS_ERR;
         }
         
+        hashtable_add(name, rc, &config_record_hashtable);
+
+        if (*nextblk != '\0') { // todo: support more than tree args.
+            return OS_ERR;
+        }
+
         iter_to_next_line(line, nextln);
     }
 }

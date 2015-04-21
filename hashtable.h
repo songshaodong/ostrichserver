@@ -35,4 +35,8 @@ typedef struct {
     uint32_t   size;
 } hashtable;
 
+int hashtable_isexist(char *string, hashtable *htable);
+int hashtable_add(char *string, void *data, hashtable *htable);
+int hashtable_init(hashitem **pphashtable, int ntablelength);
+    
 #endif

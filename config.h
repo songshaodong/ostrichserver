@@ -27,9 +27,15 @@ typedef union {
     char   *config_string;
 } config_data;
 
+enum {
+    RECORD_INT = 1,
+    RECORD_STRING,
+    RECORD_FLOAT
+};
+
 typedef struct {
     config_data data;
-    //int         type;
+    int         type;
     char       *name;
 } record;
 
