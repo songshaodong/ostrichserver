@@ -19,19 +19,8 @@
 #ifndef _EVENT_H_
 #define _EVENT_H_
 
+#include <common.h>
 #include <thread.h>
-
-typedef struct ioevent event;
-typedef struct ioctx   ioctx;
-typedef struct evtype  evtype;
-
-typedef void (*type_handler)();
-typedef int (*evhandler)();
-
-struct ioctx {
-    int    fd;
-    void  *private_data;
-};
 
 struct evtype {
     type_handler  set; 
@@ -44,5 +33,9 @@ struct ioevent {
     evtype   want;
 };
 
+struct ioctx {
+    int    fd;
+    void  *private_data;
+};
 
 #endif

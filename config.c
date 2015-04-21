@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <hashtable.h>
+#include <common.h>
 #include <config.h>
 
 hashtable config_record_hashtable;
@@ -96,7 +96,7 @@ int record_make(record **rc, char *name, char *type, char *value)
         temp.data.config_string = os_strdup(value);
     } else if (!strcmp(type, "INT")) {
         temp.data.config_int = os_atoi(value);
-    } else if (!strcmp(type, "FLOAT") {
+    } else if (!strcmp(type, "FLOAT")) {
         temp.data.config_float = atof(value);
     } else {
         return OS_ERR;;
@@ -129,13 +129,13 @@ int config_parse_file(char *path)
 {
     int result = 0;
     
-    char *pbuf = NULL;
-    char *line = NULL;
-    char *name = NULL;
-    char *nextln = NULL;
-    char *nextblk = NULL;
-    char *type = NULL;
-    char *value = NULL;
+    char   *pbuf = NULL;
+    char   *line = NULL;
+    char   *name = NULL;
+    char   *nextln = NULL;
+    char   *nextblk = NULL;
+    char   *type = NULL;
+    char   *value = NULL;
     record *rc;
 
     config_hashtable_init(1);

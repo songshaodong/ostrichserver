@@ -15,10 +15,12 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <acceptor.h>
-#include <thread.h>
 
-thread_processor acceptor;
+#include <common.h>
+#include <thread.h>
+#include <acceptor.h>
+
+processor acceptor;
 
 void acceptor_init()
 {

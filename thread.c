@@ -16,6 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <common.h>
 #include <thread.h>
 
 int thread_create(evthread *evt, int stacksize, int detached, int type)

@@ -18,13 +18,8 @@
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
-#include <event.h>
+#include <common.h>
 #include <pthread.h>
-
-typedef struct thread evthread;
-typedef struct thread_processor processor;
-typedef struct external_queue   externalq;
-typedef void *(*threadproc)(void *);
 
 #define DEFAULT_THREADS  4
 
@@ -33,13 +28,13 @@ typedef void *(*threadproc)(void *);
 #define thread_t     pthread_t
 
 struct external_queue {
-} externalq;
+};
 
 struct thread_processor {
     externalq   pushqueue;
-    evhandler   process_event;
+    //evhandler   process_event;
     evthread   *workerpool;
-} processor;
+};
 
 struct thread {
     int             type;
@@ -54,7 +49,7 @@ enum THREAD_TYPE {
 };
 
 
-evthread *thread_create(evthread *evt, int stacksize, int detached, int type);
-int make_thread_pool(threadproc exec, int evtype, int num);
+int thread_create(evthread *evt, int stacksize, int detached, int type);
+evthread *make_thread_pool(threadproc exec, int evtype, int num);
 
 #endif

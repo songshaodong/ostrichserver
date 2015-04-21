@@ -19,12 +19,14 @@
 #ifndef _DICT_H_
 #define _DICT_H_
 
+#include <common.h>
+
 #define MAXHASHTABLELEN 1024
 
 typedef struct {
     int32_t    nhashA;
     int32_t    nhashB;
-    uint8_t    exists;
+    uint8_t    exist;
     void      *data;
 } hashitem;
 

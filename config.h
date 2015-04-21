@@ -21,11 +21,11 @@
 #include <hashtable.h>
 #include <config.h>
 
-union config_data {
+typedef union {
     int     config_int;
     float   config_float;
     char   *config_string;
-};
+} config_data;
 
 typedef struct {
     config_data data;

@@ -16,7 +16,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <hashtable.h>
 #include <common.h>
 
 // base on Blizzard _One-Way Hash_, http://www.programering.com/a/MDOyADMwATE.html
@@ -54,8 +53,8 @@ int crypttable_init()
 int hashstring(char *string, int hashtype)
 {
     unsigned char *key = (unsigned char *)string;
-    unsigned char *seed1 = 0x7FED7FED;
-    unsigned char *seed2 = 0xEEEEEEEE;
+    uint32_t seed1 = 0x7FED7FED;
+    uint32_t seed2 = 0xEEEEEEEE;
 
     int ch;
 
@@ -72,23 +71,21 @@ int hashstring(char *string, int hashtype)
 int hashtable_init(hashitem **pphashtable, int ntablelength)
 {
     int        i = 0;
-    char      *p = NULL;
-    hashtable *ptable = NULL;
+    hashitem  *ptable = NULL;
 
     crypttable_init();
 
-    p = (hashitem *)os_malloc(ntablelength * sizeof(hashitem));
-    if (p = NULL) {
+    ptable = (hashitem *)os_malloc(ntablelength * sizeof(hashitem));
+    if (ptable == NULL) {
         return 0;
     }
 
-    *pphashtable = p;
-    ptable = p;
+    *pphashtable = ptable;
 
     for (i = 0; i < ntablelength; i++) {
-        (ptable + i)->n_hashA = -1;
-        (ptable + i)->n_hashB = -1;
-        (ptable + i)->exists = 0;
+        (ptable + i)->nhashA = -1;
+        (ptable + i)->nhashB = -1;
+        (ptable + i)->exist = 0;
     }
 
     return 1;
@@ -113,8 +110,8 @@ int hashtable_add(char *string, void *data, hashtable *htable)
     uint32_t   nhashpos = nhashstart;
     hashitem  *_phtable = htable->buckets;
 
-    while ((_phtable + nhashpos)->exists) {
-        nhashpos = (nhashpos + 1) % _phtable->size;
+    while ((_phtable + nhashpos)->exist) {
+        nhashpos = (nhashpos + 1) % htable->size;
         if (nhashpos == nhashstart) {
             return 0;
         }
@@ -122,14 +119,14 @@ int hashtable_add(char *string, void *data, hashtable *htable)
 
     (_phtable + nhashpos)->nhashA = nhashA;
     (_phtable + nhashpos)->nhashB = nhashB;
-    (_phtable + nhashpos)->exists = 1;
+    (_phtable + nhashpos)->exist = 1;
 
     (_phtable + nhashpos)->data = data;
 
     return 1;
 }
 
-int hashtable_isexist(char *string, hashitem *htable)
+int hashtable_isexist(char *string, hashtable *htable)
 {
     uint32_t hashoffset = 0;
     uint32_t hashA = 1;

@@ -18,6 +18,8 @@
 #ifndef _MEMORY_H_
 #define _MEMORY_H_
 
+#include <common.h>
+
 void *os_malloc(size_t size);
 void *os_calloc(size_t size);
 void *os_memset(void *s, int c, size_t n);

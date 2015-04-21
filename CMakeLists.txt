@@ -9,7 +9,8 @@ INCLUDE_DIRECTORIES (.)
 
 FIND_PACKAGE (Threads REQUIRED)
 
-ADD_DEFINITIONS (-g -Wall -Wpointer-arith -Wno-unused-function)
+#ADD_DEFINITIONS (-g -Wall -Wpointer-arith -Wno-unused-function)
+ADD_DEFINITIONS (-g )
 
 ADD_EXECUTABLE (os ${SRC_LIST})
 

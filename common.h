@@ -28,15 +28,12 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <pthread.h>
-#include <memory.h>
-#include <signal.h>
-#include <core_log.h>
-#include <event.h>
-#include <evthread.h>
 #include <assert.h>
 #include <sys/epoll.h>
 #include <stdint.h>
 #include <ctype.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
@@ -51,6 +48,23 @@ enum OS_ERRNO {
     OS_ERR = -1
 
 };
+
+// typedef struct lists
+typedef struct thread evthread;
+typedef struct external_queue   externalq;
+typedef struct ioevent event;
+typedef struct ioctx   ioctx;
+typedef struct evtype  evtype;
+typedef struct external_queue externalq;
+typedef struct thread_processor processor;
+
+// typedef function lists
+typedef void *(*threadproc)(void *);
+typedef void (*type_handler)();
+typedef int (*evhandler)();
+
+#include <hashtable.h>
+#include <memory.h>
 
 char *os_strdup(char *str);
 char *os_strndup(char *str, size_t n);
