@@ -16,8 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <config.h>
+#include "common.h"
+#include "config.h"
+#include <string.h>
 
 hashtable *config_record_hashtable;
 

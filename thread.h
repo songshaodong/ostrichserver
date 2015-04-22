@@ -18,38 +18,58 @@
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
-#include <common.h>
-#include <pthread.h>
+#include "common.h"
 
 #define DEFAULT_THREADS  4
 
 #define STACK_SIZE  (4 * 1024 * 1024)
 #define thread_key_t pthread_key_t 
 #define thread_t     pthread_t
+#define mutex_t      pthread_mutex_t
+#define cond_t       pthread_cond_t
 
 struct external_queue {
+    mutex_t      mutex;
+    cond_t       cond;
+    atomiclist  *al;
 };
 
 struct thread_processor {
     externalq   pushqueue;
-    evhandler   process_event;
-    evthread   *workerpool;
+    threadrt   *workerpool;
 };
 
 struct thread {
     int             type;
     thread_key_t    private_key;
     thread_t        tid;
+    void           *eventbase;
     threadproc      execute;
+    externalq       externalqueue;
+    evhandler       process_event;
+};
+
+struct thread_runtime {
+    event    *static_event;
+    evthread *thread;
 };
 
 enum THREAD_TYPE {
-    REGULAR,
+    REGULAR = 0,
     DEDICATED
 };
 
+/*enum THREAD_TYPE {
+    ACCEPTOR,
+    NET,
+    DISK,
+    LOG
+}; */
 
-int thread_create(evthread *evt, int stacksize, int detached, int type);
-evthread *make_thread_pool(threadproc exec, int evtype, int num);
+
+int thread_create(threadrt *evt, int stacksize, int detached);
+threadrt *make_thread_pool(threadproc exec, int evtype, int num);
+void *thread_loop_internal(void *data);
+evthread *current_thread(thread_key_t key);
 
 #endif

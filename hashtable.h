@@ -19,7 +19,7 @@
 #ifndef _HASHTABLE_H_
 #define _HASHTABLE_H_
 
-#include <common.h>
+#include "common.h"
 
 #define MAXHASHTABLELEN 1024
 

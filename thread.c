@@ -19,7 +19,33 @@
 #include <common.h>
 #include <thread.h>
 
-int thread_create(evthread *evt, int stacksize, int detached, int type)
+thread_key_t thread_private_key;
+
+evthread *current_thread(thread_key_t key)
+{
+    return pthread_getspecific(key);
+}
+
+void *thread_loop_internal(void *data)
+{
+    threadrt   *rt = data;
+    evthread   *evt = rt->thread;
+    event      *e = rt->static_event;
+
+    switch (evt->type) {
+    case REGULAR:
+        break;
+    case EPEDGE:
+        if (e) {
+            e->cont->event_handler(e);
+        }
+        break;
+    }
+
+    return NULL;
+}
+
+int thread_create(threadrt *evt, int stacksize, int detached)
 {
     int ret;
     
@@ -33,7 +59,7 @@ int thread_create(evthread *evt, int stacksize, int detached, int type)
         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     }
     
-    ret = pthread_create(&evt->tid, &attr, evt->execute, evt);
+    ret = pthread_create(&evt->thread->tid, &attr, evt->thread->execute, evt);
     if (ret < 0) {
         return OS_ERR;
     }
@@ -43,26 +69,27 @@ int thread_create(evthread *evt, int stacksize, int detached, int type)
     return OS_OK;
 }
 
-evthread *make_thread_pool(threadproc exec, int evtype, int num)
+threadrt *make_thread_pool(threadproc exec, int evtype, int num)
 {
-    evthread *evt;
+    threadrt *rt;
     evthread *t;
     int       i;
-    int       ret;
+    event    *e;
     
-    evt = os_malloc(num * sizeof(evthread));
-    if (evt == NULL) {
+    rt = os_calloc(num * sizeof(threadrt));
+    if (rt == NULL) {
         return NULL;
     }
 
     for (i = 0; i < num; i++) {
-        t = evt + i;
-        t->execute = exec;
-        ret = thread_create(evt, STACK_SIZE, 1, evtype);
-        if (ret == OS_ERR) {
-            return NULL;
+        
+        rt->thread->execute = exec;
+    
+        if (evtype == EPEDGE) {
+            e = os_malloc(sizeof(event));
+            rt->static_event = e;
         }
     }
     
-    return evt;
+    return rt;
 }

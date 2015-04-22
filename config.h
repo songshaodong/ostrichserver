@@ -18,8 +18,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include <hashtable.h>
-#include <config.h>
+#include "common.h"
 
 typedef union {
     int     config_int;

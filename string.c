@@ -17,38 +17,65 @@
 */
 
 #include "common.h"
-#include "memory.h"
 #include <string.h>
 
-void *os_malloc(size_t size)
+char *os_strdup(char *str)
 {
-    void *ptr;
+    size_t  size;
+    char   *ptr;
+
+    size = strlen(str);
     
-    ptr = malloc(size);
+    ptr = os_malloc(size + 1);
+
+    memcpy(ptr, str, size);
+
+    ptr[size] = '\0';
+    
+    return ptr; 
+}
+
+char *os_strndup(char *str, size_t n)
+{
+    char *ptr;
+
+    ptr = os_malloc(n + 1);
+
+    memcpy(ptr, str, n);
+
+    ptr[n] = '\0';
     
     return ptr;
 }
 
-void *os_calloc(size_t size)
+ssize_t
+os_natoi(char *line, size_t n)
 {
-    void *ptr;
-    
-    ptr = malloc(size);
-    if (ptr) {
-        memset(ptr, 0, size);
+    ssize_t  value;
+
+    if (n == 0) {
+        return OS_ERR;
     }
-    
-    return ptr;
+
+    for (value = 0; n--; line++) {
+        if (*line < '0' || *line > '9') {
+            return OS_ERR;
+        }
+
+        value = value * 10 + (*line - '0');
+    }
+
+    if (value < 0) {
+        return OS_ERR;
+    } else {
+        return value;
+    }
 }
 
-void *os_memset(void *s, int c, size_t n)
+ssize_t os_atoi(char *line)
 {
-    assert(s != NULL);
+    size_t   n = strlen(line);
 
-    return memset(s, c, n);
+    return os_natoi(line, n);
 }
 
-void os_free(void *ptr)
-{
-    free(ptr);
-}

@@ -19,23 +19,20 @@
 #ifndef _EVENT_H_
 #define _EVENT_H_
 
-#include <common.h>
-#include <thread.h>
+#include "common.h"
 
 struct evtype {
     type_handler  set; 
 };
 
-struct ioevent {
-    int      type;
-    ioctx    ctx;
-    thread  *t;
-    evtype   want;
-};
-
-struct ioctx {
-    int    fd;
-    void  *private_data;
+struct thread_event {
+    int           type;
+    int           fd;
+    int           active;
+    int           flag;
+    void         *private_data;
+    evthread     *t;
+    continuation *cont;
 };
 
 #endif

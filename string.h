@@ -15,14 +15,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _MEMORY_H_
-#define _MEMORY_H_
+
+#ifndef _STRING_H_
+#define _STRING_H_
 
 #include "common.h"
 
-void *os_malloc(size_t size);
-void *os_calloc(size_t size);
-void *os_memset(void *s, int c, size_t n);
-void os_free(void *ptr);
+char *os_strdup(char *str);
+char *os_strndup(char *str, size_t n);
+ssize_t os_natoi(char *line, size_t n);
+ssize_t os_atoi(char *line);
 
 #endif

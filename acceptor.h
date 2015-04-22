@@ -19,6 +19,6 @@
 #ifndef _ACCEPTOR_H_
 #define _ACCEPTOR_H_
 
-
+#define MAX_ACCEPTOR_THREADS 4
 
 #endif

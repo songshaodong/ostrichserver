@@ -20,7 +20,6 @@
 #define _COMMON_H_
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 #include <sys/stat.h>
@@ -32,8 +31,8 @@
 #include <sys/epoll.h>
 #include <stdint.h>
 #include <ctype.h>
-#include <stddef.h>
 #include <stdint.h>
+#include <sys/socket.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
@@ -52,23 +51,27 @@ enum OS_ERRNO {
 // typedef struct lists
 typedef struct thread evthread;
 typedef struct external_queue   externalq;
-typedef struct ioevent event;
-typedef struct ioctx   ioctx;
+typedef struct thread_event   event;
 typedef struct evtype  evtype;
 typedef struct external_queue externalq;
 typedef struct thread_processor processor;
+typedef struct thread_runtime  threadrt;
+typedef struct continuation continuation;
 
 // typedef function lists
 typedef void *(*threadproc)(void *);
 typedef void (*type_handler)();
 typedef int (*evhandler)();
+typedef int (*conthandler)(void *);
 
-#include <hashtable.h>
-#include <memory.h>
+#include "hashtable.h"
+#include "memory.h"
+#include "queue.h"
+#include "event.h"
+#include "continuation.h"
+#include "thread.h"
+#include "osstring.h"
+#include "eventpoll.h"
 
-char *os_strdup(char *str);
-char *os_strndup(char *str, size_t n);
-ssize_t os_natoi(char *line, size_t n);
-ssize_t os_atoi(char *line);
-    
+
 #endif

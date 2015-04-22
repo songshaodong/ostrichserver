@@ -16,13 +16,48 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <thread.h>
-#include <acceptor.h>
+#include "common.h"
+#include "thread.h"
+#include "acceptor.h"
 
 processor acceptor;
 
-void acceptor_init()
+
+int accept_block_loop(void *data)
 {
-	
+    event *e = data;
+
+    struct sockaddr *addr;
+    socklen_t *addrlen;
+
+    int fd = e->fd;
+    int connfd;
+
+    while (1) {
+        fd = accept(fd, addr, addrlen);
+    }
+}
+
+int acceptor_init()
+{
+    threadrt     *rtpool = NULL;
+    continuation *c = NULL;
+    int           i;
+
+    // todo accept threads configed
+	rtpool = make_thread_pool(thread_loop_internal, EPEDGE, 
+	    MAX_ACCEPTOR_THREADS);
+
+    if (rtpool == NULL) {
+        return OS_ERR;
+    }
+
+    for (i = 0; i < MAX_ACCEPTOR_THREADS; i++) {
+        c = os_calloc(sizeof(continuation));
+        c->event_handler = accept_block_loop;
+        rtpool[i].static_event->cont = c;
+        thread_create(rtpool + i, STACK_SIZE, 1);
+    }
+    
+    acceptor.workerpool = rtpool;
 }

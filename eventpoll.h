@@ -15,14 +15,32 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _MEMORY_H_
-#define _MEMORY_H_
+
+#ifndef _EVENTPOLL_H_
+#define _EVENTPOLL_H_
 
 #include "common.h"
 
-void *os_malloc(size_t size);
-void *os_calloc(size_t size);
-void *os_memset(void *s, int c, size_t n);
-void os_free(void *ptr);
+enum EPTRIGGER {
+    EPLEVEL = 0x00000001,
+    EPEDGE = 0x00000002
+};
+
+#define  EPREAD     EPOLLIN
+#define  EPWRITE    EPOLLOUT
+#define  DEFAULT_EVENTLIST  1024
+
+typedef struct {
+    int                 epfd;
+    int                 evsize;
+    int                 eflags;
+    struct epoll_event *evlist;
+} epbase;
+
+int netevent_create();
+int netevent_init();
+
+int epoll_init(int size);
 
 #endif
+
