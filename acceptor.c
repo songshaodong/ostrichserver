@@ -17,35 +17,50 @@
 */
 
 #include "common.h"
-#include "thread.h"
 #include "acceptor.h"
+#include "server.h"
+#include "event.h"
 
 processor acceptor;
 
 
 int accept_block_loop(void *data)
 {
-    event *e = data;
+    event *static_event = data;
+    event *netev = NULL;
 
     struct sockaddr *addr;
     socklen_t *addrlen;
 
-    int fd = e->fd;
+    int fd = static_event->fd;
     int connfd;
 
     while (1) {
         fd = accept(fd, addr, addrlen);
+        netev = os_calloc(sizeof(event));
+        netev->fd = fd;
+        netev->type = ACCEPTEVENT;
+         
     }
 }
 
 int acceptor_init()
 {
-    threadrt     *rtpool = NULL;
-    continuation *c = NULL;
-    int           i;
+    threadrt      *rtpool = NULL;
+    continuation  *c = NULL;
+    int            i;
+    int            listenfd;
+    tcp_acceptor  *netacceptor;
 
+    listenfd = protocol_listen_open(AF_INET, SOCK_STREAM, 0, NULL, 0);
+    
+    netacceptor = os_calloc(sizeof(tcp_acceptor));
+    
+    netacceptor->servfd = listenfd;
+    netacceptor->cont.event_handler = accept_block_loop;
+    
     // todo accept threads configed
-	rtpool = make_thread_pool(thread_loop_internal, EPEDGE, 
+    rtpool = make_thread_pool(thread_loop_internal, EPEDGE, 
 	    MAX_ACCEPTOR_THREADS);
 
     if (rtpool == NULL) {
@@ -53,11 +68,10 @@ int acceptor_init()
     }
 
     for (i = 0; i < MAX_ACCEPTOR_THREADS; i++) {
-        c = os_calloc(sizeof(continuation));
-        c->event_handler = accept_block_loop;
-        rtpool[i].static_event->cont = c;
+        rtpool[i].static_event->cont = &netacceptor->cont;
         thread_create(rtpool + i, STACK_SIZE, 1);
     }
     
     acceptor.workerpool = rtpool;
 }
+

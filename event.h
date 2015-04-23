@@ -21,6 +21,12 @@
 
 #include "common.h"
 
+enum  {
+    ACCEPTEVENT,
+    NETEVENT,
+    DISKIOEVENT
+};
+
 struct evtype {
     type_handler  set; 
 };

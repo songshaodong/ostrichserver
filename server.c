@@ -21,11 +21,11 @@
 
 int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int port)
 {
-    struct sockaddr_in servaddr;
-    struct sockaddr_in cliaddr;
-    int        listenfd;
-    uint32_t   ip = INADDR_ANY;
-    int        servport = DEF_SERVER_PORT;
+    int                 listenfd;
+    int                 servport = DEF_SERVER_PORT;
+    uint32_t            ip = INADDR_ANY;
+    struct sockaddr_in  servaddr;
+    struct sockaddr_in  cliaddr;
 
     listenfd = socket(domain, type, protocal);
 
