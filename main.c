@@ -16,25 +16,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <config.h>
-#include <hashtable.h>
+#include "common.h"
+#include "config.h"
 
 extern hashtable *config_record_hashtable;
 
 int main()
 {
-    int         rc = 0;
-    hashitem   *hi;
+    int          result = 0;
+    record      *rec;
+    int          listenfd = 0;
     
-    rc = config_parse_file("a.txt");
+    result = config_parse_file("record.config");
 
-    rc = hashtable_isexist("net.tcp.connection", config_record_hashtable);
-
-    if (rc != -1) {
-        hi = config_record_hashtable->buckets + rc;
-        printf("name: %s\n", ((record *)hi->data)->name);
-    }
+    acceptor_init();
     
     return 0;
 }

@@ -44,6 +44,7 @@ int accept_block_loop(void *data)
     }
 }
 
+// todo support other protocol.
 int acceptor_init()
 {
     threadrt      *rtpool = NULL;
