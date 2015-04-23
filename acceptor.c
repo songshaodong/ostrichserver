@@ -32,14 +32,14 @@ int accept_block_loop(void *data)
     struct sockaddr *addr;
     socklen_t *addrlen;
 
-    int fd = static_event->fd;
+    //int fd = static_event->fd;
     int connfd;
 
     while (1) {
-        fd = accept(fd, addr, addrlen);
-        netev = os_calloc(sizeof(event));
-        netev->fd = fd;
-        netev->type = ACCEPTEVENT;
+        //fd = accept(fd, addr, addrlen);
+        //netev = os_calloc(sizeof(event));
+        //netev->fd = fd;
+        //netev->type = ACCEPTEVENT;
          
     }
 }
@@ -52,6 +52,7 @@ int acceptor_init()
     int            i;
     int            listenfd;
     tcp_acceptor  *netacceptor;
+    event         *staticevent;
 
     listenfd = protocol_listen_open(AF_INET, SOCK_STREAM, 0, NULL, 0);
     
@@ -67,9 +68,15 @@ int acceptor_init()
     if (rtpool == NULL) {
         return OS_ERR;
     }
-
+    
     for (i = 0; i < MAX_ACCEPTOR_THREADS; i++) {
-        rtpool[i].static_event->cont = &netacceptor->cont;
+
+        staticevent = rtpool[i].static_event;
+        staticevent->cont = &netacceptor->cont;
+        staticevent->t = &rtpool[i].thread;
+        staticevent->type = ACCEPTEVENT;
+        staticevent->fd = listenfd;
+        
         thread_create(rtpool + i, STACK_SIZE, 1);
     }
     

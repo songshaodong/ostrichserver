@@ -29,7 +29,7 @@ evthread *current_thread(thread_key_t key)
 void *thread_loop_internal(void *data)
 {
     threadrt   *rt = data;
-    evthread   *evt = rt->thread;
+    evthread   *evt = &rt->thread;
     event      *e = rt->static_event;
 
     switch (evt->type) {
@@ -47,7 +47,8 @@ void *thread_loop_internal(void *data)
 
 int thread_create(threadrt *evt, int stacksize, int detached)
 {
-    int ret;
+    int       ret;
+    evthread *t = &evt->thread;
     
     pthread_attr_t attr;
 
@@ -59,7 +60,7 @@ int thread_create(threadrt *evt, int stacksize, int detached)
         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     }
     
-    ret = pthread_create(&evt->thread->tid, &attr, evt->thread->execute, evt);
+    ret = pthread_create(&t->tid, &attr, t->execute, evt);
     if (ret < 0) {
         return OS_ERR;
     }
@@ -81,9 +82,9 @@ threadrt *make_thread_pool(threadproc exec, int evtype, int num)
         return NULL;
     }
 
-    for (i = 0; i < num; i++) {
+    for (i = 0; i < num; i++) {
         
-        rt->thread->execute = exec;
+        rt->thread.execute = exec;
     
         if (evtype == EPEDGE) {
             e = os_malloc(sizeof(event));

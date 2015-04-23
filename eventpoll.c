@@ -49,8 +49,7 @@ int epoll_init(int size)
 int epoll_event_start(event *e, int flag)
 {
     struct epoll_event ev;
-    int                op;
-       
+    int                op;     
 
     if (e->active) {
         return OS_OK;

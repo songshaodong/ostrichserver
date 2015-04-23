@@ -51,7 +51,7 @@ struct thread {
 
 struct thread_runtime {
     event    *static_event;
-    evthread *thread;
+    evthread  thread;
 };
 
 enum THREAD_TYPE {
