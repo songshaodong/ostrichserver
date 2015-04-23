@@ -15,35 +15,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+
+#ifndef _SERVER_H_
+#define _SERVER_H_
 
 #include "common.h"
 
-typedef union {
-    int     config_int;
-    float   config_float;
-    char   *config_string;
-} config_data;
+#define DEF_SERVER_PORT    8080
+#define DEF_LSTEN_BACKLOG  1000
 
-enum {
-    RECORD_INT = 1,
-    RECORD_STRING,
-    RECORD_FLOAT
-};
+int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int port);
 
-typedef struct {
-    config_data data;
-    int         type;
-    char       *name;
-} record;
-
-extern hashtable *config_record_hashtable;
-
-inline record *get_config_record(char *str);
-
-int config_hashtable_init();
-
-int config_parse_file();
-    
 #endif

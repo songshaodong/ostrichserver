@@ -29,10 +29,13 @@
 #include <pthread.h>
 #include <assert.h>
 #include <sys/epoll.h>
+#include <string.h>
 #include <stdint.h>
 #include <ctype.h>
 #include <stdint.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
@@ -70,6 +73,7 @@ typedef int (*conthandler)(void *);
 #include "event.h"
 #include "continuation.h"
 #include "thread.h"
+#include "osstring.h"
 #include "osstring.h"
 #include "eventpoll.h"
 
