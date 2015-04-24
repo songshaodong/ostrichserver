@@ -54,7 +54,7 @@ int accept_block_loop(continuation *cont)
         c->event_handler = netio_init;
         //ev = os_calloc(sizeof(event));
         
-        eventprocessor.schedule_imm(c, REGULAR_ET);
+        evprocessor.schedule_imm(c, REGULAR_ET);
         //ev->cont = (continuation *)nc;
         //ev->cont->event_handler = netio_init;
         //ev->type = NEW_CONNECTION;

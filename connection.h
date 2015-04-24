@@ -22,8 +22,8 @@
 #include "common.h"
 
 struct connection {
+    continuation cont;    
     mutex_t      mutexlock;
-    continuation cont;
 };
 
 #endif
