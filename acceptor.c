@@ -23,43 +23,55 @@
 
 processor acceptor;
 
+int do_accept_loop = 1;
 
-int accept_block_loop(void *data)
+int handle_accept(void *data) 
 {
-    event *static_event = data;
-    event *netev = NULL;
+    event *staticevent = data;
 
-    struct sockaddr *addr;
-    socklen_t *addrlen;
+    continuation  *cont = staticevent->cont;
 
-    //int fd = static_event->fd;
-    int connfd;
+    accept_block_loop(cont);
 
-    while (1) {
-        //fd = accept(fd, addr, addrlen);
-        //netev = os_calloc(sizeof(event));
-        //netev->fd = fd;
-        //netev->type = ACCEPTEVENT;
-         
-    }
+    return OS_OK;
+}
+
+int accept_block_loop(continuation *cont)
+{
+    int            fd = -1;
+    tcp_acceptor  *ta;
+
+    ta = (tcp_acceptor *)cont;
+    
+    conninfo  ci;
+
+    memset(&ci, 0, sizeof(conninfo));
+
+    do {
+        fd = accept(ta->serverfd, &ci.cliaddr, &ci.cliaddrlen);
+    } while (do_accept_loop);
 }
 
 // todo support other protocol.
 int acceptor_init()
 {
-    threadrt      *rtpool = NULL;
-    continuation  *c = NULL;
     int            i;
     int            listenfd;
-    tcp_acceptor  *netacceptor;
     event         *staticevent;
+    threadrt      *rtpool = NULL;
+    continuation  *c = NULL;
+    tcp_acceptor  *netacceptor;
+    netconnection *conn;
 
     listenfd = protocol_listen_open(AF_INET, SOCK_STREAM, 0, NULL, 0);
     
     netacceptor = os_calloc(sizeof(tcp_acceptor));
     
-    netacceptor->servfd = listenfd;
-    netacceptor->cont.event_handler = accept_block_loop;
+    conn = os_calloc(sizeof(netconnection));
+    
+    netacceptor->serverfd = listenfd;
+    
+    netacceptor->cont.event_handler = handle_accept;
     
     // todo accept threads configed
     rtpool = make_thread_pool(thread_loop_internal, EPEDGE, 
@@ -75,7 +87,6 @@ int acceptor_init()
         staticevent->cont = &netacceptor->cont;
         staticevent->t = &rtpool[i].thread;
         staticevent->type = ACCEPTEVENT;
-        staticevent->fd = listenfd;
         
         thread_create(rtpool + i, STACK_SIZE, 1);
     }

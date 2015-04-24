@@ -60,6 +60,7 @@ typedef struct external_queue externalq;
 typedef struct thread_processor processor;
 typedef struct thread_runtime  threadrt;
 typedef struct continuation continuation;
+typedef struct connection  connection;
 
 // typedef function lists
 typedef void *(*threadproc)(void *);
@@ -76,6 +77,7 @@ typedef int (*conthandler)(void *);
 #include "osstring.h"
 #include "osstring.h"
 #include "eventpoll.h"
+#include "net.h"
 
 
 #endif

@@ -49,7 +49,8 @@ int epoll_init(int size)
 int epoll_event_start(event *e, int flag)
 {
     struct epoll_event ev;
-    int                op;     
+    int                op; 
+    netconnection     *nc;
 
     if (e->active) {
         return OS_OK;
@@ -64,7 +65,9 @@ int epoll_event_start(event *e, int flag)
 
     op = EPOLL_CTL_ADD;
 
-    epoll_ctl(base->epfd, op, e->fd, &ev);
+    nc = (netconnection *)e->cont;
+
+    epoll_ctl(base->epfd, op, nc->ci.fd, &ev);
 
     e->active = 1;
     e->flag = flag;
@@ -77,6 +80,7 @@ int epoll_event_modify(event *e, int flag)
     int                op;
     int                event;
     struct epoll_event ev;
+    netconnection     *nc;
 
     epbase *base = get_local_epbase();
     
@@ -91,8 +95,10 @@ int epoll_event_modify(event *e, int flag)
 
     ev.events = event;
     ev.data.ptr = e;
+
+    nc = (netconnection *)e->cont;
     
-    epoll_ctl(base->epfd, op, e->fd, &ev);
+    epoll_ctl(base->epfd, op, nc->ci.fd, &ev);
 
     return OS_OK;
 }

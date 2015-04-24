@@ -17,7 +17,6 @@
 */
 
 #include "common.h"
-#include <stdlib.h>
 #include <string.h>
 
 char *os_strdup(char *str)

@@ -173,3 +173,23 @@ int config_parse_file(char *path)
     }
 }
 
+inline record *get_config_record(char *str)
+{
+    int       index;
+    hashitem *hi;
+    record   *rc;
+
+    index = hashtable_isexist(str, config_record_hashtable);
+    if (index == -1) {
+        return NULL;
+    }
+    
+    hi = config_record_hashtable->buckets + index;
+
+    rc = hi->data;
+
+    assert(rc != NULL);
+
+    return rc;   
+}
+

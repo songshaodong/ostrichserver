@@ -20,7 +20,8 @@
 #define _CONTINUATION_H_
 
 struct continuation {
-    conthandler event_handler;
+    void         *private_data;
+    conthandler   event_handler;
 };
 
 #endif

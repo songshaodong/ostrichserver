@@ -16,27 +16,4 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _EVENT_H_
-#define _EVENT_H_
 
-#include "common.h"
-
-enum  {
-    ACCEPTEVENT,
-    NETEVENT,
-    DISKIOEVENT
-};
-
-struct evtype {
-    type_handler  set; 
-};
-
-struct thread_event {
-    int           type;
-    int           active;
-    int           flag;
-    evthread     *t;
-    continuation *cont;
-};
-
-#endif

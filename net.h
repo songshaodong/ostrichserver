@@ -19,13 +19,21 @@
 #ifndef _NET_H_
 #define _NET_H_
 
-typedef struct ioctx_netconn  netconn;
-typedef struct conninfo       conninfo;
+#include "common.h"
+#include "connection.h"
 
-struct ioctx_netconn {
-    int           protocol;
-    int           status;
-    conninfo      info;
-};
+typedef struct {
+    struct sockaddr  cliaddr;
+    socklen_t        cliaddrlen;
+    int              fd;
+} conninfo;
+
+typedef struct {
+    connection       c;
+    conninfo         ci;
+} netconnection;
+
+int init_connection(int fd, conninfo *ci);
+
 
 #endif

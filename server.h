@@ -24,6 +24,7 @@
 #define DEF_SERVER_PORT    8080
 #define DEF_LSTEN_BACKLOG  1000
 
+
 int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int port);
 
 #endif
