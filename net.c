@@ -15,3 +15,23 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "common.h"
+#include "net.h"
+#include "eventpoll.h"
+
+netconnection *init_connection(int fd, conninfo *ci)
+{
+    netconnection *nc;
+
+    nc = os_calloc(sizeof(netconnection));
+    nc->ci.fd = fd;
+    nc->ci = *ci;
+}
+
+int netio_init(event *ev)
+{
+    assert(ev->type == NEW_CONNECTION);
+
+    epoll_event_start(ev, EPOLLIN | EPOLLOUT);
+}

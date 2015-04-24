@@ -25,11 +25,9 @@ processor acceptor;
 
 int do_accept_loop = 1;
 
-int handle_accept(void *data) 
+int handle_accept(event *ev) 
 {
-    event *staticevent = data;
-
-    continuation  *cont = staticevent->cont;
+    continuation  *cont = ev->cont;
 
     accept_block_loop(cont);
 
@@ -39,16 +37,27 @@ int handle_accept(void *data)
 int accept_block_loop(continuation *cont)
 {
     int            fd = -1;
+    event         *ev;
     tcp_acceptor  *ta;
+    conninfo       ci;
+    netconnection *nc;
+    continuation  *c;
 
     ta = (tcp_acceptor *)cont;
-    
-    conninfo  ci;
 
     memset(&ci, 0, sizeof(conninfo));
 
     do {
         fd = accept(ta->serverfd, &ci.cliaddr, &ci.cliaddrlen);
+        nc = init_connection(fd, &ci);
+        c = (continuation *)nc;
+        c->event_handler = netio_init;
+        //ev = os_calloc(sizeof(event));
+        
+        eventprocessor.schedule_imm(c, REGULAR_ET);
+        //ev->cont = (continuation *)nc;
+        //ev->cont->event_handler = netio_init;
+        //ev->type = NEW_CONNECTION;
     } while (do_accept_loop);
 }
 
@@ -91,6 +100,6 @@ int acceptor_init()
         thread_create(rtpool + i, STACK_SIZE, 1);
     }
     
-    acceptor.workerpool = rtpool;
+    //acceptor.workerpool = rtpool;
 }
 

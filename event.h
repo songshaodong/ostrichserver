@@ -21,11 +21,16 @@
 
 #include "common.h"
 
+
 enum  {
-    ACCEPTEVENT,
-    NETEVENT,
-    DISKIOEVENT
+    ACCEPTEVENT = 0,
+    NEW_CONNECTION = 0x0001,
+    READ = 0x0002,
+    WRITE = 0x0004,
+    DISKIOEVENT = 0x0008
 };
+
+#define REGULAR_ET  (NEW_CONNECTION | READ | WRITE)
 
 struct evtype {
     type_handler  set; 
@@ -36,6 +41,7 @@ struct thread_event {
     int           active;
     int           flag;
     evthread     *t;
+    mutex_t      *mutexlock;
     continuation *cont;
 };
 

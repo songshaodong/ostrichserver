@@ -19,7 +19,10 @@
 #ifndef _CONNECTION_H_
 #define _CONNECTION_H_
 
+#include "common.h"
+
 struct connection {
+    mutex_t      mutexlock;
     continuation cont;
 };
 

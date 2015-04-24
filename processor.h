@@ -16,24 +16,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _PROCESSOR_H_
+#define _PROCESSOR_H_
+
 #include "common.h"
-#include "config.h"
 
-extern hashtable *config_record_hashtable;
+struct thread_processor {
+};
 
-int main()
-{
-    int          result = 0;
-    record      *rec;
-    int          listenfd = 0;
-    
-    result = config_parse_file("record.config");
+typedef struct {
+    processor    base;
+    void       (*schedule_imm)(continuation *cont, int eventtype);
+    event     *(*assign_thread)();
+    threadrt    *eventthread; // todo support other type threads
+    int          n_threads;
+    int          next_thread;
+} _eventprocessor;
 
-    acceptor_init();
-    
-    while (1) {
-        sleep(1);
-    }
-    
-    return 0;
-}
+
+void eventprocessor_init();
+
+#endif

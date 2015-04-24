@@ -41,6 +41,7 @@ int netevent_create();
 int netevent_init();
 
 int epoll_init(int size);
+int epoll_event_start(event *e, int flag);
 
 #endif
 

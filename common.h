@@ -56,7 +56,6 @@ typedef struct thread evthread;
 typedef struct external_queue   externalq;
 typedef struct thread_event   event;
 typedef struct evtype  evtype;
-typedef struct external_queue externalq;
 typedef struct thread_processor processor;
 typedef struct thread_runtime  threadrt;
 typedef struct continuation continuation;
@@ -66,7 +65,7 @@ typedef struct connection  connection;
 typedef void *(*threadproc)(void *);
 typedef void (*type_handler)();
 typedef int (*evhandler)();
-typedef int (*conthandler)(void *);
+typedef int (*conthandler)(event *);
 
 #include "hashtable.h"
 #include "memory.h"
@@ -78,6 +77,6 @@ typedef int (*conthandler)(void *);
 #include "osstring.h"
 #include "eventpoll.h"
 #include "net.h"
-
+#include "mutex.h"
 
 #endif

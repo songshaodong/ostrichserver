@@ -31,9 +31,11 @@ typedef struct {
 typedef struct {
     connection       c;
     conninfo         ci;
+    int              status;
 } netconnection;
 
-int init_connection(int fd, conninfo *ci);
+netconnection *init_connection(int fd, conninfo *ci);
+int netio_init(event *ev);
 
 
 #endif

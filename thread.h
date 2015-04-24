@@ -25,18 +25,13 @@
 #define STACK_SIZE  (4 * 1024 * 1024)
 #define thread_key_t pthread_key_t 
 #define thread_t     pthread_t
-#define mutex_t      pthread_mutex_t
-#define cond_t       pthread_cond_t
 
 struct external_queue {
     mutex_t      mutex;
     cond_t       cond;
     atomiclist  *al;
-};
-
-struct thread_processor {
-    externalq   pushqueue;
-    threadrt   *workerpool;
+    void        (*enqueue)(event *ev);
+    event      *(*dequeue)();
 };
 
 struct thread {
