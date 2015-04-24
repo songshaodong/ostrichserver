@@ -84,11 +84,11 @@ threadrt *make_thread_pool(threadproc exec, int evtype, int num)
 
     for (i = 0; i < num; i++) {
         
-        rt->thread.execute = exec;
+        rt[i].thread.execute = exec;
     
         if (evtype == EPEDGE) {
             e = os_malloc(sizeof(event));
-            rt->static_event = e;
+            rt[i].static_event = e;
         }
     }
     
