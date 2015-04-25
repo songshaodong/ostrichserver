@@ -19,6 +19,7 @@
 #define _THREAD_H_
 
 #include "common.h"
+#include "processor.h"
 
 #define DEFAULT_THREADS  4
 

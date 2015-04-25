@@ -20,16 +20,19 @@
 #define _PROCESSOR_H_
 
 #include "common.h"
+#include "mutex.h"
+#include "atomiclist.h"
 
 struct thread_processor {
 };
 
 struct external_queue {
-    mutex_t      mutex;
-    cond_t       cond;
+    mutex_t      lock;
+    cond_t       might_have_data;
     atomiclist   al;
-    void        (*enqueue)(atomiclist *al, void *item);
-    void       *(*dequeue)();
+    void        (*enqueue)(void *item);
+    void        (*wakeup)(evthread *evt);
+    //void       *(*dequeue)();
 };
 
 typedef struct {

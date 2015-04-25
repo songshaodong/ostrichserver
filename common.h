@@ -51,6 +51,9 @@ enum OS_ERRNO {
 
 };
 
+#define true 1
+#define false 0
+
 // typedef struct lists
 typedef struct thread evthread;
 typedef struct external_queue   externalq;

@@ -60,9 +60,48 @@ void eventprocessor_init(int n_threads)
     evprocessor.next_thread = 0;
 }
 
+inline void eventprocessor_thread_wakeup(evthread *thr)
+{
+    externalq *queue;
+
+    queue = thr->externalqueue;
+    
+    mutex_acquire(&queue->lock);
+    
+    cond_signal(&queue->might_have_data);
+    
+    mutex_release(&queue->lock);
+}
+
+void eventprocessor_event_enqueue(void *item)
+{
+    int was_empty;
+
+    event *e = item;
+
+    evthread *thread = e->t;
+
+    was_empty = atomic_list_push(&thread->externalqueue, e);
+
+    if (was_empty == false) {
+        return;
+    }
+
+    eventprocessor_thread_wakeup(thread);
+}
+
 void eventprocessor_externalq_init(externalq *eq)
 {
     event   e;
+
+    mutex_init(&eq->mutex);
+    
+    cond_init(&eq->cond);
     
     atomic_list_init(&eq->al, "processor external queue", &e.ln.next - &e);
+    
+    eq->enqueue = eventprocessor_event_enqueue;
+    
+    eq->wakeup = eventprocessor_thread_wakeup;
+    
 }

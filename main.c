@@ -30,6 +30,8 @@ int main()
     result = config_parse_file("record.config");
 
     acceptor_init();
+
+    eventprocessor_init(DEFAULT_THREADS);
     
     while (1) {
         sleep(1);

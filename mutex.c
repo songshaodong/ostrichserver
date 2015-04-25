@@ -18,14 +18,51 @@
 
 #include "common.h"
 
-inline int mutex_init(mutex_t *mutex)
+pthread_mutexattr_t  g_mutex_attr;
+
+inline void mutex_init(mutex_t *mutex)
 {
-    pthread_mutexattr_t      mutexattr;
+    pthread_mutexattr_init(&g_mutex_attr);
+    pthread_mutexattr_setpshared(&g_mutex_attr, PTHREAD_PROCESS_SHARED);
     
-    pthread_mutexattr_init(&mutexattr);
-    pthread_mutexattr_setpshared(&mutexattr, PTHREAD_PROCESS_SHARED);
 }
 
 inline int cond_init(cond_t *cond)
 {
+    return pthread_cond_init(cond, NULL);
 }
+
+inline int mutex_acquire(mutex_t *mutex)
+{
+    return pthread_mutex_lock(mutex);
+}
+
+inline int mutex_release(mutex_t *mutex)
+{
+    return pthread_mutex_destroy(mutex);
+}
+
+inline void cond_wait(cond_t *cond, mutex_t *m)
+{
+    return pthread_cond_wait(cond, m);
+}
+
+inline int cond_timewait(cond_t *cond, mutex_t *m)
+{
+    int error;
+    
+    while (EINTR == (error = pthread_cond_timedwait(cond, m)));
+
+    return error; 
+}
+
+inline void cond_signal(cond_t *cond)
+{
+    pthread_cond_signal(cond);
+}
+
+inline void cond_broadcast(cond_t *cond)
+{
+    pthread_cond_broadcast(cond);
+}
+

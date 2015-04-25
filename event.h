@@ -46,7 +46,7 @@ struct thread_event {
     int           active;
     int           flag;
     evthread     *t;
-    mutex_t      *mutexlock;
+    //mutex_t      *mutexlock;
     continuation *cont;
     evlink        ln;
 };

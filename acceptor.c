@@ -20,7 +20,9 @@
 #include "acceptor.h"
 #include "server.h"
 #include "event.h"
+#include "processor.h"
 
+extern processor evprocessor;
 processor acceptor;
 
 int do_accept_loop = 1;
@@ -48,16 +50,17 @@ int accept_block_loop(continuation *cont)
     memset(&ci, 0, sizeof(conninfo));
 
     do {
+
         fd = accept(ta->serverfd, &ci.cliaddr, &ci.cliaddrlen);
+        
         nc = init_connection(fd, &ci);
+        
         c = (continuation *)nc;
-        c->event_handler = netio_init;
-        //ev = os_calloc(sizeof(event));
+        
+        c->event_handler = netio_init; 
         
         evprocessor.schedule_imm(c, REGULAR_ET);
-        //ev->cont = (continuation *)nc;
-        //ev->cont->event_handler = netio_init;
-        //ev->type = NEW_CONNECTION;
+        
     } while (do_accept_loop);
 }
 

@@ -85,6 +85,8 @@ threadrt *make_thread_pool(threadproc exec, int evtype, int num)
     for (i = 0; i < num; i++) {
         
         rt[i].thread.execute = exec;
+        
+        eventprocessor_externalq_init(&rt[i].thread.externalqueue);
     
         if (evtype == EPEDGE) {
             e = os_malloc(sizeof(event));
