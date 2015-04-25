@@ -1,3 +1,4 @@
+
 /* 
    Copyright (c) 2014-2015 ostrichserver
 
@@ -16,9 +17,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _QUEUE_H_
-#define _QUEUE_H_
+#ifndef _MUTEX_H_
+#define _MUTEX_H_
 
-void _enqueue(void *data);
+#include "common.h"
+
+#define mutex_t      pthread_mutex_t
+#define cond_t       pthread_cond_t
+
+inline int mutex_init(mutex_t *mutex);
+inline int cond_init(cond_t *cond);
 
 #endif

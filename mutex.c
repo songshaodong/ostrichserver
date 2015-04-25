@@ -16,9 +16,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _QUEUE_H_
-#define _QUEUE_H_
+#include "common.h"
 
-void _enqueue(void *data);
+inline int mutex_init(mutex_t *mutex)
+{
+    pthread_mutexattr_t      mutexattr;
+    
+    pthread_mutexattr_init(&mutexattr);
+    pthread_mutexattr_setpshared(&mutexattr, PTHREAD_PROCESS_SHARED);
+}
 
-#endif
+inline int cond_init(cond_t *cond)
+{
+}

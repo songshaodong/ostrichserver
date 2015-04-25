@@ -78,5 +78,6 @@ typedef int (*conthandler)(event *);
 #include "eventpoll.h"
 #include "net.h"
 #include "mutex.h"
+#include "atomiclist.h"
 
 #endif

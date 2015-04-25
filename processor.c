@@ -59,3 +59,10 @@ void eventprocessor_init(int n_threads)
     evprocessor.n_threads = n_threads;
     evprocessor.next_thread = 0;
 }
+
+void eventprocessor_externalq_init(externalq *eq)
+{
+    event   e;
+    
+    atomic_list_init(&eq->al, "processor external queue", &e.ln.next - &e);
+}

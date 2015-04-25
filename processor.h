@@ -24,6 +24,14 @@
 struct thread_processor {
 };
 
+struct external_queue {
+    mutex_t      mutex;
+    cond_t       cond;
+    atomiclist   al;
+    void        (*enqueue)(atomiclist *al, void *item);
+    void       *(*dequeue)();
+};
+
 typedef struct {
     processor    base;
     void       (*schedule_imm)(continuation *cont, int eventtype);
@@ -35,5 +43,6 @@ typedef struct {
 
 
 void eventprocessor_init();
+void eventprocessor_externalq_init(externalq *eq);
 
 #endif

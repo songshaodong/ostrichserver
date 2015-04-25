@@ -36,6 +36,11 @@ struct evtype {
     type_handler  set; 
 };
 
+typedef struct {
+    event *prev;
+    event *next;
+} evlink;
+
 struct thread_event {
     int           type;
     int           active;
@@ -43,6 +48,7 @@ struct thread_event {
     evthread     *t;
     mutex_t      *mutexlock;
     continuation *cont;
+    evlink        ln;
 };
 
 #endif

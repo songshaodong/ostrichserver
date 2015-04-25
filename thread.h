@@ -26,14 +26,6 @@
 #define thread_key_t pthread_key_t 
 #define thread_t     pthread_t
 
-struct external_queue {
-    mutex_t      mutex;
-    cond_t       cond;
-    atomiclist  *al;
-    void        (*enqueue)(event *ev);
-    event      *(*dequeue)();
-};
-
 struct thread {
     int             type;
     thread_key_t    private_key;

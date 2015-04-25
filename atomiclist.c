@@ -16,9 +16,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _QUEUE_H_
-#define _QUEUE_H_
+#include "common.h"
 
-void _enqueue(void *data);
+void atomic_list_init(atomiclist *al, char *name, int next_offset)
+{
+    al->name = name;
+    al->offset = next_offset;
+    SET_ATOMICLIST_POINTER_VERSION(al->head, (char *)0, 0);
+}
 
-#endif
+void atomic_list_push(atomiclist *al, void *data)
+{
+}
+
+void *atomic_list_pop(atomiclist *al)
+{
+}
+
