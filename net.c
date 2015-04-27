@@ -25,8 +25,8 @@ netconnection *init_connection(int fd, conninfo *ci)
     netconnection *nc;
 
     nc = os_calloc(sizeof(netconnection));
-    nc->ci.fd = fd;
     nc->ci = *ci;
+    nc->ci.fd = fd;
 }
 
 int netio_init(event *ev)

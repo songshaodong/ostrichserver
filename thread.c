@@ -26,29 +26,38 @@ evthread *current_thread(thread_key_t key)
     return pthread_getspecific(key);
 }
 
-void *thread_loop_internal(void *data)
+void *threadrt_loop_internal(void *data)
 {
     threadrt   *rt = data;
     evthread   *evt = &rt->thread;
     event      *e = rt->static_event;
 
-    switch (evt->type) {
-    case REGULAR:
-        break;
-    case EPEDGE:
-        if (e) {
-            e->cont->event_handler(e);
-        }
-        break;
+    pthread_setspecific(thread_private_key, evt);
+
+    if (e) {
+        e->cont->event_handler(e);
     }
 
     return NULL;
 }
 
-int thread_create(threadrt *evt, int stacksize, int detached)
+void *thread_loop_internal(void *data)
+{
+    evthread   *rt = data;
+
+    pthread_setspecific(thread_private_key, rt);
+
+    while (1) {
+        sleep(1);
+    }
+
+    return NULL;
+}
+
+
+int thread_create(evthread *t, int stacksize, int detached)
 {
     int       ret;
-    evthread *t = &evt->thread;
     
     pthread_attr_t attr;
 
@@ -60,7 +69,7 @@ int thread_create(threadrt *evt, int stacksize, int detached)
         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     }
     
-    ret = pthread_create(&t->tid, &attr, t->execute, evt);
+    ret = pthread_create(&t->tid, &attr, t->execute, t);
     if (ret < 0) {
         return OS_ERR;
     }
@@ -70,7 +79,7 @@ int thread_create(threadrt *evt, int stacksize, int detached)
     return OS_OK;
 }
 
-threadrt *make_thread_pool(threadproc exec, int evtype, int num)
+threadrt *make_threadrt_pool(threadproc exec, int num)
 {
     threadrt *rt;
     evthread *t;
@@ -85,14 +94,44 @@ threadrt *make_thread_pool(threadproc exec, int evtype, int num)
     for (i = 0; i < num; i++) {
         
         rt[i].thread.execute = exec;
-        
-        eventprocessor_externalq_init(&rt[i].thread.externalqueue);
-    
-        if (evtype == EPEDGE) {
-            e = os_malloc(sizeof(event));
-            rt[i].static_event = e;
-        }
+        rt[i].thread.type = DEDICATED;
+
+        e = os_malloc(sizeof(event));
+        e->t = &rt[i].thread;
+        rt[i].static_event = e;
     }
     
     return rt;
 }
+
+evthread *make_thread_pool(threadproc exec, int num)
+{
+    evthread *t;
+    int       i;
+    event    *e;
+    
+    t = os_calloc(num * sizeof(evthread));
+    if (t == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; i < num; i++) {
+        
+        t[i].execute = exec;
+        t[i].type = REGULAR;
+        
+        eventprocessor_externalq_init(&t[i].externalqueue);
+    }
+    
+    return t;
+}
+
+void *make_threads_pool(int type, int num)
+{
+    if (type == DEDICATED) {
+        return make_threadrt_pool(threadrt_loop_internal, num);
+    } else if (type == REGULAR) {
+        return make_thread_pool(thread_loop_internal, num);
+    }
+}
+

@@ -37,7 +37,7 @@ struct evtype {
 };
 
 typedef struct {
-    event *prev;
+    //event *prev;
     event *next;
 } evlink;
 

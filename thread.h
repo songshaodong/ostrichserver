@@ -23,7 +23,7 @@
 
 #define DEFAULT_THREADS  4
 
-#define STACK_SIZE  (4 * 1024 * 1024)
+#define STACK_SIZE  (4 * 1024)
 #define thread_key_t pthread_key_t 
 #define thread_t     pthread_t
 
@@ -55,9 +55,12 @@ enum THREAD_TYPE {
 }; */
 
 
-int thread_create(threadrt *evt, int stacksize, int detached);
-threadrt *make_thread_pool(threadproc exec, int evtype, int num);
+int thread_create(evthread *t, int stacksize, int detached);
+evthread *make_thread_pool(threadproc exec, int num);
+threadrt *make_threadrt_pool(threadproc exec, int num);
+void *threadrt_loop_internal(void *data);
 void *thread_loop_internal(void *data);
+void *make_threads_pool(int type, int num);
 evthread *current_thread(thread_key_t key);
 
 #endif

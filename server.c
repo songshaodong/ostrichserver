@@ -50,7 +50,7 @@ int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int po
     listen(listenfd, DEF_LSTEN_BACKLOG);
 
     // todo set recvbuf and sendbuf
-    fcntl(listenfd, F_SETFL, fcntl(listenfd, F_GETFL) | O_NONBLOCK);
+    //fcntl(listenfd, F_SETFL, fcntl(listenfd, F_GETFL) | O_NONBLOCK);
 
     return listenfd;
 }

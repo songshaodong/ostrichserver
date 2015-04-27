@@ -39,7 +39,7 @@ typedef struct {
     processor    base;
     void       (*schedule_imm)(continuation *cont, int eventtype);
     evthread  *(*assign_thread)();
-    threadrt    *eventthread; // todo support other type threads
+    void        *eventthread; // todo support other type threads
     int          n_threads;
     int          next_thread;
 } _eventprocessor;

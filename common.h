@@ -54,6 +54,8 @@ enum OS_ERRNO {
 #define true 1
 #define false 0
 
+#define bool int
+
 // typedef struct lists
 typedef struct thread evthread;
 typedef struct external_queue   externalq;
@@ -82,5 +84,6 @@ typedef int (*conthandler)(event *);
 #include "net.h"
 #include "mutex.h"
 #include "atomiclist.h"
+#include "atomic.h"
 
 #endif

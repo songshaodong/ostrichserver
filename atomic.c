@@ -17,25 +17,5 @@
 */
 
 #include "common.h"
-#include "config.h"
 
-extern hashtable *config_record_hashtable;
 
-int main()
-{
-    int          result = 0;
-    record      *rec;
-    int          listenfd = 0;
-    
-    result = config_parse_file("record.config");
-
-    eventprocessor_init(DEFAULT_THREADS);
-
-    acceptor_init();
-    
-    while (1) {
-        sleep(1);
-    }
-    
-    return 0;
-}

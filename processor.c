@@ -41,23 +41,35 @@ void event_schedule_imm(continuation *cont, int eventtype)
 evthread *event_assign_thread(int eventtype)
 {
     int              next;
+    evthread        *t;
     _eventprocessor *evp = &evprocessor;
     
     (void) eventtype; // todo other types supported.
 
     next = evp->next_thread++ % evp->n_threads;
 
-    return &evp->eventthread[next].thread;
+    t = evp->eventthread;
+
+    return &t[next];
 }
 
 void eventprocessor_init(int n_threads)
 {
+    int  i;
+    
     evprocessor.schedule_imm = event_schedule_imm;
+    
     evprocessor.assign_thread = event_assign_thread;
 
-    evprocessor.eventthread = os_calloc(sizeof(evthread) * n_threads);
+    evprocessor.eventthread = make_threads_pool(REGULAR, n_threads);
+
     evprocessor.n_threads = n_threads;
+    
     evprocessor.next_thread = 0;
+
+    for (i = 0; i < n_threads; i++) {
+        thread_create(evprocessor.eventthread + i, STACK_SIZE, 1);
+    }
 }
 
 inline void eventprocessor_thread_wakeup(evthread *thr)
@@ -81,7 +93,7 @@ void eventprocessor_event_enqueue(void *item)
 
     evthread *thread = e->t;
 
-    was_empty = atomic_list_push(&thread->externalqueue.al, e);
+    was_empty = (atomic_list_push(&thread->externalqueue.al, e) == NULL);
 
     if (was_empty == false) {
         return;

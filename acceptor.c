@@ -23,7 +23,7 @@
 #include "processor.h"
 
 extern _eventprocessor evprocessor;
-processor acceptor;
+_eventprocessor acceptor;
 
 int do_accept_loop = 1;
 
@@ -86,12 +86,15 @@ int acceptor_init()
     netacceptor->cont.event_handler = handle_accept;
     
     // todo accept threads configed
-    rtpool = make_thread_pool(thread_loop_internal, EPEDGE, 
-	    MAX_ACCEPTOR_THREADS);
+    rtpool = make_threads_pool(DEDICATED, MAX_ACCEPTOR_THREADS);
 
     if (rtpool == NULL) {
         return OS_ERR;
     }
+
+    acceptor.eventthread = rtpool;
+    acceptor.n_threads = MAX_ACCEPTOR_THREADS;
+    acceptor.next_thread = 0;
     
     for (i = 0; i < MAX_ACCEPTOR_THREADS; i++) {
 
@@ -100,9 +103,8 @@ int acceptor_init()
         staticevent->t = &rtpool[i].thread;
         staticevent->type = ACCEPTEVENT;
         
-        thread_create(rtpool + i, STACK_SIZE, 1);
+        thread_create(&rtpool[i].thread, STACK_SIZE, 1);
     }
     
-    //acceptor.workerpool = rtpool;
 }
 

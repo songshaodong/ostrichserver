@@ -15,27 +15,12 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _ATOMIC_H_
+#define _ATOMIC_H_
 
 #include "common.h"
-#include "config.h"
 
-extern hashtable *config_record_hashtable;
+#define atomic_cas(val, old, new)   \
+    __sync_bool_compare_and_swap(val, old, new)
 
-int main()
-{
-    int          result = 0;
-    record      *rec;
-    int          listenfd = 0;
-    
-    result = config_parse_file("record.config");
-
-    eventprocessor_init(DEFAULT_THREADS);
-
-    acceptor_init();
-    
-    while (1) {
-        sleep(1);
-    }
-    
-    return 0;
-}
+#endif
