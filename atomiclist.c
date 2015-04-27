@@ -25,7 +25,7 @@ void atomic_list_init(atomiclist *al, char *name, int next_offset)
     SET_ATOMICLIST_POINTER_VERSION(al->head, (char *)0, 0);
 }
 
-void atomic_list_push(atomiclist *al, void *data)
+int atomic_list_push(atomiclist *al, void *data)
 {
 }
 

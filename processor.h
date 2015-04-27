@@ -38,7 +38,7 @@ struct external_queue {
 typedef struct {
     processor    base;
     void       (*schedule_imm)(continuation *cont, int eventtype);
-    event     *(*assign_thread)();
+    evthread  *(*assign_thread)();
     threadrt    *eventthread; // todo support other type threads
     int          n_threads;
     int          next_thread;

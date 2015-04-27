@@ -75,9 +75,9 @@ typedef struct
 #elif defined(__x86_64__) || defined(__ia64__)
 */
 
-#define ATOMICLIST_POINTER(_x) ((void*)(((((intptr_t)(_x).data)<<16)>>16) | \
+#define ALPOINTER(_x) ((void*)(((((intptr_t)(_x).data)<<16)>>16) | \
  (((~((((intptr_t)(_x).data)<<16>>63)-1))>>48)<<48)))
-#define ATOMICLIST_VERSION(_x) (((intptr_t)(_x).data)>>48)
+#define ALVERSION(_x) (((intptr_t)(_x).data)>>48)
 #define SET_ATOMICLIST_POINTER_VERSION(_x,_p,_v) \
   (_x).data = ((((intptr_t)(_p))&0x0000FFFFFFFFFFFFULL) | (((_v)&0xFFFFULL) << 48))
   
@@ -88,7 +88,7 @@ typedef struct
 //#endif
 
 void atomic_list_init(atomiclist *al, char *name, int next_offset);
-void atomic_list_push(atomiclist *al, void *data);
+int atomic_list_push(atomiclist *al, void *data);
 void *atomic_list_pop(atomiclist *al);
 
 #endif

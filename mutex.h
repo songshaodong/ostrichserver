@@ -25,12 +25,12 @@
 #define mutex_t      pthread_mutex_t
 #define cond_t       pthread_cond_t
 
-inline int mutex_init(mutex_t *mutex);
+inline void mutex_init(mutex_t *mutex);
 inline void cond_init(cond_t *cond);
 inline void mutex_acquire(mutex_t *mutex);
 inline void mutex_release(mutex_t *mutex);
 inline void cond_wait(cond_t *cond, mutex_t *m);
-inline int cond_timewait(cond_t *cond, mutex_t *m);
+inline int cond_timewait(cond_t *cond, mutex_t *m, struct timespec *time);
 inline void cond_signal(cond_t *cond);
 inline void cond_broadcast(cond_t *cond);
 

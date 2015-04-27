@@ -27,31 +27,31 @@ inline void mutex_init(mutex_t *mutex)
     
 }
 
-inline int cond_init(cond_t *cond)
+inline void cond_init(cond_t *cond)
 {
-    return pthread_cond_init(cond, NULL);
+    pthread_cond_init(cond, NULL);
 }
 
-inline int mutex_acquire(mutex_t *mutex)
+inline void mutex_acquire(mutex_t *mutex)
 {
-    return pthread_mutex_lock(mutex);
+    pthread_mutex_lock(mutex);
 }
 
-inline int mutex_release(mutex_t *mutex)
+inline void mutex_release(mutex_t *mutex)
 {
-    return pthread_mutex_destroy(mutex);
+    pthread_mutex_destroy(mutex);
 }
 
 inline void cond_wait(cond_t *cond, mutex_t *m)
 {
-    return pthread_cond_wait(cond, m);
+    pthread_cond_wait(cond, m);
 }
 
-inline int cond_timewait(cond_t *cond, mutex_t *m)
+inline int cond_timewait(cond_t *cond, mutex_t *m, struct timespec *t)
 {
     int error;
     
-    while (EINTR == (error = pthread_cond_timedwait(cond, m)));
+    while (EINTR == (error = pthread_cond_timedwait(cond, m, t)));
 
     return error; 
 }

@@ -27,14 +27,14 @@ void event_schedule_imm(continuation *cont, int eventtype)
     event    *ev;
     evthread *thread;
     
-    ev = os_calloc(sizeof(event))
+    ev = os_calloc(sizeof(event));
     ev->type = eventtype;
     ev->cont = cont;
 
     thread = evprocessor.assign_thread();
 
     ev->t = thread;
-    ev->mutexlock = NULL; // todo init mutex.
+    //ev->mutexlock = NULL; // todo init mutex.
     ev->t->externalqueue.enqueue(ev);
 }
 
@@ -47,7 +47,7 @@ evthread *event_assign_thread(int eventtype)
 
     next = evp->next_thread++ % evp->n_threads;
 
-    return evp->eventthread[next];
+    return &evp->eventthread[next].thread;
 }
 
 void eventprocessor_init(int n_threads)
@@ -64,7 +64,7 @@ inline void eventprocessor_thread_wakeup(evthread *thr)
 {
     externalq *queue;
 
-    queue = thr->externalqueue;
+    queue = &thr->externalqueue;
     
     mutex_acquire(&queue->lock);
     
@@ -81,7 +81,7 @@ void eventprocessor_event_enqueue(void *item)
 
     evthread *thread = e->t;
 
-    was_empty = atomic_list_push(&thread->externalqueue, e);
+    was_empty = atomic_list_push(&thread->externalqueue.al, e);
 
     if (was_empty == false) {
         return;
@@ -94,11 +94,12 @@ void eventprocessor_externalq_init(externalq *eq)
 {
     event   e;
 
-    mutex_init(&eq->mutex);
+    mutex_init(&eq->lock);
     
-    cond_init(&eq->cond);
+    cond_init(&eq->might_have_data);
     
-    atomic_list_init(&eq->al, "processor external queue", &e.ln.next - &e);
+    atomic_list_init(&eq->al, "processor external queue", 
+        (char *)&e.ln.next - (char *)&e);
     
     eq->enqueue = eventprocessor_event_enqueue;
     
