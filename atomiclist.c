@@ -74,3 +74,8 @@ void *atomic_list_pop(atomiclist *al)
     return ptr;
 }
 
+
+inline bool atomic_list_empty(atomiclist *al)
+{
+    return !((void *)ALPOINTER(al->head));
+}

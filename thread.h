@@ -55,7 +55,7 @@ enum THREAD_TYPE {
 }; */
 
 
-int thread_create(evthread *t, int stacksize, int detached);
+int thread_create(void *t, int type, int stacksize, int detached);
 evthread *make_thread_pool(threadproc exec, int num);
 threadrt *make_threadrt_pool(threadproc exec, int num);
 void *threadrt_loop_internal(void *data);

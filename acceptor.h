@@ -22,7 +22,7 @@
 #include "common.h"
 #include "server.h"
 
-#define MAX_ACCEPTOR_THREADS 4
+#define MAX_ACCEPTOR_THREADS 1
 
 typedef struct {
     continuation     cont;

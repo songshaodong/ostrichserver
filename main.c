@@ -20,12 +20,15 @@
 #include "config.h"
 
 extern hashtable *config_record_hashtable;
+extern thread_key_t thread_private_key;
 
 int main()
 {
     int          result = 0;
     record      *rec;
     int          listenfd = 0;
+
+    pthread_key_create(&thread_private_key, NULL);
     
     result = config_parse_file("record.config");
 

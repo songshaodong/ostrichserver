@@ -55,21 +55,24 @@ evthread *event_assign_thread(int eventtype)
 
 void eventprocessor_init(int n_threads)
 {
-    int  i;
+    int       i;
+    evthread *t;
     
     evprocessor.schedule_imm = event_schedule_imm;
     
     evprocessor.assign_thread = event_assign_thread;
 
-    evprocessor.eventthread = make_threads_pool(REGULAR, n_threads);
+    t = make_threads_pool(REGULAR, n_threads);
 
     evprocessor.n_threads = n_threads;
     
     evprocessor.next_thread = 0;
 
     for (i = 0; i < n_threads; i++) {
-        thread_create(evprocessor.eventthread + i, STACK_SIZE, 1);
+        thread_create(t + i, REGULAR, STACK_SIZE, 1);
     }
+
+    evprocessor.eventthread = t;
 }
 
 inline void eventprocessor_thread_wakeup(evthread *thr)

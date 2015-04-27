@@ -103,7 +103,7 @@ int acceptor_init()
         staticevent->t = &rtpool[i].thread;
         staticevent->type = ACCEPTEVENT;
         
-        thread_create(&rtpool[i].thread, STACK_SIZE, 1);
+        thread_create(&rtpool[i], DEDICATED, STACK_SIZE, 1);
     }
     
 }
