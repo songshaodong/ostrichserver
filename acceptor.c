@@ -52,6 +52,8 @@ int accept_block_loop(continuation *cont)
     do {
 
         fd = accept(ta->serverfd, &ci.cliaddr, &ci.cliaddrlen);
+
+        printf("accept fd: %d\n", fd);
         
         nc = init_connection(fd, &ci);
         

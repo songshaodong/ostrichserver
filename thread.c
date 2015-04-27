@@ -50,14 +50,18 @@ void *thread_loop_internal(void *data)
 
     pthread_setspecific(thread_private_key, rt);
 
-    ts.tv_sec = 0;
-    ts.tv_nsec = 1000 * 5;
+    ts.tv_sec = 3;
+    ts.tv_nsec = 0;
 
-    while (atomic_list_empty(l)) {
-        cond_timewait(&queue->might_have_data, &queue->lock, &ts);
+    printf("thread %p running\n", rt);
+    
+    while (1) {
+        while (atomic_list_empty(l)) {
+            cond_timewait(&queue->might_have_data, &queue->lock, &ts);
+        }
+
+        printf("new connection\n");
     }
-
-    printf("new connection\n");
 
     return NULL;
 }
@@ -69,11 +73,11 @@ int thread_create(void *thr, int type, int stacksize, int detached)
 
     evthread *t = thr; 
 
+    pthread_attr_t attr;
+
     if (type == DEDICATED) {
         t = &((threadrt *)thr)->thread;
-    }
-    
-    pthread_attr_t attr;
+    }    
 
     pthread_attr_init(&attr);
   

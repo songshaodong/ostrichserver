@@ -33,6 +33,8 @@ void event_schedule_imm(continuation *cont, int eventtype)
 
     thread = evprocessor.assign_thread();
 
+    printf("schedule accept event to thread: %p\n", thread);
+
     ev->t = thread;
     //ev->mutexlock = NULL; // todo init mutex.
     ev->t->externalqueue.enqueue(ev);

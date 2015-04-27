@@ -22,6 +22,7 @@
 int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int port)
 {
     int                 listenfd;
+    int                 reuseaddr = 1;
     int                 servport = DEF_SERVER_PORT;
     uint32_t            ip = INADDR_ANY;
     struct sockaddr_in  servaddr;
@@ -46,6 +47,9 @@ int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int po
     servaddr.sin_addr.s_addr = htons(ip);
 
     bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
+
+    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (const void *) &reuseaddr, 
+        sizeof(int));
     
     listen(listenfd, DEF_LSTEN_BACKLOG);
 
