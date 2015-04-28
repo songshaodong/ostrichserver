@@ -17,6 +17,7 @@
 */
 
 #include "common.h"
+#include "config.h"
 #include "acceptor.h"
 #include "server.h"
 #include "event.h"
@@ -76,8 +77,16 @@ int acceptor_init()
     continuation  *c = NULL;
     tcp_acceptor  *netacceptor;
     netconnection *conn;
+    record        *rc;
+    int            port = DEF_SERVER_PORT;
 
-    listenfd = protocol_listen_open(AF_INET, SOCK_STREAM, 0, NULL, 0);
+    rc = get_config_record("net.tcp.listen");
+
+    if (rc) {
+        port = rc->data.config_int;
+    }
+    
+    listenfd = protocol_listen_open(AF_INET, SOCK_STREAM, 0, NULL, port);
     
     netacceptor = os_calloc(sizeof(tcp_acceptor));
     

@@ -104,8 +104,8 @@ void eventprocessor_event_enqueue(void *item)
         //eventprocessor_thread_wakeup(thread);
         return;
     }
-
-    printf("thread is %p, target al is %p\n", thread, &thread->externalqueue.al);
+    
+    printf("thread is %p, target al is %p, put event: %p\n", thread, &thread->externalqueue.al, e);
     
     eventprocessor_thread_wakeup(thread);
 }

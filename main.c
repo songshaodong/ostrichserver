@@ -20,7 +20,6 @@
 #include "config.h"
 
 extern hashtable *config_record_hashtable;
-
 extern thread_key_t thread_private_key;
 
 int main()

@@ -66,10 +66,12 @@ void *thread_loop_internal(void *data)
         }
 
         e = atomic_list_popall(l);
+
+        printf("get event: %p\n", e);
         
         mutex_release(&queue->lock);
 
-        printf("new connection\n");
+        printf("new connection, fd: %d\n", ((netconnection *)e->cont)->ci.fd);
     }
 
     return NULL;
