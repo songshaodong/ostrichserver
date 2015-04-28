@@ -41,40 +41,72 @@ void *threadrt_loop_internal(void *data)
     return NULL;
 }
 
-void *thread_loop_internal(void *data)
+void thread_process_event(evthread *t)
 {
-    evthread   *rt = data;
-    externalq  *queue = &rt->externalqueue;
-    atomiclist *l = &queue->al;
+    externalq  *queue = &t->externalqueue;
     event      *e;
-    //struct timespec    ts;
 
-    pthread_setspecific(thread_private_key, rt);
+    printf("thread %p running\n", t);
 
-    //ts.tv_sec = time(NULL) + 10;
-    //ts.tv_nsec = 0;
+    for (;;) {
 
-    printf("thread %p running\n", rt);
-    
-    while (1) {
-        
-        mutex_acquire(&queue->lock);
-        
-        while (atomic_list_empty(l)) {
-            //cond_timewait(&queue->might_have_data, &queue->lock, &ts);
-            cond_wait(&queue->might_have_data, &queue->lock);
+        e = t->localqueue.dequeue();
+        if (e) {
+            t->process_event(e);
+        }
+        if (!atomic_list_empty(&queue->al)) {
+            queue->dequeueall();
         }
 
-        e = atomic_list_popall(l);
-
-        printf("get event: %p\n", e);
         
-        mutex_release(&queue->lock);
+    }
+}
 
-        printf("new connection, fd: %d\n", ((netconnection *)e->cont)->ci.fd);
+void local_schedule_imm(event *e, int eventtype)
+{
+    evthread *evt = current_thread(thread_private_key);
+
+    if (eventtype == INIT_POLL) {
+        e->cont->event_handler = netio_pollevent;
+        evt->localqueue.enqueue(e);
+    }
+}
+
+void thread_init(evthread *evt)
+{
+    epbase *ep = NULL;
+    event  *e = NULL;
+    
+    pthread_setspecific(thread_private_key, evt);
+
+    ep = epoll_init(1);
+
+    if (ep == NULL) {
+        return;
     }
 
-    return NULL;
+    evt->eventbase = ep;
+
+    e = os_calloc(sizeof(event));
+
+    e->schedule_imm = local_schedule_imm;
+
+    e->cont = (continuation *)ep;
+
+    e->schedule_imm(e, INIT_POLL);
+}
+
+void *thread_loop_internal(void *data)
+{
+    evthread *evt = data;
+
+    thread_init(evt);
+    
+    while (1) {
+        thread_process_event(evt);
+    }
+    
+    return NULL; 
 }
 
 
@@ -133,6 +165,87 @@ threadrt *make_threadrt_pool(threadproc exec, int num)
     return rt;
 }
 
+void *make_threads_pool(int type, int num)
+{
+    if (type == DEDICATED) {
+        return make_threadrt_pool(threadrt_loop_internal, num);
+    } else if (type == REGULAR) {
+        return make_thread_pool(thread_loop_internal, num);
+    }
+}
+
+inline void thread_event_wakeup(evthread *thr)
+{
+    externalq *queue;
+
+    queue = &thr->externalqueue;
+    
+    mutex_acquire(&queue->lock);
+    
+    cond_signal(&queue->might_have_data);
+    
+    mutex_release(&queue->lock);
+}
+
+void thread_localq_enqueue(void *item)
+{
+    evthread *t = current_thread(thread_private_key);
+
+    locallnk *lnk = NULL;
+    event    *elnk = item;
+
+    lnk = t->localqueue.link;
+
+    elnk->ln.next  = (event *)lnk;
+
+    t->localqueue.link = elnk;
+}
+
+void *thread_localq_dequeue()
+{
+    evthread *t = current_thread(thread_private_key);
+    
+    locallnk *lnk = NULL;
+    locallnk *next = NULL;
+
+    lnk = t->localqueue.link;
+
+    if (lnk == NULL) {
+        return NULL;
+    }
+
+    next = getlnknext(lnk);
+
+    t->localqueue.link = next;
+
+    return lnk;
+    
+}
+
+void thread_localq_init(localq *lq)
+{
+    lq->link = NULL;
+    lq->enqueue = thread_localq_enqueue;
+    lq->dequeue = thread_localq_dequeue;
+}
+
+void thread_event_process(event *e)
+{
+    evthread *t = current_thread(thread_private_key);
+    
+    e->cont->event_handler(e);
+    // todo redo event
+
+    if (e->redo) {
+        t->localqueue.enqueue(e);
+    }
+}
+
+int thread_event_handler_init(evthread *t)
+{
+    t->process_event = thread_event_process;
+}
+
 evthread *make_thread_pool(threadproc exec, int num)
 {
     evthread *t;
@@ -149,18 +262,73 @@ evthread *make_thread_pool(threadproc exec, int num)
         t[i].execute = exec;
         t[i].type = REGULAR;
         
-        eventprocessor_externalq_init(&t[i].externalqueue);
+        thread_externalq_init(&t[i].externalqueue);
+        thread_localq_init(&t[i].localqueue);
+
+        thread_event_handler_init(&t[i]);
+        
     }
     
     return t;
 }
 
-void *make_threads_pool(int type, int num)
+void thread_event_enqueue(void *item)
 {
-    if (type == DEDICATED) {
-        return make_threadrt_pool(threadrt_loop_internal, num);
-    } else if (type == REGULAR) {
-        return make_thread_pool(thread_loop_internal, num);
+    int was_empty;
+
+    event *e = item;
+
+    evthread *thread = e->t;
+
+    was_empty = (atomic_list_push(&thread->externalqueue.al, e) == NULL);
+
+    if (was_empty == false) {
+        //thread_event_wakeup(thread);
+        return;
     }
+    
+    printf("thread is %p, target al is %p, put event: %p\n", thread, &thread->externalqueue.al, e);
+    
+    thread_event_wakeup(thread);
+}
+
+void thread_event_dequeue()
+{
+    event      *e;
+    evthread   *t = current_thread(thread_private_key);
+    externalq  *queue = &t->externalqueue;
+        
+    mutex_acquire(&queue->lock);
+    
+    while (atomic_list_empty(&queue->al)) {
+        //cond_timewait(&queue->might_have_data, &queue->lock, &ts); //todo
+        cond_wait(&queue->might_have_data, &queue->lock);
+    }
+
+    //printf("get event: %p\n", e);
+    
+    mutex_release(&queue->lock);
+
+    t->localqueue.link = (locallnk *)atomic_list_popall(&queue->al);
+
+    //printf("new connection, fd: %d\n", ((netconnection *)e->cont)->ci.fd);   
+}
+
+void thread_externalq_init(externalq *eq)
+{
+    event   e;
+
+    mutex_init(&eq->lock);
+    
+    cond_init(&eq->might_have_data);
+    
+    atomic_list_init(&eq->al, "processor external queue", 
+        (char *)&e.ln.next - (char *)&e);
+    
+    eq->enqueue = thread_event_enqueue;
+
+    eq->dequeueall = thread_event_dequeue;
+    
+    eq->wakeup = thread_event_wakeup;
 }
 

@@ -21,34 +21,25 @@
 
 #include "common.h"
 
-
-enum  {
-    ACCEPTEVENT = 0,
-    NEW_CONNECTION = 0x0001,
-    READ = 0x0002,
-    WRITE = 0x0004,
-    DISKIOEVENT = 0x0008
-};
-
-#define REGULAR_ET  (NEW_CONNECTION | READ | WRITE)
-
 struct evtype {
     type_handler  set; 
 };
 
 typedef struct {
-    //event *prev;
     event *next;
 } evlink;
 
 struct thread_event {
+    evlink        ln;
     int           type;
     int           active;
     int           flag;
+    int           redo;
     evthread     *t;
-    //mutex_t      *mutexlock;
     continuation *cont;
-    evlink        ln;
+    void        (*schedule_imm)(event *e, int eventtype);
 };
+
+inline continuation *event_init(event *e);
 
 #endif

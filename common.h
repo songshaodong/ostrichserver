@@ -60,6 +60,7 @@ enum OS_ERRNO {
 // typedef struct lists
 typedef struct thread evthread;
 typedef struct external_queue   externalq;
+typedef struct localqueue  localq;
 typedef struct thread_event   event;
 typedef struct evtype  evtype;
 typedef struct thread_processor processor;
@@ -70,7 +71,6 @@ typedef struct connection  connection;
 // typedef function lists
 typedef void *(*threadproc)(void *);
 typedef void (*type_handler)();
-typedef int (*evhandler)();
 typedef int (*conthandler)(event *);
 
 #include "hashtable.h"
@@ -86,5 +86,6 @@ typedef int (*conthandler)(event *);
 #include "mutex.h"
 #include "atomiclist.h"
 #include "atomic.h"
+#include "processor.h"
 
 #endif

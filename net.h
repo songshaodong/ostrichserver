@@ -22,6 +22,18 @@
 #include "common.h"
 #include "connection.h"
 
+enum  {
+    INIT_POLL,
+    ACCEPTEVENT,
+    NEW_CONNECTION,
+    WAIT_FOR_READ,
+    READ_DATA,
+    WAIT_FOR_WRITE,
+    WRITE_DATA,
+};
+
+#define EVENT_STARTUP  (NEW_CONNECTION)
+
 typedef struct {
     struct sockaddr  cliaddr;
     socklen_t        cliaddrlen;
@@ -36,6 +48,6 @@ typedef struct {
 
 netconnection *init_connection(int fd, conninfo *ci);
 int netio_init(event *ev);
-
+int netio_pollevent(event *e);
 
 #endif

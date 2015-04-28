@@ -31,16 +31,14 @@ enum EPTRIGGER {
 #define  DEFAULT_EVENTLIST  1024
 
 typedef struct {
+    continuation        cont;
     int                 epfd;
     int                 evsize;
     int                 eflags;
     struct epoll_event *evlist;
 } epbase;
 
-int netevent_create();
-int netevent_init();
-
-int epoll_init(int size);
+epbase *epoll_init(int size);
 int epoll_event_start(event *e, int flag);
 
 #endif

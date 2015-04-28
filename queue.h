@@ -19,6 +19,7 @@
 #ifndef _QUEUE_H_
 #define _QUEUE_H_
 
-void _enqueue(void *data);
+#include "common.h"
+
 
 #endif

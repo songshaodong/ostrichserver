@@ -34,4 +34,12 @@ int netio_init(event *ev)
     assert(ev->type == NEW_CONNECTION);
 
     epoll_event_start(ev, EPOLLIN | EPOLLOUT);
+
+    ev->type = WAIT_FOR_READ;
 }
+
+int netio_pollevent(event *e)
+{
+    //epoll_wait
+}
+

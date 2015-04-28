@@ -62,7 +62,7 @@ int accept_block_loop(continuation *cont)
         
         c->event_handler = netio_init; 
         
-        evprocessor.schedule_imm(c, REGULAR_ET);
+        evprocessor.schedule_imm(c, EVENT_STARTUP);
         
     } while (do_accept_loop);
 }

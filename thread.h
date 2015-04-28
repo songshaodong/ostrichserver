@@ -19,13 +19,37 @@
 #define _THREAD_H_
 
 #include "common.h"
-#include "processor.h"
+#include "mutex.h"
+#include "atomiclist.h"
 
 #define DEFAULT_THREADS  3
 
 #define STACK_SIZE  (4 * 1024)
 #define thread_key_t pthread_key_t 
 #define thread_t     pthread_t
+
+#define locallnk  event  // todo
+#define getlnknext(link) (link->ln.next) //todo 
+
+struct localqueue {
+    locallnk *link;
+    void    (*enqueue)(void *item);
+    void   *(*dequeue)();
+};
+
+struct external_queue {
+    mutex_t       lock;
+    cond_t        might_have_data;
+    atomiclist    al;
+    void        (*enqueue)(void *item);
+    void        (*wakeup)(evthread *evt);
+    void        (*dequeueall)();
+};
+
+enum THREAD_TYPE {
+    REGULAR = 0,
+    DEDICATED
+};
 
 struct thread {
     int             type;
@@ -34,26 +58,14 @@ struct thread {
     void           *eventbase;
     threadproc      execute;
     externalq       externalqueue;
-    evhandler       process_event;
+    localq          localqueue;
+    void          (*process_event)(event *e);
 };
 
 struct thread_runtime {
     event    *static_event;
     evthread  thread;
 };
-
-enum THREAD_TYPE {
-    REGULAR = 0,
-    DEDICATED
-};
-
-/*enum THREAD_TYPE {
-    ACCEPTOR,
-    NET,
-    DISK,
-    LOG
-}; */
-
 
 int thread_create(void *t, int type, int stacksize, int detached);
 evthread *make_thread_pool(threadproc exec, int num);
@@ -62,5 +74,8 @@ void *threadrt_loop_internal(void *data);
 void *thread_loop_internal(void *data);
 void *make_threads_pool(int type, int num);
 evthread *current_thread(thread_key_t key);
+void eventprocessor_init();
+void thread_externalq_init(externalq *eq);
+int thread_event_handler_init();
 
 #endif

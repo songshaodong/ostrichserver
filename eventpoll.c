@@ -25,25 +25,25 @@ extern thread_key_t thread_private_key;
 
 epbase mainepbase;
 
-int epoll_init(int size)
+epbase *epoll_init(int size)
 {
-    epbase *base = get_local_epbase();
+    epbase *base = os_calloc(sizeof(epbase));
 
     base->evsize = size;
     
     base->epfd = epoll_create(size);
     if (base->epfd < 0) {
-        return OS_ERR;
+        return NULL;
     }
     
     base->evlist = os_calloc(sizeof(struct epoll_event) * base->evsize);
     if (base->evlist == NULL) {
-        return OS_ERR;
+        return NULL;
     }
     
     base->eflags |= EPEDGE; // default using edge trigger.
 
-    return OS_OK;
+    return base;
 }
 
 int epoll_event_start(event *e, int flag)
