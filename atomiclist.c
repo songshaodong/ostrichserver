@@ -79,3 +79,29 @@ inline bool atomic_list_empty(atomiclist *al)
 {
     return !((void *)ALPOINTER(al->head));
 }
+
+void *atomic_list_popall(atomiclist *al)
+{
+    head_p temp;
+    head_p next;
+    void  *ret;
+
+    int result = 0;
+
+    do {
+        temp = al->head;
+        
+        if ((void *)ALPOINTER(temp) == NULL) {
+            return NULL;
+        }
+
+        SET_ATOMICLIST_POINTER_VERSION(next, NULL, ALVERSION(temp) + 1);
+
+        result = atomic_cas((int64_t *)&al->head.data, temp.data, next.data);
+        
+    } while (result == 0);
+
+    return (void *)ALPOINTER(temp);
+    
+}
+

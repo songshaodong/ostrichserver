@@ -46,19 +46,28 @@ void *thread_loop_internal(void *data)
     evthread   *rt = data;
     externalq  *queue = &rt->externalqueue;
     atomiclist *l = &queue->al;
-    struct timespec    ts;
+    event      *e;
+    //struct timespec    ts;
 
     pthread_setspecific(thread_private_key, rt);
 
-    ts.tv_sec = 3;
-    ts.tv_nsec = 0;
+    //ts.tv_sec = time(NULL) + 10;
+    //ts.tv_nsec = 0;
 
     printf("thread %p running\n", rt);
     
     while (1) {
+        
+        mutex_acquire(&queue->lock);
+        
         while (atomic_list_empty(l)) {
-            cond_timewait(&queue->might_have_data, &queue->lock, &ts);
+            //cond_timewait(&queue->might_have_data, &queue->lock, &ts);
+            cond_wait(&queue->might_have_data, &queue->lock);
         }
+
+        e = atomic_list_popall(l);
+        
+        mutex_release(&queue->lock);
 
         printf("new connection\n");
     }

@@ -37,9 +37,14 @@ inline void mutex_acquire(mutex_t *mutex)
     pthread_mutex_lock(mutex);
 }
 
-inline void mutex_release(mutex_t *mutex)
+inline void mutex_destory(mutex_t *mutex)
 {
     pthread_mutex_destroy(mutex);
+}
+
+inline void mutex_release(mutex_t *mutex)
+{
+    pthread_mutex_unlock(mutex);
 }
 
 inline void cond_wait(cond_t *cond, mutex_t *m)
@@ -52,6 +57,8 @@ inline int cond_timewait(cond_t *cond, mutex_t *m, struct timespec *t)
     int error;
     
     while (EINTR == (error = pthread_cond_timedwait(cond, m, t)));
+
+    printf("cond timewait timeout, err: %d\n", error);
 
     return error; 
 }

@@ -101,9 +101,12 @@ void eventprocessor_event_enqueue(void *item)
     was_empty = (atomic_list_push(&thread->externalqueue.al, e) == NULL);
 
     if (was_empty == false) {
+        //eventprocessor_thread_wakeup(thread);
         return;
     }
 
+    printf("thread is %p, target al is %p\n", thread, &thread->externalqueue.al);
+    
     eventprocessor_thread_wakeup(thread);
 }
 

@@ -21,7 +21,7 @@
 #include "common.h"
 #include "processor.h"
 
-#define DEFAULT_THREADS  4
+#define DEFAULT_THREADS  3
 
 #define STACK_SIZE  (4 * 1024)
 #define thread_key_t pthread_key_t 

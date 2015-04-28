@@ -90,6 +90,7 @@ typedef struct
 void atomic_list_init(atomiclist *al, char *name, int next_offset);
 void *atomic_list_push(atomiclist *al, void *data);
 void *atomic_list_pop(atomiclist *al);
+void *atomic_list_popall(atomiclist *al);
 bool atomic_list_empty(atomiclist *al);
 
 #endif
