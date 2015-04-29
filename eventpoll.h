@@ -28,7 +28,7 @@ enum EPTRIGGER {
 
 #define  EPREAD     EPOLLIN
 #define  EPWRITE    EPOLLOUT
-#define  EPTIMEOUT          5      // ms
+#define  EPTIMEOUT          1000      // ms
 
 typedef struct {
     int                 epfd;

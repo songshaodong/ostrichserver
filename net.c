@@ -29,15 +29,20 @@ netconnection *init_connection(int fd, conninfo *ci)
     nc = os_calloc(sizeof(netconnection));
     nc->ci = *ci;
     nc->ci.fd = fd;
+    nc->status = EVENT_STARTUP;
 }
 
 int netio_init(event *ev)
 {
-    assert(ev->type == NEW_CONNECTION);
+    netconnection *nc = (netconnection *)ev->cont;
+    
+    assert(nc->status == NEW_CONNECTION);
 
     pollevent_start(ev, poll_init_event());
+
+    printf("register an event, thread:%p, pollfd: %d\n", ev->t, ev->t->eventbase->pollfd);
     
-    ev->type = WAIT_FOR_READ;
+    nc->status = WAIT_FOR_READ;
     
     return OS_OK;
 }
@@ -47,9 +52,15 @@ int netio_pollevent(event *e)
     evthread   *evt = current_thread(thread_private_key);
     pollbase   *ep = (pollbase *)e->cont;
     int         i;
+        
+    ep->result = ep->eventpoll(ep->pollfd, ep->evlist, ep->pesize, 
+        ep->timeout);
 
-    ep->result = ep->eventpoll(ep->pollfd, ep->evlist, ep->pesize, ep->timeout);
-
+    if (ep->result) {
+        printf("get event: %d, thread: %p, pollfd: %d\n", ep->result, evt, 
+            ep->pollfd);
+    }
+        
     return OS_OK;
 }
 

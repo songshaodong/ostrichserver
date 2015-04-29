@@ -28,7 +28,7 @@ struct thread_processor {
 
 typedef struct {
     processor    base;
-    void       (*schedule_imm)(continuation *cont, int eventtype);
+    void       (*schedule)(continuation *cont, int eventtype);
     evthread  *(*assign_thread)();
     void        *eventthread; // todo support other type threads
     int          n_threads;

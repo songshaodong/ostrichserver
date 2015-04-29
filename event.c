@@ -47,6 +47,8 @@ pollbase *pollbase_init(int size)
 
     base->eventpoll = pollevent_handle;
 
+    base->timeout = poll_timeout();
+
     return base;
 
 }

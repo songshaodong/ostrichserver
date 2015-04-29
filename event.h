@@ -32,6 +32,12 @@
 #define   pollevent_handle      epoll_wait
 #define   pollevent_start(e, type)  epoll_event_start(e, type)
 #define   poll_init_event()       (EPOLLIN | EPOLLOUT)
+#define   poll_timeout()          EPTIMEOUT
+
+
+#define  EVENT_IMM   0x00000000
+#define  EVENT_IDLE  0x00000001
+#define  EVENT_REDO  0x00000002
 
 struct evtype {
     type_handler  set; 
@@ -49,7 +55,7 @@ struct thread_event {
     int           redo;
     evthread     *t;
     continuation *cont;
-    void        (*schedule_imm)(event *e, int eventtype);
+    void        (*schedule)(event *e, int eventtype);
 };
 
 typedef struct {

@@ -22,7 +22,7 @@
 
 _eventprocessor  evprocessor;
 
-void event_schedule_imm(continuation *cont, int eventtype)
+void event_schedule(continuation *cont, int eventtype)
 {
     event    *ev;
     evthread *thread;
@@ -60,7 +60,7 @@ void eventprocessor_init(int n_threads)
     int       i;
     evthread *t;
     
-    evprocessor.schedule_imm = event_schedule_imm;
+    evprocessor.schedule = event_schedule;
     
     evprocessor.assign_thread = event_assign_thread;
 
