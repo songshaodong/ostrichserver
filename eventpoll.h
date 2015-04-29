@@ -28,10 +28,9 @@ enum EPTRIGGER {
 
 #define  EPREAD     EPOLLIN
 #define  EPWRITE    EPOLLOUT
-#define  DEFAULT_EVENTLIST  1024
+#define  EPTIMEOUT          5      // ms
 
 typedef struct {
-    continuation        cont;
     int                 epfd;
     int                 evsize;
     int                 eflags;

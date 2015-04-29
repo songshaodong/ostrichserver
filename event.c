@@ -27,3 +27,27 @@ inline continuation *event_init(event *e)
     e->cont = cont;
 }
 
+pollbase *pollbase_init(int size)
+{
+    pollbase *base = os_calloc(sizeof(pollbase));
+
+    base->pesize = size;
+    
+    base->pollfd = pollfd_create(size);
+    if (base->pollfd < 0) {
+        return NULL;
+    }
+    
+    base->evlist = os_calloc(sizeof(pelist) * base->pesize);
+    if (base->evlist == NULL) {
+        return NULL;
+    }
+    
+    //base->eflags |= pe_get_flags(); // default using edge trigger.
+
+    base->eventpoll = pollevent_handle;
+
+    return base;
+
+}
+

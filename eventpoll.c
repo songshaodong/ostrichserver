@@ -51,12 +51,13 @@ int epoll_event_start(event *e, int flag)
     struct epoll_event ev;
     int                op; 
     netconnection     *nc;
+    pollbase          *base;
 
     if (e->active) {
         return OS_OK;
     }
     
-    epbase *base = get_local_epbase();
+    base = get_local_epbase();
 
     os_memset(&ev, 0, sizeof(ev));
     
@@ -67,7 +68,7 @@ int epoll_event_start(event *e, int flag)
 
     nc = (netconnection *)e->cont;
 
-    epoll_ctl(base->epfd, op, nc->ci.fd, &ev);
+    epoll_ctl(base->pollfd, op, nc->ci.fd, &ev);
 
     e->active = 1;
     e->flag = flag;
@@ -81,8 +82,9 @@ int epoll_event_modify(event *e, int flag)
     int                event;
     struct epoll_event ev;
     netconnection     *nc;
+    pollbase          *base;
 
-    epbase *base = get_local_epbase();
+    base = get_local_epbase();
     
     if (!e->active) {
         op = EPOLL_CTL_ADD;
@@ -98,7 +100,7 @@ int epoll_event_modify(event *e, int flag)
 
     nc = (netconnection *)e->cont;
     
-    epoll_ctl(base->epfd, op, nc->ci.fd, &ev);
+    epoll_ctl(base->pollfd, op, nc->ci.fd, &ev);
 
     return OS_OK;
 }

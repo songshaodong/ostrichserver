@@ -16,8 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <thread.h>
+#include "common.h"
+#include "thread.h"
+#include "event.h"
 
 thread_key_t thread_private_key;
 
@@ -74,24 +75,26 @@ void local_schedule_imm(event *e, int eventtype)
 
 void thread_init(evthread *evt)
 {
-    epbase *ep = NULL;
-    event  *e = NULL;
+    pollbase  *pb = NULL;
+    event     *e = NULL;
     
     pthread_setspecific(thread_private_key, evt);
 
-    ep = epoll_init(1);
+    pb = pollbase_init(DEFAULT_EVENTLIST);
 
-    if (ep == NULL) {
+    if (pb == NULL) {
         return;
     }
 
-    evt->eventbase = ep;
+    evt->eventbase = pb;
 
     e = os_calloc(sizeof(event));
 
     e->schedule_imm = local_schedule_imm;
 
-    e->cont = (continuation *)ep;
+    e->cont = (continuation *)pb;
+
+    e->t = evt;
 
     e->schedule_imm(e, INIT_POLL);
 }

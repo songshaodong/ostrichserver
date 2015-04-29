@@ -20,6 +20,8 @@
 #include "net.h"
 #include "eventpoll.h"
 
+extern thread_key_t  thread_private_key;
+
 netconnection *init_connection(int fd, conninfo *ci)
 {
     netconnection *nc;
@@ -33,13 +35,21 @@ int netio_init(event *ev)
 {
     assert(ev->type == NEW_CONNECTION);
 
-    epoll_event_start(ev, EPOLLIN | EPOLLOUT);
-
+    pollevent_start(ev, poll_init_event());
+    
     ev->type = WAIT_FOR_READ;
+    
+    return OS_OK;
 }
 
 int netio_pollevent(event *e)
 {
-    //epoll_wait
+    evthread   *evt = current_thread(thread_private_key);
+    pollbase   *ep = (pollbase *)e->cont;
+    int         i;
+
+    ep->result = ep->eventpoll(ep->pollfd, ep->evlist, ep->pesize, ep->timeout);
+
+    return OS_OK;
 }
 

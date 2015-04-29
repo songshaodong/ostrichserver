@@ -55,7 +55,7 @@ struct thread {
     int             type;
     thread_key_t    private_key;
     thread_t        tid;
-    void           *eventbase;
+    pollbase       *eventbase;
     threadproc      execute;
     externalq       externalqueue;
     localq          localqueue;
