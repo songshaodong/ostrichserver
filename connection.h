@@ -23,7 +23,6 @@
 
 struct connection {
     continuation cont;    
-    mutex_t      mutexlock;
 };
 
 #endif
