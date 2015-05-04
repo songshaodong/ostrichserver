@@ -28,7 +28,6 @@
 
 #define   pollfd_create(size)   epoll_create(size)
 #define   pelist                struct epoll_event
-//#define   pe_get_flags()        EPEDGE
 #define   pollevent_handle      epoll_wait
 #define   pollevent_start(e, type)  epoll_event_start(e, type)
 #define   poll_init_event()       (EPOLLIN | EPOLLOUT)

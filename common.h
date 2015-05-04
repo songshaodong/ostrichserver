@@ -64,7 +64,7 @@ typedef struct localqueue  localq;
 typedef struct thread_event   event;
 typedef struct evtype  evtype;
 typedef struct thread_processor processor;
-typedef struct thread_runtime  threadrt;
+typedef struct thread_dedicated  dedthread;
 typedef struct continuation continuation;
 typedef struct connection  connection;
 

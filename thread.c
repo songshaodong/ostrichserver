@@ -29,9 +29,9 @@ evthread *current_thread(thread_key_t key)
     return pthread_getspecific(key);
 }
 
-void *threadrt_loop_internal(void *data)
+void *dedthread_loop_internal(void *data)
 {
-    threadrt   *rt = data;
+    dedthread   *rt = data;
     evthread   *evt = &rt->thread;
     event      *e = rt->static_event;
 
@@ -85,17 +85,13 @@ void thread_init(evthread *evt)
     e->schedule(e, EVENT_REDO | EVENT_IDLE);
 }
 
-int thread_create(void *thr, int type, int stacksize, int detached)
+int thread_create(void *thr, int stacksize, int detached)
 {
     int       ret;
 
     evthread *t = thr; 
 
     pthread_attr_t attr;
-
-    if (type == DEDICATED) {
-        t = &((threadrt *)thr)->thread;
-    }    
 
     pthread_attr_init(&attr);
   
@@ -115,14 +111,14 @@ int thread_create(void *thr, int type, int stacksize, int detached)
     return OS_OK;
 }
 
-threadrt *make_threadrt_pool(threadproc exec, int num)
+dedthread *make_dedthread_pool(threadproc exec, int num)
 {
-    threadrt *rt;
+    dedthread *rt;
     evthread *t;
     int       i;
     event    *e;
     
-    rt = os_calloc(num * sizeof(threadrt));
+    rt = os_calloc(num * sizeof(dedthread));
     if (rt == NULL) {
         return NULL;
     }
@@ -143,7 +139,7 @@ threadrt *make_threadrt_pool(threadproc exec, int num)
 void *make_threads_pool(int type, int num)
 {
     if (type == DEDICATED) {
-        return make_threadrt_pool(threadrt_loop_internal, num);
+        return make_dedthread_pool(dedthread_loop_internal, num);
     } else if (type == REGULAR) {
         return make_thread_pool(thread_loop_internal, num);
     }

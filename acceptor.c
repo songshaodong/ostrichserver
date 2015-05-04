@@ -73,7 +73,7 @@ int acceptor_init()
     int            i;
     int            listenfd;
     event         *staticevent;
-    threadrt      *rtpool = NULL;
+    dedthread     *rtpool = NULL;
     continuation  *c = NULL;
     tcp_acceptor  *netacceptor;
     netconnection *conn;
@@ -114,7 +114,7 @@ int acceptor_init()
         staticevent->t = &rtpool[i].thread;
         staticevent->type = ACCEPTEVENT;
         
-        thread_create(&rtpool[i], DEDICATED, STACK_SIZE, 1);
+        thread_create(&rtpool[i], STACK_SIZE, 1);
     }
     
 }

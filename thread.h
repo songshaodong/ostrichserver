@@ -63,15 +63,15 @@ struct thread {
     void          (*process_event)(event *e);
 };
 
-struct thread_runtime {
-    event    *static_event;
+struct thread_dedicated {
     evthread  thread;
+    event    *static_event;
 };
 
-int thread_create(void *t, int type, int stacksize, int detached);
+int thread_create(void *t, int stacksize, int detached);
 evthread *make_thread_pool(threadproc exec, int num);
-threadrt *make_threadrt_pool(threadproc exec, int num);
-void *threadrt_loop_internal(void *data);
+dedthread *make_dedthread_pool(threadproc exec, int num);
+void *dedthread_loop_internal(void *data);
 void *thread_loop_internal(void *data);
 void *make_threads_pool(int type, int num);
 evthread *current_thread(thread_key_t key);

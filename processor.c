@@ -71,7 +71,7 @@ void eventprocessor_init(int n_threads)
     evprocessor.next_thread = 0;
 
     for (i = 0; i < n_threads; i++) {
-        thread_create(t + i, REGULAR, STACK_SIZE, 1);
+        thread_create(t + i, STACK_SIZE, 1);
     }
 
     evprocessor.eventthread = t;

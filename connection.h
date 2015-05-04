@@ -22,7 +22,7 @@
 #include "common.h"
 
 struct connection {
-    continuation cont;    
+    continuation cont;
 };
 
 #endif
