@@ -19,9 +19,13 @@
 #ifndef _CONTINUATION_H_
 #define _CONTINUATION_H_
 
+#include "common.h"
+#include "mutex.h"
+
 struct continuation {
-    void         *private_data;
     conthandler   event_handler;
+    void         *private_data;
+    mutex_t      *lock;
 };
 
 #endif
