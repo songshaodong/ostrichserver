@@ -25,7 +25,7 @@ thread_key_t thread_private_key;
 
 extern __thread priority_queue event_priority_queue;
 
-__thread localq localqueue;
+__thread localq postponedqueue;
 __thread localq collectqueue;
 __thread localq timeoutqueue;
 __thread time_t cur_time;
@@ -55,7 +55,7 @@ void local_schedule(event *e, int eventtype)
     evthread *evt = current_thread(thread_private_key);
 
     e->type |= eventtype;
-    localqueue.enqueue(e);
+    postponedqueue.enqueue(e);
 }
 
 int thread_create(void *thr, int stacksize, int detached)
@@ -168,11 +168,11 @@ void localq_enqueue(void *item)
     qlink *lnk = NULL;
     event    *elnk = item;
 
-    lnk = localqueue.link;
+    lnk = postponedqueue.link;
 
     elnk->ln.next  = (event *)lnk;
 
-    localqueue.link = elnk;
+    postponedqueue.link = elnk;
 }
 
 void *localq_dequeue()
@@ -180,7 +180,7 @@ void *localq_dequeue()
     qlink *lnk = NULL;
     qlink *next = NULL;
 
-    lnk = localqueue.link;
+    lnk = postponedqueue.link;
 
     if (lnk == NULL) {
         return NULL;
@@ -188,7 +188,7 @@ void *localq_dequeue()
 
     next = getlnknext(lnk);
 
-    localqueue.link = next;
+    postponedqueue.link = next;
 
     lnk->ln.next = NULL;
 
@@ -202,11 +202,11 @@ void thread_localq_enqueue(void *item)
     qlink *lnk = NULL;
     event    *elnk = item;
 
-    localqueue.link;
+    postponedqueue.link;
 
     elnk->ln.next  = (event *)lnk;
 
-    localqueue.link = elnk;
+    postponedqueue.link = elnk;
 }
 
 void *thread_localq_dequeue()
@@ -216,7 +216,7 @@ void *thread_localq_dequeue()
     qlink *lnk = NULL;
     qlink *next = NULL;
 
-    lnk = localqueue.link;
+    lnk = postponedqueue.link;
 
     if (lnk == NULL) {
         return NULL;
@@ -224,7 +224,7 @@ void *thread_localq_dequeue()
 
     next = getlnknext(lnk);
 
-    localqueue.link = next;
+    postponedqueue.link = next;
 
     lnk->ln.next = NULL;
 
@@ -297,7 +297,7 @@ void thread_event_dequeue()
         e = enext;
     }
     
-    //t->localqueue.link = (qlink *)atomic_list_popall(&queue->al);
+    //t->postponedqueue.link = (qlink *)atomic_list_popall(&queue->al);
 
     //printf("new connection, fd: %d\n", ((netconnection *)e->cont)->ci.fd);   
 }
@@ -359,7 +359,7 @@ void thread_main_event_loop(evthread *t)
         while (e = collectqueue.dequeue()) {
             
             if (e->type & EVENT_IDLE) {
-                localqueue.enqueue(e);
+                postponedqueue.enqueue(e);
                 continue;
             }
 
@@ -379,7 +379,7 @@ void thread_main_event_loop(evthread *t)
         //while (e = collectqueue.dequeue()) {
         //    
         //    if (e->type & EVENT_IDLE) {
-        //        localqueue.enqueue(e);
+        //        postponedqueue.enqueue(e);
         //        continue;
         //    }
         //    
@@ -387,7 +387,7 @@ void thread_main_event_loop(evthread *t)
         //}
 
         // process idle event        
-        while (localevent = localqueue.dequeue()) {
+        while (localevent = postponedqueue.dequeue()) {
             
             localevent->ln.next = NULL;
             
@@ -403,7 +403,7 @@ void thread_init(evthread *evt)
     
     pthread_setspecific(thread_private_key, evt);
 
-    localqueue_init(&localqueue);
+    localqueue_init(&postponedqueue);
     
     collectqueue_init(&collectqueue);
 
@@ -449,7 +449,7 @@ evthread *make_thread_pool(threadproc exec, int num)
         t[i].type = REGULAR;
         
         thread_externalq_init(&t[i].externalqueue);
-        //thread_localq_init(&t[i].localqueue);
+        //thread_localq_init(&t[i].postponedqueue);
 
         thread_event_handler_init(&t[i]);
         

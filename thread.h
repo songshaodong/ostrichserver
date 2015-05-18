@@ -56,7 +56,6 @@ struct thread {
     pollbase       *eventbase;
     threadproc      execute;
     externalq       externalqueue;
-    //localq          localqueue;
     void          (*process_event)(event *e);
 };
 
