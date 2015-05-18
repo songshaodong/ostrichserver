@@ -34,6 +34,8 @@ int main()
 
     eventprocessor_init(DEFAULT_THREADS);
 
+    application_protocol_init("HTTP");
+    
     acceptor_init();
     
     while (1) {

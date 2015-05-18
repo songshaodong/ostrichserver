@@ -23,31 +23,23 @@
 
 #define HAS_128BIT_CAS 1   // todo test 128bit cas support.
 
-/*typedef union
+typedef union
 {
-#if (defined(__i386__) || defined(__arm__)) && (SIZEOF_VOIDP == 4)
-    struct
-    {
+    
+#if (defined(__i386__) && (SIZEOF_VOIDP == 4))
+
+    struct {
       void *pointer;
       int32_t version;
     } s;
     int64_t data;
-#elif HAS_128BIT_CAS
-    struct
-    {
-      void *pointer;
-      int64_t version;
-    } s;
-    __int128_t data;
-#else
+    
+#elif defined(__x86_64__) || defined(__ia64__)
 
     int64_t data;
+
 #endif
-} head_p;
-*/
 
-typedef struct {
-    int64_t data;
 } head_p;
   
 typedef struct
@@ -57,23 +49,24 @@ typedef struct
     uint32_t        offset;
 } atomiclist;
 
+extern inline void __LD64(void *dst, void *src);
 
-/*#if (defined(__i386__) || defined(__arm__)) && (SIZEOF_VOIDP == 4)
+#if defined(__x86_64__) || defined(__ia64__)
+#define _LD64(dst,src) *((uint64_t*)&(dst)) = *((uint64_t*)&(src))
+#else
+#define _LD64(dst,src) (__LD64((void *)&(dst), (void *)&(src)))
+#endif
+
+
+#if (defined(__i386__) || (SIZEOF_VOIDP == 4))
 
 #define ATOMICLIST_POINTER(_x) (_x).s.pointer
 #define ATOMICLIST_VERSION(_x) (_x).s.version
 #define SET_ATOMICLIST_POINTER_VERSION(_x,_p,_v) \
 (_x).s.pointer = _p; (_x).s.version = _v
 
-#elif HAS_128BIT_CAS
-
-#define ATOMICLIST_POINTER(_x) (_x).s.pointer
-#define ATOMICLIST_VERSION(_x) (_x).s.version
-#define SET_ATOMICLIST_POINTER_VERSION(_x,_p,_v) \
-(_x).s.pointer = _p; (_x).s.version = _v
 
 #elif defined(__x86_64__) || defined(__ia64__)
-*/
 
 #define ALPOINTER(_x) ((void*)(((((intptr_t)(_x).data)<<16)>>16) | \
  (((~((((intptr_t)(_x).data)<<16>>63)-1))>>48)<<48)))
@@ -81,11 +74,11 @@ typedef struct
 #define SET_ATOMICLIST_POINTER_VERSION(_x,_p,_v) \
   (_x).data = ((((intptr_t)(_p))&0x0000FFFFFFFFFFFFULL) | (((_v)&0xFFFFULL) << 48))
   
-//#else
+#else
 
-//#error "unsupported processor"
+#error "unsupported processor"
 
-//#endif
+#endif
 
 void atomic_list_init(atomiclist *al, char *name, int next_offset);
 void *atomic_list_push(atomiclist *al, void *data);

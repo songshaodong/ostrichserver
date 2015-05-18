@@ -29,6 +29,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <sys/epoll.h>
+#include <sys/time.h>
 #include <string.h>
 #include <stdint.h>
 #include <ctype.h>

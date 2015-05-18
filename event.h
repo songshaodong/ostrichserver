@@ -22,6 +22,7 @@
 #include "common.h"
 #include "eventpoll.h"
 #include "continuation.h"
+#include "event.h"
 
 
 #define  DEFAULT_EVENTLIST  32768
@@ -38,6 +39,11 @@
 #define  EVENT_IDLE  0x00000001
 #define  EVENT_REDO  0x00000002
 
+
+#define qlink  event  // todo
+#define getlnknext(link) (link->ln.next) //todo 
+
+
 struct evtype {
     type_handler  set; 
 };
@@ -52,6 +58,7 @@ struct thread_event {
     int           active;
     int           flag;
     int           redo;
+    time_t       timeout;
     evthread     *t;
     continuation *cont;
     void        (*schedule)(event *e, int eventtype);

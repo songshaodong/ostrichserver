@@ -22,18 +22,15 @@
 #include "mutex.h"
 #include "atomiclist.h"
 
-#define DEFAULT_THREADS  3
+#define DEFAULT_THREADS  1
 
 #define STACK_SIZE  (4 * 1024)
 #define thread_key_t pthread_key_t 
 #define thread_t     pthread_t
 
-#define locallnk  event  // todo
-#define getlnknext(link) (link->ln.next) //todo 
-
 struct localqueue {
-    locallnk *link;
-    //locallnk *rear;
+    qlink *link;
+    //qlink *rear;
     void    (*enqueue)(void *item);
     void   *(*dequeue)();
 };
@@ -59,7 +56,7 @@ struct thread {
     pollbase       *eventbase;
     threadproc      execute;
     externalq       externalqueue;
-    localq          localqueue;
+    //localq          localqueue;
     void          (*process_event)(event *e);
 };
 

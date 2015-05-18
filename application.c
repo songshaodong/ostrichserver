@@ -15,25 +15,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef _QUEUE_H_
-#define _QUEUE_H_
-
 #include "common.h"
-#include "event.h"
+#include "appliction.h"
+#include "http.h"
 
-// <5ms, 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120
-#define N_PQ_LIST        10
-#define IDX_TIME(t) (5 << t)
-
-typedef struct {
-    int      last_check_index;
-    int      last_check_time;
-    event  **buckets[N_PQ_LIST]; 
-} priority_queue;
-
-inline void priority_queue_init();
-void priority_enqueue(event *e, time_t now);
-void priority_queue_check(priority_queue *queue, time_t now);
-
-#endif
+void application_protocol_init(char *p)
+{
+    if (!strcmp(p, "HTTP")) {
+        http_init();
+    } else {
+        
+    }
+}

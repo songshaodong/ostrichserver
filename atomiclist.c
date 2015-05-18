@@ -18,6 +18,18 @@
 
 #include "common.h"
 
+inline void __LD64(void *dst, void *src)
+{
+#if (defined(__i386__) || (SIZEOF_VOIDP == 4))                      
+      volatile int32_t src_version = (*(head_p *) src).s.version;     
+      void *src_pointer = (*(head_p *) src).s.pointer;                
+      (*(head_p *) dst).s.version = src_version;                      
+      (*(head_p *) dst).s.pointer = src_pointer;                      
+#else                                                               
+     *(void**)dst = *(void**)src;                                     
+#endif 
+}
+
 void atomic_list_init(atomiclist *al, char *name, int next_offset)
 {
     al->name = name;
@@ -34,7 +46,7 @@ void *atomic_list_push(atomiclist *al, void *data)
     int             result = 0;
 
     do {
-        head = al->head;
+        _LD64(head, al->head);
         h = ALPOINTER(head);
         *addroffset = h;
         SET_ATOMICLIST_POINTER_VERSION(temp, data, ALVERSION(head));
