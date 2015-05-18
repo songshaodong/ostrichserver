@@ -26,7 +26,7 @@ thread_key_t thread_private_key;
 extern __thread priority_queue event_priority_queue;
 
 __thread localq localqueue;
-__thread localq tempqueue;
+__thread localq collectqueue;
 __thread localq timeoutqueue;
 __thread time_t cur_time;
 
@@ -131,24 +131,24 @@ inline void thread_event_wakeup(evthread *thr)
     mutex_release(&queue->lock);
 }
 
-void localtq_enqueue(void *item)
+void collectqueue_enqueue(void *item)
 {
     qlink *lnk = NULL;
     event    *elnk = item;
 
-    lnk = tempqueue.link;
+    lnk = collectqueue.link;
 
     elnk->ln.next  = (event *)lnk;
 
-    tempqueue.link = elnk;
+    collectqueue.link = elnk;
 }
 
-void *localtq_dequeue()
+void *collectqueue_dequeue()
 {
     qlink *lnk = NULL;
     qlink *next = NULL;
 
-    lnk = tempqueue.link;
+    lnk = collectqueue.link;
 
     if (lnk == NULL) {
         return NULL;
@@ -156,7 +156,7 @@ void *localtq_dequeue()
 
     next = getlnknext(lnk);
 
-    tempqueue.link = next;
+    collectqueue.link = next;
 
     lnk->ln.next = NULL;
 
@@ -240,7 +240,7 @@ void thread_event_process(event *e)
     // todo redo event
 
     if (e->redo) {
-        tempqueue.enqueue(e);
+        collectqueue.enqueue(e);
     }
 }
 
@@ -292,8 +292,8 @@ void thread_event_dequeue()
     while (e) {
         enext = getlnknext(e);
         e->ln.next = NULL;
-        localtq_enqueue((void *)e);
-        //tempqueue.enqueue(e);
+        collectqueue_enqueue((void *)e);
+        //collectqueue.enqueue(e);
         e = enext;
     }
     
@@ -327,11 +327,11 @@ void localqueue_init(localq *lq)
     lq->dequeue = localq_dequeue;
 }
 
-void localtq_init(localq *lq)
+void collectqueue_init(localq *lq)
 {
     lq->link = NULL;
-    lq->enqueue = localtq_enqueue;
-    lq->dequeue = localtq_dequeue;
+    lq->enqueue = collectqueue_enqueue;
+    lq->dequeue = collectqueue_dequeue;
 }
 
 void thread_localq_init(localq *lq)
@@ -356,7 +356,7 @@ void thread_main_event_loop(evthread *t)
         // local event have priority
         cur_time = get_current_time();
        
-        while (e = tempqueue.dequeue()) {
+        while (e = collectqueue.dequeue()) {
             
             if (e->type & EVENT_IDLE) {
                 localqueue.enqueue(e);
@@ -376,7 +376,7 @@ void thread_main_event_loop(evthread *t)
         }
 
         // new external event        
-        //while (e = tempqueue.dequeue()) {
+        //while (e = collectqueue.dequeue()) {
         //    
         //    if (e->type & EVENT_IDLE) {
         //        localqueue.enqueue(e);
@@ -405,7 +405,7 @@ void thread_init(evthread *evt)
 
     localqueue_init(&localqueue);
     
-    localtq_init(&tempqueue);
+    collectqueue_init(&collectqueue);
 
     priority_queue_init(&event_priority_queue);
 
