@@ -27,13 +27,12 @@ inline void priority_queue_init(priority_queue *pq)
     pq->last_check_index = 0;
     pq->last_check_time = 0;
     
-    memset(&pq->buckets, 0, sizeof(void) * N_PQ_LIST);
+    memset(&pq->buckets, 0, sizeof(void *) * N_PQ_LIST);
 }
 
-
 void priority_enqueue(event *e, time_t now)
-{
-    time_t   t = e->timeout - now;
+{
+    time_t    t = e->timeout - now;
     int       i = 0;
     event    *head;
     
@@ -77,10 +76,10 @@ void priority_enqueue(event *e, time_t now)
       }
     }
 
-    head = event_priority_queue.buckets[i];
+    head = (event *)event_priority_queue.buckets[i];
     if (head) {
-        getlnknext(e) = head;
-        event_priority_queue.buckets[i]->ln.next = e;
+        getlnknext(e) = head;
+        ((event *)event_priority_queue.buckets[i])->ln.next = e;
     } else {
         event_priority_queue.buckets[i] = e;
     }
@@ -126,8 +125,8 @@ void priority_queue_check(priority_queue *queue, time_t now)
 
             head = event_priority_queue.buckets[j];
             if (head) {
-                getlnknext(e)= head;
-                event_priority_queue.buckets[j]->ln.next = e;
+                getlnknext(e)= head;
+                ((event *)event_priority_queue.buckets[i])->ln.next = e;
             } else {
                 event_priority_queue.buckets[j] = e;
             }
@@ -136,3 +135,4 @@ void priority_queue_check(priority_queue *queue, time_t now)
         }
     }
 }
+

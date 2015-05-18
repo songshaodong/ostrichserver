@@ -18,6 +18,7 @@
 
 #include "common.h"
 #include "config.h"
+#include "application.h"
 
 extern hashtable *config_record_hashtable;
 extern thread_key_t thread_private_key;

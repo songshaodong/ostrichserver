@@ -68,6 +68,7 @@ typedef struct thread_processor processor;
 typedef struct thread_dedicated  dedthread;
 typedef struct continuation continuation;
 typedef struct connection  connection;
+typedef struct event_list  evlink;
 
 // typedef function lists
 typedef void *(*threadproc)(void *);

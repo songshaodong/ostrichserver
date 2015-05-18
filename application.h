@@ -1,3 +1,4 @@
+
 /* 
    Copyright (c) 2014-2015 ostrichserver
 
@@ -15,15 +16,11 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "common.h"
-#include "application.h"
-#include "http.h"
+#ifndef  _APPLICATION_H_
+#define  _APPLICATION_H_
 
-void application_protocol_init(char *p)
-{
-    if (!strcmp(p, "HTTP")) {
-        http_init();
-    } else {
-        
-    }
-}
+#include "common.h"
+
+void application_protocol_init(char *p);
+
+#endif

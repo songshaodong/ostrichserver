@@ -19,6 +19,7 @@
 #include "common.h"
 #include "thread.h"
 #include "event.h"
+#include "timer.h"
 
 thread_key_t thread_private_key;
 
@@ -292,7 +293,7 @@ void thread_event_dequeue()
         enext = getlnknext(e);
         e->ln.next = NULL;
         localtq_enqueue((void *)e);
-        localqueue.enqueue(e);
+        tempqueue.enqueue(e);
         e = enext;
     }
     
@@ -354,14 +355,11 @@ void thread_main_event_loop(evthread *t)
 
         // local event have priority
         cur_time = get_current_time();
-        
-        e = tempqueue.dequeue();
-        
-        while (e) {
+       
+        while (e = tempqueue.dequeue()) {
             
             if (e->type & EVENT_IDLE) {
                 localqueue.enqueue(e);
-                e = tempqueue.dequeue();
                 continue;
             }
 
@@ -371,40 +369,29 @@ void thread_main_event_loop(evthread *t)
             }
             
             t->process_event(e);
-            
-            e = tempqueue.dequeue();
         }
         
         if (!atomic_list_empty(&queue->al)) {
             queue->dequeueall();
         }
 
-        // new external event
-        e = tempqueue.dequeue();
-        
-        while (e) {
+        // new external event        
+        while (e = tempqueue.dequeue()) {
             
             if (e->type & EVENT_IDLE) {
                 localqueue.enqueue(e);
-                e = tempqueue.dequeue();
                 continue;
             }
             
             t->process_event(e);
-            
-            e = tempqueue.dequeue();
         }
 
-        // process idle event
-        localevent = localqueue.dequeue();
-        
-        while (localevent) {
+        // process idle event        
+        while (localevent = localqueue.dequeue()) {
             
             localevent->ln.next = NULL;
             
             t->process_event(localevent);
-            
-            localevent = localqueue.dequeue();
         }
     }
 }
@@ -462,6 +449,7 @@ evthread *make_thread_pool(threadproc exec, int num)
         t[i].type = REGULAR;
         
         thread_externalq_init(&t[i].externalqueue);
+        //thread_localq_init(&t[i].localqueue);
 
         thread_event_handler_init(&t[i]);
         
@@ -482,3 +470,4 @@ void *thread_loop_internal(void *data)
     
     return NULL; 
 }
+

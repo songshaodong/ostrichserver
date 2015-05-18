@@ -20,7 +20,6 @@
 #define _QUEUE_H_
 
 #include "common.h"
-#include "event.h"
 
 // <5ms, 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120
 #define N_PQ_LIST        10
@@ -29,7 +28,7 @@
 typedef struct {
     int      last_check_index;
     int      last_check_time;
-    event  **buckets[N_PQ_LIST]; 
+    void    *buckets[N_PQ_LIST]; 
 } priority_queue;
 
 inline void priority_queue_init();

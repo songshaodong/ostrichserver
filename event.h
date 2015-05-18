@@ -48,9 +48,9 @@ struct evtype {
     type_handler  set; 
 };
 
-typedef struct {
+struct event_list {
     event *next;
-} evlink;
+};
 
 struct thread_event {
     evlink        ln;
