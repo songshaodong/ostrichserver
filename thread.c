@@ -240,7 +240,7 @@ void thread_event_process(event *e)
     // todo redo event
 
     if (e->redo) {
-        localqueue.enqueue(e);
+        tempqueue.enqueue(e);
     }
 }
 
@@ -293,7 +293,7 @@ void thread_event_dequeue()
         enext = getlnknext(e);
         e->ln.next = NULL;
         localtq_enqueue((void *)e);
-        tempqueue.enqueue(e);
+        //tempqueue.enqueue(e);
         e = enext;
     }
     
@@ -376,15 +376,15 @@ void thread_main_event_loop(evthread *t)
         }
 
         // new external event        
-        while (e = tempqueue.dequeue()) {
-            
-            if (e->type & EVENT_IDLE) {
-                localqueue.enqueue(e);
-                continue;
-            }
-            
-            t->process_event(e);
-        }
+        //while (e = tempqueue.dequeue()) {
+        //    
+        //    if (e->type & EVENT_IDLE) {
+        //        localqueue.enqueue(e);
+        //        continue;
+        //    }
+        //    
+        //    t->process_event(e);
+        //}
 
         // process idle event        
         while (localevent = localqueue.dequeue()) {
