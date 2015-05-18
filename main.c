@@ -26,8 +26,8 @@ extern thread_key_t thread_private_key;
 int main()
 {
     int          result = 0;
-    record      *rec;
     int          listenfd = 0;
+    record      *rec;
 
     pthread_key_create(&thread_private_key, NULL);
     
