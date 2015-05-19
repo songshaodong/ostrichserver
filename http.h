@@ -19,52 +19,43 @@
 #ifndef _HTTP_H_
 #define _HTTP_H_
 
-typedef struct {
-    char                  *name;
-    uint32_t               offset;
-    int                  (*header_handler)(uint32_t offset);
-} http_header_t;
+#define   MAX_HEADERS  512
 
 typedef struct {
-} header_p;
 
-/*typedef struct {
-    ngx_list_t                 headers;
+} http_request_headers_out;
 
-    header_p                  *host;
-    header_p                  *connection;
-    header_p                  *if_modified_since;
-    header_p                  *if_unmodified_since;
-    header_p                  *if_match;
-    header_p                  *if_none_match;
-    header_p                  *user_agent;
-    header_p                  *referer;
-    header_p                  *content_length;
-    header_p                  *content_type;
+typedef struct header_callback headercb;
 
-    header_p                  *range;
-    header_p                  *if_range;
-
-    header_p                  *transfer_encoding;
-    header_p                  *expect;
-    header_p                  *upgrade;
-
-    header_p                  *authorization;
-
-    header_p                  *keep_alive;
-
-
-    header_p                  *accept;
-    header_p                  *accept_language;
-
-    char                      *server;
-    off_t                      content_length_n;
-    time_t                     keep_alive_n;
-} http_request_headers;
+struct header_callback {
+     int           (*handler)(uint32_t offset);
+     headercb       *next;
+}; 
 
 typedef struct {
-} http_response_headers;
-*/
+    int         hash;
+    int         metaidx;
+    stringkv    headerkv;
+    headercb    callback;
+} http_header;
+
+typedef struct {
+    http_header          *host;
+} http_request_headers_in;
+
+typedef struct {
+    string                    uri;
+    http_request_headers_in   headersin;
+    http_request_headers_out  headersout;
+} http_request;
+
+typedef struct {
+    char                *name;
+    uint32_t             offset;
+    int                (*header_parser)(http_request *r, http_header *h, uint32_t offset);
+} http_header_meta;
+
 void http_init();
+int http_process_unique_header_line(http_request *r, http_header *h, uint32_t offset);
 
 #endif

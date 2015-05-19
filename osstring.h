@@ -21,6 +21,18 @@
 
 #include "common.h"
 
+#define null_string   { 0, NULL }
+
+typedef struct {
+    char *data;
+    int   size;
+} string;
+
+typedef struct {
+    string   name;
+    string   value;
+} stringkv;
+
 char *os_strdup(char *str);
 char *os_strndup(char *str, size_t n);
 ssize_t os_natoi(char *line, size_t n);

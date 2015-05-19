@@ -38,6 +38,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <time.h>
+#include <stddef.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
