@@ -55,6 +55,12 @@ void local_schedule(event *e, int eventtype)
     evthread *evt = current_thread(thread_private_key);
 
     e->type |= eventtype;
+    
+    if (e->timeout > 0) {
+        //event_priority_queue.enqueue(e, );
+        return;
+    }
+    
     postponedqueue.enqueue(e);
 }
 
@@ -292,7 +298,7 @@ void thread_event_dequeue()
     while (e) {
         enext = getlnknext(e);
         e->ln.next = NULL;
-        collectqueue_enqueue((void *)e);
+        collectqueue.enqueue((void *)e);
         //collectqueue.enqueue(e);
         e = enext;
     }
@@ -364,7 +370,7 @@ void thread_main_event_loop(evthread *t)
             }
 
             if (e->timeout > 0) {
-                priority_enqueue(e, cur_time);
+                event_priority_enqueue(e, cur_time);
                 continue;
             }
             
@@ -374,17 +380,6 @@ void thread_main_event_loop(evthread *t)
         if (!atomic_list_empty(&queue->al)) {
             queue->dequeueall();
         }
-
-        // new external event        
-        //while (e = collectqueue.dequeue()) {
-        //    
-        //    if (e->type & EVENT_IDLE) {
-        //        postponedqueue.enqueue(e);
-        //        continue;
-        //    }
-        //    
-        //    t->process_event(e);
-        //}
 
         // process idle event        
         while (localevent = postponedqueue.dequeue()) {

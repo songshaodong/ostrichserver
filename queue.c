@@ -30,7 +30,7 @@ inline void priority_queue_init(priority_queue *pq)
     memset(&pq->buckets, 0, sizeof(void *) * N_PQ_LIST);
 }
 
-void priority_enqueue(event *e, time_t now)
+void event_priority_enqueue(event *e, time_t now)
 {
     time_t    t = e->timeout - now;
     int       i = 0;
