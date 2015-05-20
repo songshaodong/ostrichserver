@@ -39,6 +39,7 @@
 #include <netinet/in.h>
 #include <time.h>
 #include <stddef.h>
+#include <signal.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)

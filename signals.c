@@ -19,7 +19,70 @@
 #include "common.h"
 #include "signals.h"
 
+
+extern int workerid;
+extern int workerstatus;
+
+void sig_term(int signum)
+{
+    pid_t   pid = 0;
+    int     status = 0;
+    
+    killpg(0, signum);
+
+    for (;;) {
+        pid = waitpid(-1, &status, WNOHANG);
+        if (pid <= 0) {
+            break;
+        }
+
+        workerid = pid;
+        workerstatus = status;
+    }
+
+    exit(0);
+}
+
+void sig_child(int signum)
+{
+    pid_t pid = 0;
+    int   status = 0;
+
+    for (;;) {
+        pid = waitpid(-1, &status, WNOHANG);
+        if (pid <= 0) {
+            break;
+        }
+
+        workerid = pid;
+        workerstatus = status;
+    }
+}
+
 int init_signals()
 {
+    struct sigaction action;
+
+    action.sa_handler = sig_term;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+
+    sigaction(SIGTERM, &action, NULL);
+    sigaction(SIGINT, &action, NULL);
+
+    action.sa_handler = sig_child;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+
+    sigaction(SIGCHLD, &action, NULL);
+
+    action.sa_handler = SIG_IGN;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+
+    sigaction(SIGPIPE, &action, NULL);
+    sigaction(SIGSYS, &action, NULL);
+
+    return OS_OK;
 }
 

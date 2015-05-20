@@ -24,6 +24,9 @@
 extern hashtable *config_record_hashtable;
 extern thread_key_t thread_private_key;
 
+int  workerid;
+int  workerstatus;
+
 int main()
 {
     int          result = 0;

@@ -20,5 +20,7 @@
 #define _SIGNALS_H_
 
 int init_signals();
+void sig_term(int signum);
+void sig_child(int signum);
 
 #endif
