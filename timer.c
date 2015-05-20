@@ -19,11 +19,19 @@
 #include "common.h"
 #include "timer.h"
 
-time_t get_current_time()
+// return microseconds
+hrtime_t get_current_time()
 {
-    struct timeval tv;
+    //struct timeval tv;
     
-    gettimeofday(&tv, NULL);
+    //gettimeofday(&tv, NULL);
     
-    return (tv.tv_sec * 1000 * 1000 * 1000 + tv.tv_usec * 1000);
+    //return (tv.tv_sec * 1000 * 1000  + tv.tv_usec);
+
+    hrtime_t tm;
+
+    clock_gettime(CLOCK_REALTIME, &tm);
+
+    return tm;
 }
+

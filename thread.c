@@ -28,7 +28,7 @@ extern __thread priority_queue event_priority_queue;
 __thread localq postponedqueue;
 __thread localq collectqueue;
 __thread localq timeoutqueue;
-__thread time_t cur_time;
+__thread hrtime_t cur_time;
 
 evthread *current_thread(thread_key_t key)
 {
@@ -285,8 +285,8 @@ void thread_event_dequeue()
     mutex_acquire(&queue->lock);
     
     while (atomic_list_empty(&queue->al)) {
-        //cond_timewait(&queue->might_have_data, &queue->lock, &ts); //todo
-        cond_wait(&queue->might_have_data, &queue->lock);
+        cond_timewait(&queue->might_have_data, &queue->lock, &cur_time);
+        //cond_wait(&queue->might_have_data, &queue->lock);
     }
 
     //printf("get event: %p\n", e);
@@ -299,7 +299,6 @@ void thread_event_dequeue()
         enext = getlnknext(e);
         e->ln.next = NULL;
         collectqueue.enqueue((void *)e);
-        //collectqueue.enqueue(e);
         e = enext;
     }
     
@@ -354,6 +353,7 @@ void thread_main_event_loop(evthread *t)
     localq      lq;
     event      *localevent;
     event      *next;
+    int64_t     msec;
 
     printf("thread %p running\n", t);
     
@@ -361,7 +361,7 @@ void thread_main_event_loop(evthread *t)
 
         // local event have priority
         cur_time = get_current_time();
-       
+        msec = get_msec_time(cur_time);
         while (e = collectqueue.dequeue()) {
             
             if (e->type & EVENT_IDLE) {
@@ -370,7 +370,7 @@ void thread_main_event_loop(evthread *t)
             }
 
             if (e->timeout > 0) {
-                event_priority_enqueue(e, cur_time);
+                event_priority_enqueue(e, msec);
                 continue;
             }
             
@@ -388,6 +388,11 @@ void thread_main_event_loop(evthread *t)
             
             t->process_event(localevent);
         }
+        
+        priority_queue_check(&event_priority_queue, msec);
+
+        priority_queue_process_ready(&event_priority_queue, msec);
+        
     }
 }
 

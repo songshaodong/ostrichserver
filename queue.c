@@ -21,6 +21,7 @@
 #include "event.h"
 
 __thread priority_queue event_priority_queue;
+extern thread_key_t thread_private_key;
 
 inline void priority_queue_init(priority_queue *pq)
 {
@@ -30,7 +31,7 @@ inline void priority_queue_init(priority_queue *pq)
     memset(&pq->buckets, 0, sizeof(void *) * N_PQ_LIST);
 }
 
-void event_priority_enqueue(event *e, time_t now)
+void event_priority_enqueue(event *e, int64_t now)
 {
     time_t    t = e->timeout - now;
     int       i = 0;
@@ -85,7 +86,7 @@ void event_priority_enqueue(event *e, time_t now)
     }
 }
 
-void priority_queue_check(priority_queue *queue, time_t now)
+void priority_queue_check(priority_queue *queue, int64_t now)
 {
     (void) queue;
     
@@ -136,3 +137,18 @@ void priority_queue_check(priority_queue *queue, time_t now)
     }
 }
 
+inline void priority_queue_process_ready(priority_queue *queue, int64_t  now)
+{
+    (void) queue;
+    
+    event    *e = NULL;
+    event    *head = (event *)event_priority_queue.buckets[0];
+    evthread *t = current_thread(thread_private_key);
+
+    e = head;
+    
+    while (e) {
+        e = getlnknext(e);
+        t->process_event(e);
+    }
+}

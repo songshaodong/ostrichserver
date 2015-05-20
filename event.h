@@ -58,7 +58,7 @@ struct thread_event {
     int           active;
     int           flag;
     int           redo;
-    time_t        timeout;
+    int64_t       timeout;
     evthread     *t;
     continuation *cont;
     void        (*schedule)(event *e, int eventtype);

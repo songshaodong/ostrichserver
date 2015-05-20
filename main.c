@@ -19,6 +19,7 @@
 #include "common.h"
 #include "config.h"
 #include "application.h"
+#include "signals.h"
 
 extern hashtable *config_record_hashtable;
 extern thread_key_t thread_private_key;
@@ -26,10 +27,12 @@ extern thread_key_t thread_private_key;
 int main()
 {
     int          result = 0;
-    int          listenfd = 0;
     record      *rec;
+    int          listenfd = 0;
 
     pthread_key_create(&thread_private_key, NULL);
+
+    init_signals();
     
     result = config_parse_file("record.config");
 

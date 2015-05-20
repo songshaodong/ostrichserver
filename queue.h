@@ -32,7 +32,8 @@ typedef struct {
 } priority_queue;
 
 inline void priority_queue_init();
-void event_priority_enqueue(event *e, time_t now);
-void priority_queue_check(priority_queue *queue, time_t now);
+void event_priority_enqueue(event *e, int64_t now);
+void priority_queue_check(priority_queue *queue, int64_t now);
+inline void priority_queue_process_ready(priority_queue *queue, int64_t  now);
 
 #endif
