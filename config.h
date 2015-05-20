@@ -38,8 +38,6 @@ typedef struct {
     char       *name;
 } record;
 
-extern hashtable *config_record_hashtable;
-
 inline record *get_config_record(char *str);
 
 int config_hashtable_init();

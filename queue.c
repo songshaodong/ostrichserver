@@ -21,7 +21,6 @@
 #include "event.h"
 
 __thread priority_queue event_priority_queue;
-extern thread_key_t thread_private_key;
 
 inline void priority_queue_init(priority_queue *pq)
 {

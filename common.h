@@ -92,4 +92,14 @@ typedef int (*conthandler)(event *);
 #include "atomic.h"
 #include "processor.h"
 
+extern _eventprocessor evprocessor;
+extern hashtable *config_record_hashtable;
+extern thread_key_t thread_private_key;
+extern __thread priority_queue event_priority_queue;
+extern int workerid;
+extern int workerstatus;
+extern int masterid;
+
+int os_daemon();
+
 #endif

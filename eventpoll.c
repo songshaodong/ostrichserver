@@ -19,8 +19,6 @@
 #include "common.h"
 #include "eventpoll.h"
 
-extern thread_key_t thread_private_key;
-
 #define get_local_epbase() (((evthread *)current_thread(thread_private_key))->eventbase)
 
 epbase mainepbase;

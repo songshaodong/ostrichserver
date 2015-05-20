@@ -19,10 +19,6 @@
 #include "common.h"
 #include "signals.h"
 
-
-extern int workerid;
-extern int workerstatus;
-
 void sig_term(int signum)
 {
     pid_t   pid = 0;

@@ -20,8 +20,6 @@
 #include "net.h"
 #include "eventpoll.h"
 
-extern thread_key_t  thread_private_key;
-
 netconnection *init_connection(int fd, conninfo *ci)
 {
     netconnection *nc;

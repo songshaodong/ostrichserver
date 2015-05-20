@@ -21,11 +21,9 @@
 #include "application.h"
 #include "signals.h"
 
-extern hashtable *config_record_hashtable;
-extern thread_key_t thread_private_key;
-
 int  workerid;
 int  workerstatus;
+int  masterid;
 
 int main()
 {
@@ -36,6 +34,8 @@ int main()
     pthread_key_create(&thread_private_key, NULL);
 
     init_signals();
+
+    os_daemon();
     
     result = config_parse_file("record.config");
 

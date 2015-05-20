@@ -23,8 +23,6 @@
 
 thread_key_t thread_private_key;
 
-extern __thread priority_queue event_priority_queue;
-
 __thread localq postponedqueue;
 __thread localq collectqueue;
 __thread localq timeoutqueue;
