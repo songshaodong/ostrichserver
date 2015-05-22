@@ -55,14 +55,14 @@ int os_parse_options(int argc, char **argv)
                 case 'V':
                     show_version = 1;
                     break;
-                case 'q':
-                    quiet = 1;
-                    break;
-                case 'r':
-                    reconfig = 1;
-                    break;
-                case 's':
-                    restart = 1;
+                //case 'q':
+                //    quiet = 1;
+                //    break;
+                //case 'r':
+                //    reconfig = 1;
+                //    break;
+                //case 's':
+                //    restart = 1;
                 case 't':
                     isdaemon = 0;
                     break;
@@ -98,13 +98,13 @@ int os_worker_start()
     acceptor_init();
 
     for (;;) {
-        event_notify_wait(); // todo process errno
+        //event_notify_wait(); // todo process errno
     }
 }
 
 int main(int argc, char **argv)
 {
-
+    sigset_t  set;
     pthread_key_create(&thread_private_key, NULL);
 
     init_signals();
@@ -117,10 +117,27 @@ int main(int argc, char **argv)
 
     // todo some other things
 
+    sigemptyset(&set);
+    sigaddset(&set, SIGCHLD);
+    sigaddset(&set, SIGTERM);
+    sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGPIPE);
+    sigaddset(&set, SIGSYS);
+    sigaddset(&set, SIGUSR1);
+    sigaddset(&set, SIGUSR2);
+
+    sigprocmask(SIG_BLOCK, &set, NULL);
+
+    sigemptyset(&set);
+
+    
     os_worker_start();
     
-    while (1) {
-        sleep(1);
+    for (;;) {
+        sigsuspend(&set);
+        //if (reconfig) {
+        //    event_notify_signal();
+        //}
     }
     
     return 0;

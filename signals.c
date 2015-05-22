@@ -55,6 +55,17 @@ void sig_child(int signum)
     }
 }
 
+
+void sig_reconfig(int signum)
+{
+    reconfig = 1;
+}
+
+void sig_restart(int signum)
+{
+    restart = 1;
+}
+
 int init_signals()
 {
     struct sigaction action;
@@ -79,6 +90,17 @@ int init_signals()
     sigaction(SIGPIPE, &action, NULL);
     sigaction(SIGSYS, &action, NULL);
 
+    action.sa_handler = sig_reconfig;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    sigaction(SIGUSR1, &action, NULL);
+
+    action.sa_handler = sig_restart;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    sigaction(SIGUSR2, &action, NULL);
+
     return OS_OK;
 }
+
 

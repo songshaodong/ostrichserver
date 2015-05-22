@@ -22,6 +22,14 @@
 int event_fd;
 int notify_epfd;
 
+int event_notify_signal_reconfig()
+{
+}
+
+int event_notify_signal_restart()
+{
+}
+
 int event_notify_init()
 {
     struct epoll_event ev;

@@ -100,6 +100,9 @@ extern __thread priority_queue event_priority_queue;
 extern int workerid;
 extern int workerstatus;
 extern int masterid;
+extern int quiet;
+extern int reconfig;
+extern int restart;
 
 int os_daemon();
 
