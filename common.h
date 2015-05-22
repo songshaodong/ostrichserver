@@ -103,6 +103,7 @@ extern int masterid;
 extern int quiet;
 extern int reconfig;
 extern int restart;
+extern int cf_daemon;
 
 int os_daemon();
 

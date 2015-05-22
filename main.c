@@ -30,8 +30,15 @@ int show_help;
 int quiet;
 int reconfig;
 int restart;
-int isdaemon = 0;
-int event_fd = -1;
+int cf_daemon = 1;
+
+char  *old_argv_last;
+char **old_argv;
+char **new_argv;
+extern char **environ;
+
+char *master_title = "server manager";
+char *worker_title = "worker";
 
 int os_parse_options(int argc, char **argv)
 {
@@ -64,7 +71,7 @@ int os_parse_options(int argc, char **argv)
                 //case 's':
                 //    restart = 1;
                 case 't':
-                    isdaemon = 0;
+                    cf_daemon = 0;
                     break;
             }
         }
@@ -82,7 +89,7 @@ int os_worker_start()
     int          listenfd = 0;
     int          rc = 0;
 
-    if (isdaemon) {    
+    if (cf_daemon) {    
         rc = fork();
         if (rc > 0) {
             return OS_OK;
@@ -98,22 +105,114 @@ int os_worker_start()
     acceptor_init();
 
     for (;;) {
+        sleep(1);
         //event_notify_wait(); // todo process errno
     }
 }
 
+int os_setproctitle(char *title)
+{
+    char  *p;
+    char  *head = "ostrichserver: ";
+    
+    old_argv[1] = NULL;
+
+    p = old_argv[0];
+
+    p = strncpy(p, "ostrichserver: ", old_argv_last - old_argv[0]);
+
+    p += strlen(head);
+
+    p = strncpy(p, title, old_argv_last - p);
+
+    p += sizeof(title);
+
+    if (old_argv_last - p) {
+        memset(p, '\0', old_argv_last - p);
+    }
+
+    return OS_OK;
+}
+
+int os_init_proctitle()
+{
+    char    *p;
+    size_t   size = 0;
+    int      i;
+
+    for (i = 0; environ[i]; i++) {
+        size += strlen(environ[i]) + 1;
+    }
+
+    p  = os_calloc(size);
+
+    old_argv_last = old_argv[0];
+
+    for (i = 0; old_argv[i]; i++) {
+        if (old_argv_last == old_argv[i]) {
+            old_argv_last = old_argv[i] + strlen(old_argv[i]) + 1;
+        }
+    }
+
+    for (i = 0; environ[i]; i++) {
+        if (old_argv_last == environ[i]) {
+            size = strlen(environ[i]) + 1;
+            old_argv_last = environ[i] + size;
+
+            strncpy(p, environ[i], size);
+            environ[i] = p;
+            p += size;
+        }
+    }
+
+    old_argv_last--;
+
+    return OS_OK;
+}
+
+int os_save_argv(int argc, char **argv)
+{
+    int       i;
+    size_t    len;
+    
+    old_argv = argv;
+
+    new_argv = os_calloc((argc + 1) * sizeof(char *));
+
+    for (i = 0; i < argc; i++) {
+        
+        len = strlen(argv[i]) + 1;
+
+        new_argv[i] = os_calloc(len);
+        
+        strncpy(new_argv[i], old_argv[i], len);
+    }
+
+    new_argv[i] = NULL;
+}
+
 int main(int argc, char **argv)
 {
+    int       i;
+    size_t    size;
     sigset_t  set;
+    char     *title;
+    char     *pt;
+    char    **saved_argv;
+    
     pthread_key_create(&thread_private_key, NULL);
 
     init_signals();
 
     os_parse_options(argc, argv);
 
-    if (isdaemon) {
+    if (cf_daemon) {
         os_daemon();
     }
+
+    os_save_argv(argc, argv);
+    
+    os_init_proctitle();
 
     // todo some other things
 
@@ -130,6 +229,23 @@ int main(int argc, char **argv)
 
     sigemptyset(&set);
 
+    size = strlen(master_title);
+
+    for (i = 0; i < argc; i++) {
+        size += strlen(new_argv[i]) + 1;
+    }
+
+    title = os_calloc(size);
+
+    pt = memcpy(title, master_title, strlen(master_title));
+    pt += strlen(master_title);
+    for (i = 0; i < argc; i++) {
+        *pt++ = ' ';
+        pt = strncpy(pt, new_argv[i], size);
+        pt += strlen(new_argv[i]);
+    }
+
+    os_setproctitle(title);
     
     os_worker_start();
     

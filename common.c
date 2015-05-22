@@ -19,7 +19,11 @@
 #include "common.h"
 
 int os_daemon()
-{    
+{
+    if (!cf_daemon) {
+        return OS_OK;
+    }
+    
     int fd = fork();
     
     if (fd < 0) {
