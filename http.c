@@ -21,9 +21,9 @@
 
 http_header_meta  http_headers[] = {
     { "Host", offsetof(http_request_headers_in, host),
-                 http_process_unique_header_line },
+                 http_process_unique_header_line, NULL },
 
-    { NULL, -1, NULL }
+    { NULL, -1, NULL, NULL }
 };
 
 hashtable *http_header_hashtable;

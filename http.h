@@ -36,7 +36,6 @@ typedef struct {
     int         hash;
     int         metaidx;
     stringkv    headerkv;
-    headercb    callback;
 } http_header;
 
 typedef struct {
@@ -53,6 +52,7 @@ typedef struct {
     char                *name;
     uint32_t             offset;
     int                (*header_parser)(http_request *r, http_header *h, uint32_t offset);
+    headercb            *callback;
 } http_header_meta;
 
 void http_init();
