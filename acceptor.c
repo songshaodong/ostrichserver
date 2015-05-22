@@ -23,7 +23,6 @@
 #include "event.h"
 #include "processor.h"
 
-extern _eventprocessor evprocessor;
 _eventprocessor acceptor;
 
 int do_accept_loop = 1;

@@ -17,35 +17,58 @@
 */
 
 #include "common.h"
+#include "notify.h"
 
-int os_daemon()
-{    
-    int fd = fork();
+int event_fd;
+int notify_epfd;
+
+int event_notify_init()
+{
+    struct epoll_event ev;
+
+    event_fd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
     
-    if (fd < 0) {
-        return OS_ERR;
-    }
+    ev.events = EPOLLIN;
 
-    if (fd > 0) {
-        exit(0);
-    }
+    ev.data.fd = event_fd;
+    
+    notify_epfd = epoll_create(1);
 
-    masterid = getpid();
-
-    if(setsid() == -1) {
-        return OS_ERR;
-    }
-
-    umask(0);
-
-    fd = open("/dev/null", O_RDWR);
-    if (fd == -1) {
-        return OS_ERR;
-    }
-
-    dup2(fd, STDIN_FILENO);
-    dup2(fd, STDOUT_FILENO);
+    epoll_ctl(notify_epfd, EPOLL_CTL_ADD, event_fd, &ev);
 
     return OS_OK;
 }
 
+int event_notify_signal()
+{
+    uint64_t  data = 1;
+    
+    write(event_fd, &data, sizeof(data));
+
+    return OS_OK;
+}
+
+int event_notify_wait()
+{
+    int       result;
+    int       nevent;
+    uint64_t  data = 0;
+    struct epoll_event ev;
+
+    do {
+        nevent = epoll_wait(notify_epfd, &ev, 1, -1);
+    } while (nevent < 0 && errno == EINTR);
+
+    if (nevent < 0) {
+        return OS_ERR;
+    }
+
+    result = read(event_fd, &data, sizeof(data));
+
+    if (result != sizeof(uint64_t)) {
+        return OS_ERR;
+    }
+
+    
+    return OS_OK;
+}

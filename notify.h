@@ -16,36 +16,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _NOTIFY_H_
+#define _NOTIFY_H_
+
 #include "common.h"
 
-int os_daemon()
-{    
-    int fd = fork();
-    
-    if (fd < 0) {
-        return OS_ERR;
-    }
+int event_notify_init();
+int event_notify_signal();
+int event_notify_wait();
 
-    if (fd > 0) {
-        exit(0);
-    }
-
-    masterid = getpid();
-
-    if(setsid() == -1) {
-        return OS_ERR;
-    }
-
-    umask(0);
-
-    fd = open("/dev/null", O_RDWR);
-    if (fd == -1) {
-        return OS_ERR;
-    }
-
-    dup2(fd, STDIN_FILENO);
-    dup2(fd, STDOUT_FILENO);
-
-    return OS_OK;
-}
-
+#endif

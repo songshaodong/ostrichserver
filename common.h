@@ -40,6 +40,7 @@
 #include <time.h>
 #include <stddef.h>
 #include <signal.h>
+#include <sys/eventfd.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
