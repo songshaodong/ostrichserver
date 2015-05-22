@@ -37,7 +37,7 @@ char **old_argv;
 char **new_argv;
 extern char **environ;
 
-char *master_title = "server manager";
+char *master_title = "manager";
 char *worker_title = "worker";
 
 int os_parse_options(int argc, char **argv)
@@ -95,6 +95,8 @@ int os_worker_start()
             return OS_OK;
         }
     }
+
+    os_setproctitle(worker_title);
     
     result = config_parse_file("record.config");
 
@@ -104,9 +106,11 @@ int os_worker_start()
     
     acceptor_init();
 
-    for (;;) {
-        sleep(1);
-        //event_notify_wait(); // todo process errno
+    if (cf_daemon) {
+        for (;;) {
+            sleep(1);
+            //event_notify_wait(); // todo process errno
+        }
     }
 }
 
@@ -197,7 +201,7 @@ int main(int argc, char **argv)
     size_t    size;
     sigset_t  set;
     char     *title;
-    char     *pt;
+    char     *p;
     char    **saved_argv;
     
     pthread_key_create(&thread_private_key, NULL);
@@ -219,7 +223,7 @@ int main(int argc, char **argv)
     sigemptyset(&set);
     sigaddset(&set, SIGCHLD);
     sigaddset(&set, SIGTERM);
-    sigaddset(&set, SIGINT);
+    //sigaddset(&set, SIGINT);
     sigaddset(&set, SIGPIPE);
     sigaddset(&set, SIGSYS);
     sigaddset(&set, SIGUSR1);
@@ -237,20 +241,23 @@ int main(int argc, char **argv)
 
     title = os_calloc(size);
 
-    pt = memcpy(title, master_title, strlen(master_title));
-    pt += strlen(master_title);
-    for (i = 0; i < argc; i++) {
-        *pt++ = ' ';
-        pt = strncpy(pt, new_argv[i], size);
-        pt += strlen(new_argv[i]);
-    }
+    p = title;
 
+    memcpy(p, master_title, strlen(master_title));
+    p += strlen(master_title);
+    for (i = 0; i < argc; i++) {
+        *p++ = ' ';
+        strncpy(p, new_argv[i], strlen(new_argv[i]));
+        p += strlen(new_argv[i]);
+    }
+    
     os_setproctitle(title);
     
     os_worker_start();
     
     for (;;) {
         sigsuspend(&set);
+        printf("receive a signal\n");
         //if (reconfig) {
         //    event_notify_signal();
         //}
