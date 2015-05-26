@@ -94,9 +94,9 @@ int os_worker_start()
         if (rc > 0) {
             return OS_OK;
         }
-    }
 
-    os_setproctitle(worker_title);
+        _proctitle_setting(worker_title);
+    }
     
     result = config_parse_file("record.config");
 
@@ -114,7 +114,7 @@ int os_worker_start()
     }
 }
 
-int os_setproctitle(char *title)
+int _proctitle_setting(char *title)
 {
     char  *p;
     char  *head = "ostrichserver: ";
@@ -195,43 +195,16 @@ int os_save_argv(int argc, char **argv)
     new_argv[i] = NULL;
 }
 
-int main(int argc, char **argv)
+void proctitle_setting(int argc, char **argv)
 {
     int       i;
     size_t    size;
-    sigset_t  set;
     char     *title;
     char     *p;
-    char    **saved_argv;
-    
-    pthread_key_create(&thread_private_key, NULL);
-
-    init_signals();
-
-    os_parse_options(argc, argv);
-
-    if (cf_daemon) {
-        os_daemon();
-    }
-
+        
     os_save_argv(argc, argv);
     
     os_init_proctitle();
-
-    // todo some other things
-
-    sigemptyset(&set);
-    sigaddset(&set, SIGCHLD);
-    sigaddset(&set, SIGTERM);
-    //sigaddset(&set, SIGINT);
-    sigaddset(&set, SIGPIPE);
-    sigaddset(&set, SIGSYS);
-    sigaddset(&set, SIGUSR1);
-    sigaddset(&set, SIGUSR2);
-
-    sigprocmask(SIG_BLOCK, &set, NULL);
-
-    sigemptyset(&set);
 
     size = strlen(master_title);
 
@@ -251,7 +224,39 @@ int main(int argc, char **argv)
         p += strlen(new_argv[i]);
     }
     
-    os_setproctitle(title);
+    _proctitle_setting(title);
+}
+
+int main(int argc, char **argv)
+{
+    sigset_t  set;
+
+    pthread_key_create(&thread_private_key, NULL);
+
+    init_signals();
+
+    os_parse_options(argc, argv);
+
+    if (cf_daemon) {
+        os_daemon();
+    }
+
+    // todo some other things
+
+    proctitle_setting(argc, argv);
+
+    sigemptyset(&set);
+    sigaddset(&set, SIGCHLD);
+    sigaddset(&set, SIGTERM);
+    //sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGPIPE);
+    sigaddset(&set, SIGSYS);
+    sigaddset(&set, SIGUSR1);
+    sigaddset(&set, SIGUSR2);
+
+    sigprocmask(SIG_BLOCK, &set, NULL);
+
+    sigemptyset(&set);
     
     os_worker_start();
     
