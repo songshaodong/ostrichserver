@@ -19,7 +19,7 @@
 #ifndef _ARRAYS_H_
 #define _ARRAYS_H_
 
-#include "memory.h"
+#include "common.h"
 
 static inline void *realloc_down(void *ptr, size_t size)
 {
@@ -27,62 +27,54 @@ static inline void *realloc_down(void *ptr, size_t size)
 	return ret ? ret : ptr;
 }
 
-#define INSERT_ELEM( p_ar, i_oldsize, i_pos, elem )                           \
-    do                                                                        \
-    {                                                                         \
-        if( !(i_oldsize) ) (p_ar) = NULL;                                       \
-        (p_ar) = os_realloc( p_ar, ((i_oldsize) + 1) * sizeof(*(p_ar)) ); \
-        if( !(p_ar) ) abort();                                                \
-        if( (i_oldsize) - (i_pos) )                                           \
-        {                                                                     \
-            memmove( (p_ar) + (i_pos) + 1, (p_ar) + (i_pos),                  \
-                     ((i_oldsize) - (i_pos)) * sizeof( *(p_ar) ) );           \
-        }                                                                     \
-        (p_ar)[(i_pos)] = elem;                                                 \
-        (i_oldsize)++;                                                        \
-    }                                                                         \
-    while( 0 )
+#define INSERT_ELEM( p_ar, i_oldsize, i_pos, elem )                            \
+    do {                                                                       \
+        if(!(i_oldsize)) {                                                     \
+            (p_ar) = NULL;                                                     \
+        }                                                                      \
+        (p_ar) = os_realloc(p_ar, ((i_oldsize) + 1) * sizeof(*(p_ar)));       \
+        if((i_oldsize) - (i_pos)) {                                            \
+            memmove((p_ar) + (i_pos) + 1, (p_ar) + (i_pos),                   \
+                ((i_oldsize) - (i_pos)) * sizeof(*(p_ar)));                   \
+        }                                                                      \
+        (p_ar)[(i_pos)] = elem;                                                \
+        (i_oldsize)++;                                                         \
+    } while( 0 )
 
-#define REMOVE_ELEM( p_ar, i_size, i_pos )                                    \
-    do                                                                        \
-    {                                                                         \
-        if( (i_size) - (i_pos) - 1 )                                          \
-        {                                                                     \
-            memmove( (p_ar) + (i_pos),                                        \
-                     (p_ar) + (i_pos) + 1,                                    \
-                     ((i_size) - (i_pos) - 1) * sizeof( *(p_ar) ) );          \
-        }                                                                     \
-        if( i_size > 1 )                                                      \
+#define REMOVE_ELEM( p_ar, i_size, i_pos )                                     \
+    do {                                                                       \
+        if((i_size) - (i_pos) - 1) {                                           \
+            memmove((p_ar) + (i_pos), (p_ar) + (i_pos) + 1,                   \
+                     ((i_size) - (i_pos) - 1) * sizeof(*(p_ar)));             \
+        }                                                                      \
+        if( i_size > 1 ) {                                                     \
             (p_ar) = realloc_down( p_ar, ((i_size) - 1) * sizeof( *(p_ar) ) );\
-        else                                                                  \
-        {                                                                     \
-            os_free( p_ar );                                                     \
-            (p_ar) = NULL;                                                    \
-        }                                                                     \
-        (i_size)--;                                                           \
-    }                                                                         \
-    while( 0 )
+        } else {                                                               \
+            os_free( p_ar );                                                   \
+            (p_ar) = NULL;                                                     \
+        }                                                                      \
+        (i_size)--;                                                            \
+    } while( 0 )
 
-#define TAB_INIT( count, tab )                  \
-  do {                                          \
-    (count) = 0;                                \
-    (tab) = NULL;                               \
-  } while(0)
+#define TAB_INIT( count, tab )                              \
+            do {                                            \
+                (count) = 0;                                \
+                (tab) = NULL;                               \
+            } while(0)
 
-#define TAB_CLEAN( count, tab )                 \
-  do {                                          \
-    os_free( tab );                                \
-    (count)= 0;                                 \
-    (tab)= NULL;                                \
-  } while(0)
+#define TAB_CLEAN( count, tab )                             \
+            do {                                            \
+                os_free( tab );                             \
+                (count)= 0;                                 \
+                (tab)= NULL;                                \
+            } while(0)
 
-#define TAB_APPEND_CAST( cast, count, tab, p )             \
+#define TAB_APPEND_CAST( cast, count, tab, p )  \
   do {                                          \
-    if( (count) > 0 )                           \
+    if((count) > 0)                           \
         (tab) = cast os_realloc( tab, sizeof( void ** ) * ( (count) + 1 ) ); \
     else                                        \
         (tab) = cast os_malloc( sizeof( void ** ) );    \
-    if( !(tab) ) abort();                       \
     (tab)[count] = (p);                         \
     (count)++;                                  \
   } while(0)
@@ -192,7 +184,8 @@ static inline void *realloc_down(void *ptr, size_t size)
   do {                                                                      \
     (array).i_alloc = 0;                                                    \
     (array).i_size = 0;                                                     \
-    os_free( (array).p_elems ); (array).p_elems = NULL;                        \
+    os_free((array).p_elems);                                               \
+  (array).p_elems = NULL;                                                   \
   } while(0)
 
 #define ARRAY_APPEND(array, elem)                                           \
@@ -262,15 +255,17 @@ static inline void array_clear(array_t * p_array)
 static inline array_t *array_new(void)
 {
 	array_t *ret = (array_t *) os_malloc(sizeof(array_t));
-	if (ret)
+	if (ret) {
 		array_init(ret);
+	}
 	return ret;
 }
 
 static inline void array_destroy(array_t * p_array)
 {
-	if (!p_array)
+	if (!p_array) {
 		return;
+	}
 	array_clear(p_array);
 	os_free(p_array);
 }
@@ -290,8 +285,9 @@ static inline int array_index_of_item(array_t * p_array, void *item)
 {
 	int i;
 	for (i = 0; i < p_array->i_count; i++) {
-		if (p_array->pp_elems[i] == item)
+		if (p_array->pp_elems[i] == item) {
 			return i;
+		}
 	}
 	return -1;
 }
@@ -300,7 +296,7 @@ static inline void
 array_insert(array_t * p_array, void *p_elem, int i_index)
 {
 	TAB_INSERT_CAST((void **), p_array->i_count, p_array->pp_elems, p_elem,
-			i_index);
+	    i_index);
 }
 
 static inline void array_append(array_t * p_array, void *p_elem)
@@ -328,6 +324,7 @@ static inline void array_remove(array_t * p_array, int i_index)
 static inline uint64_t DictHash(const char *psz_string, int hashsize)
 {
 	uint64_t i_hash = 0;
+    
 	if (psz_string) {
 		while (*psz_string) {
 			i_hash += *psz_string++;
@@ -335,6 +332,7 @@ static inline uint64_t DictHash(const char *psz_string, int hashsize)
 			i_hash ^= i_hash >> 8;
 		}
 	}
+    
 	return i_hash % hashsize;
 }
 
@@ -356,67 +354,85 @@ static inline void dictionary_init(dictionary_t * p_dict, int i_size)
 	p_dict->p_entries = NULL;
 
 	if (i_size > 0) {
-		p_dict->p_entries =
-		    (dictionary_entry_t **) calloc(i_size,
-							sizeof
-							(*p_dict->p_entries));
-		if (!p_dict->p_entries)
+        
+		p_dict->p_entries = (dictionary_entry_t **) calloc(i_size,
+		    sizeof(*p_dict->p_entries));
+        
+		if (!p_dict->p_entries) {
 			i_size = 0;
+		}
 	}
+    
 	p_dict->i_size = i_size;
 }
 
 static inline void dictionary_clear(dictionary_t * p_dict,
-					 void (*pf_os_free) (void *p_data,
-							  void *p_obj),
-					 void *p_obj)
+    void (*pf_os_free)(void *p_data, void *p_obj), void *p_obj)
 {	
 	int i;
 
 	if (p_dict->p_entries) {
+        
 		for (i = 0; i < p_dict->i_size; i++) {
+            
 			dictionary_entry_t *p_current, *p_next;
+            
 			p_current = p_dict->p_entries[i];
+            
 			while (p_current) {
+                
 				p_next = p_current->p_next;
-				if (pf_os_free != NULL)
+                
+				if (pf_os_free != NULL) {
 					(*pf_os_free) (p_current->p_value, p_obj);
+				}
+                
 				os_free(p_current->psz_key);
 				os_free(p_current);
+                
 				p_current = p_next;
 			}
 		}
+        
 		os_free(p_dict->p_entries);
+        
 		p_dict->p_entries = NULL;
+        
 	}
+    
 	p_dict->i_size = 0;
 }
 
 static inline int
 dictionary_has_key(const dictionary_t * p_dict, const char *psz_key)
 {
-	if (!p_dict->p_entries)
+	if (!p_dict->p_entries) {
 		return 0;
+	}
 
 	int i_pos = DictHash(psz_key, p_dict->i_size);
+    
 	return p_dict->p_entries[i_pos] != NULL;
 }
 
 static inline void *dictionary_value_for_key(const dictionary_t *
 						  p_dict, const char *psz_key)
 {
-	if (!p_dict->p_entries)
+	if (!p_dict->p_entries) {
 		return kIMAXDictionaryNotFound;
+	}
 
 	int i_pos = DictHash(psz_key, p_dict->i_size);
 	dictionary_entry_t *p_entry = p_dict->p_entries[i_pos];
 
-	if (!p_entry)
+	if (!p_entry) {
 		return kIMAXDictionaryNotFound;
+	}
 
 	do {
-		if (!strcmp(psz_key, p_entry->psz_key))
+		if (!strcmp(psz_key, p_entry->psz_key)) {
 			return p_entry->p_value;
+		}
 		p_entry = p_entry->p_next;
 	} while (p_entry);
 
@@ -428,14 +444,18 @@ static inline int dictionary_keys_count(const dictionary_t * p_dict)
 	dictionary_entry_t *p_entry;
 	int i, count = 0;
 
-	if (!p_dict->p_entries)
+	if (!p_dict->p_entries) {
 		return 0;
+	}
 
 	for (i = 0; i < p_dict->i_size; i++) {
-		for (p_entry = p_dict->p_entries[i]; p_entry;
-		     p_entry = p_entry->p_next)
+        
+		for (p_entry = p_dict->p_entries[i]; p_entry; p_entry = p_entry->p_next) {
 			count++;
+		}
+        
 	}
+    
 	return count;
 }
 
@@ -448,22 +468,27 @@ static inline char **dictionary_all_keys(const dictionary_t * p_dict)
 	ppsz_ret = (char **)os_malloc(sizeof(char *) * (count + 1));
 
 	count = 0;
+    
 	for (i = 0; i < p_dict->i_size; i++) {
-		for (p_entry = p_dict->p_entries[i]; p_entry;
-		     p_entry = p_entry->p_next)
+        
+		for (p_entry = p_dict->p_entries[i]; p_entry; p_entry = p_entry->p_next) {
 			ppsz_ret[count++] = strdup(p_entry->psz_key);
+		}
 	}
+    
 	ppsz_ret[count] = NULL;
+    
 	return ppsz_ret;
 }
 
 static inline void
 __dictionary_insert(dictionary_t * p_dict, const char *psz_key,
-			 void *p_value, bool rebuild)
+    void *p_value, bool rebuild)
 {
-	if (!p_dict->p_entries)
+	if (!p_dict->p_entries) {
 		dictionary_init(p_dict, 1);
-
+	}
+  
 	int i_pos = DictHash(psz_key, p_dict->i_size);
 	dictionary_entry_t *p_entry;
 
@@ -472,75 +497,94 @@ __dictionary_insert(dictionary_t * p_dict, const char *psz_key,
 	p_entry->p_value = p_value;
 	p_entry->p_next = p_dict->p_entries[i_pos];
 	p_dict->p_entries[i_pos] = p_entry;
+    
 	if (rebuild) {
 
 		int count;
-		for (count = 1; p_entry->p_next; count++)
+        
+		for (count = 1; p_entry->p_next; count++) {
 			p_entry = p_entry->p_next;
+		}
+        
 		if (count > 3) {
 
 			struct dictionary_t new_dict;
+            
 			int i_new_size = ((p_dict->i_size + 2) * 3) / 2;
+            
 			int i;
+            
 			dictionary_init(&new_dict, i_new_size);
+            
 			for (i = 0; i < p_dict->i_size; i++) {
+                
 				p_entry = p_dict->p_entries[i];
+                
 				while (p_entry) {
-					__dictionary_insert(&new_dict,
-								 p_entry->
-								 psz_key,
-								 p_entry->
-								 p_value,
-								 false);
+					__dictionary_insert(&new_dict,p_entry->psz_key,
+					    p_entry->p_value, false);
 					p_entry = p_entry->p_next;
 				}
 			}
 
 			dictionary_clear(p_dict, NULL, NULL);
+            
 			p_dict->i_size = new_dict.i_size;
+            
 			p_dict->p_entries = new_dict.p_entries;
+            
 		}
 	}
 }
 
 static inline void
 dictionary_insert(dictionary_t * p_dict, const char *psz_key,
-		       void *p_value)
+    void *p_value)
 {
 	__dictionary_insert(p_dict, psz_key, p_value, true);
 }
 
 static inline void
 dictionary_remove_value_for_key(const dictionary_t * p_dict,
-				     const char *psz_key,
-				     void (*pf_os_free) (void *p_data,
-						      void *p_obj), void *p_obj)
+    const char *psz_key, void (*pf_os_free) (void *p_data, void *p_obj), 
+    void *p_obj)
 {
-	if (!p_dict->p_entries)
+	if (!p_dict->p_entries) {
 		return;
+	}
 
 	int i_pos = DictHash(psz_key, p_dict->i_size);
 	dictionary_entry_t *p_entry = p_dict->p_entries[i_pos];
 	dictionary_entry_t *p_prev;
 
-	if (!p_entry)
+	if (!p_entry) {
 		return;
+	}
 
 	p_prev = NULL;
+    
 	do {
 		if (!strcmp(psz_key, p_entry->psz_key)) {
-			if (pf_os_free != NULL)
+            
+			if (pf_os_free != NULL) {
 				(*pf_os_free) (p_entry->p_value, p_obj);
-			if (!p_prev)
+			}
+            
+			if (!p_prev) {
 				p_dict->p_entries[i_pos] = p_entry->p_next;
-			else
+			} else {
 				p_prev->p_next = p_entry->p_next;
+			}
+            
 			os_free(p_entry->psz_key);
 			os_free(p_entry);
+            
 			return;
 		}
+        
 		p_prev = p_entry;
 		p_entry = p_entry->p_next;
+        
 	} while (p_entry);
 
 }
