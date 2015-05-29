@@ -38,7 +38,7 @@ pollbase *pollbase_init(int size)
         return NULL;
     }
     
-    base->evlist = os_calloc(sizeof(pelist) * base->pesize);
+    base->evlist = os_calloc(sizeof(struct epoll_event) * base->pesize);
     if (base->evlist == NULL) {
         return NULL;
     }

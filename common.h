@@ -52,16 +52,36 @@
 #define unlikely(x)	__builtin_expect (!!(x), 0)
 #endif
 
+#define COL(x,y)  "\033[" #x ";" #y "m"
+#define RED     COL(31,1)
+#define GREEN   COL(32,1)
+#define YELLOW  COL(0,33)
+#define WHITE   COL(0,1)
+#define GRAY    "\033[0m"
+
 enum OS_ERRNO {
     OS_OK = 0,
-    OS_ERR = -1
-
+    OS_ERR = -1,
+	OS_AGAIN = -2,
+	OS_BUSY = -3,
+	OS_DONE = -4,
+	OS_DECLINED = -5,
+	OS_ABORT = -6
 };
+
+typedef int os_socket;
+
+typedef uint32_t msec;
+
+#define LF     (u_char) 10
+#define CR     (u_char) 13
+#define CRLF   "\x0d\x0a"
 
 #define true 1
 #define false 0
 
 #define bool int
+#define os_uint_t uint32_t
 
 // typedef struct lists
 typedef struct thread evthread;
@@ -74,11 +94,14 @@ typedef struct thread_dedicated  dedthread;
 typedef struct continuation continuation;
 typedef struct connection  connection;
 typedef struct event_list  evlink;
+typedef struct buffer os_buf;
+
 
 // typedef function lists
 typedef void *(*threadproc)(void *);
 typedef void (*type_handler)();
-typedef int (*conthandler)(event *);
+typedef void (*conthandler)(event *);
+
 
 #include "hashtable.h"
 #include "memory.h"
@@ -87,13 +110,16 @@ typedef int (*conthandler)(event *);
 #include "continuation.h"
 #include "thread.h"
 #include "osstring.h"
-#include "osstring.h"
 #include "eventpoll.h"
 #include "net.h"
 #include "mutex.h"
 #include "atomiclist.h"
 #include "atomic.h"
 #include "processor.h"
+#include "osbuf.h"
+#include "oserrno.h"
+#include "arrays.h"
+
 
 extern _eventprocessor evprocessor;
 extern hashtable *config_record_hashtable;

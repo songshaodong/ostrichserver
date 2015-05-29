@@ -22,7 +22,20 @@
 #include "common.h"
 
 struct connection {
-    continuation cont;
+    continuation 		cont;
+	
+	event			   *read;
+	event			   *write;
+	
+	os_socket       	fd;
+	os_buf			   *buf;
+
+	off_t           	sent;
+	off_t				receive;
+	unsigned            unexpected_eof:1;
+    unsigned            timedout:1;
+    unsigned            error:1;
+    unsigned            destroyed:1;
 };
 
 #endif

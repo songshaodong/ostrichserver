@@ -19,6 +19,7 @@
 #include "common.h"
 #include "net.h"
 #include "eventpoll.h"
+#include "http_request.h"
 
 netconnection *init_connection(int fd, conninfo *ci)
 {
@@ -30,10 +31,19 @@ netconnection *init_connection(int fd, conninfo *ci)
     nc->status = EVENT_STARTUP;
 }
 
-int netio_init(event *ev)
+void netio_init(event *ev)
 {
     netconnection *nc = (netconnection *)ev->cont;
-    
+
+	continuation *cont = (continuation*)nc;
+
+	/* load http module */
+	cont->event_handler = http_wait_request_handler;
+
+	nc->c.read = ev;
+	nc->c.write = NULL;
+    nc->c.fd = nc->ci.fd;
+
     assert(nc->status == NEW_CONNECTION);
 
     pollevent_start(ev, poll_init_event());
@@ -41,11 +51,11 @@ int netio_init(event *ev)
     printf("register an event, thread:%p, pollfd: %d\n", ev->t, ev->t->eventbase->pollfd);
     
     nc->status = WAIT_FOR_READ;
-    
-    return OS_OK;
+
+	evprocessor.schedule(cont, EVENT_IDLE); 
 }
 
-int netio_pollevent(event *e)
+void netio_pollevent(event *e)
 {
     evthread   *evt = current_thread(thread_private_key);
     pollbase   *ep = (pollbase *)e->cont;
@@ -58,7 +68,5 @@ int netio_pollevent(event *e)
         printf("get event: %d, thread: %p, pollfd: %d\n", ep->result, evt, 
             ep->pollfd);
     }
-        
-    return OS_OK;
 }
 

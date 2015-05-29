@@ -24,7 +24,7 @@
 
 enum  {
     INIT_POLL,
-    ACCEPTEVENT,
+    ACCEPT_EVENT,
     NEW_CONNECTION,
     WAIT_FOR_READ,
     READ_DATA,
@@ -42,12 +42,13 @@ typedef struct {
 
 typedef struct {
     connection       c;
-    conninfo         ci;
+	void			*deal; /*mutual, can http, rtmp */
+	conninfo	     ci;
     int              status;
 } netconnection;
 
 netconnection *init_connection(int fd, conninfo *ci);
-int netio_init(event *ev);
-int netio_pollevent(event *e);
+void netio_init(event *ev);
+void netio_pollevent(event *e);
 
 #endif

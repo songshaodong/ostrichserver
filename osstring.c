@@ -79,3 +79,106 @@ ssize_t os_atoi(char *line)
     return os_natoi(line, n);
 }
 
+void
+os_strlow(u_char *dst, u_char *src, size_t n)
+{
+    while (n) {
+        *dst = os_tolower(*src);
+        dst++;
+        src++;
+        n--;
+    }
+}
+
+os_uint_t
+os_strncasecmp(u_char *s1, u_char *s2, size_t n)
+{
+    os_uint_t  c1, c2;
+
+    while (n) {
+        c1 = (os_uint_t) *s1++;
+        c2 = (os_uint_t) *s2++;
+
+        c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
+        c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
+
+        if (c1 == c2) {
+
+            if (c1) {
+                n--;
+                continue;
+            }
+
+            return 0;
+        }
+
+        return c1 - c2;
+    }
+
+    return 0;
+}
+
+u_char *
+os_strstrn(u_char *s1, char *s2, size_t n)
+{
+    u_char  c1, c2;
+
+    c2 = *(u_char *) s2++;
+
+    do {
+        do {
+            c1 = *s1++;
+
+            if (c1 == 0) {
+                return NULL;
+            }
+
+        } while (c1 != c2);
+
+    } while (os_strncmp(s1, (u_char *) s2, n) != 0);
+
+    return --s1;
+}
+
+
+u_char *
+os_strcasestrn(u_char *s1, char *s2, size_t n)
+{
+    os_uint_t  c1, c2;
+
+    c2 = (os_uint_t) *s2++;
+    c2 = (c2 >= 'A' && c2 <= 'Z') ? (c2 | 0x20) : c2;
+
+    do {
+        do {
+            c1 = (os_uint_t) *s1++;
+
+            if (c1 == 0) {
+                return NULL;
+            }
+
+            c1 = (c1 >= 'A' && c1 <= 'Z') ? (c1 | 0x20) : c1;
+
+        } while (c1 != c2);
+
+    } while (os_strncasecmp(s1, (u_char *) s2, n) != 0);
+
+    return --s1;
+}
+
+
+
+#if (OS_MEMCPY_LIMIT)
+
+void *
+os_memcpy(void *dst, const void *src, size_t n)
+{
+    if (n > OS_MEMCPY_LIMIT) {
+		printf(RED "memcpy %uz bytes" GRAY, n);
+    }
+    return memcpy(dst, src, n);
+}
+
+#endif
+
+

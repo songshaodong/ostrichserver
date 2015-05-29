@@ -44,6 +44,19 @@ epbase *epoll_init(int size)
     return base;
 }
 
+int epoll_event_add(event *e, int flag)
+{
+
+    if (e->active) {
+        return OS_OK;
+    }
+    
+    epoll_event_start(e, flag);
+
+    return OS_OK;
+}
+
+
 int epoll_event_start(event *e, int flag)
 {
     struct epoll_event ev;

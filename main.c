@@ -82,35 +82,47 @@ int os_parse_options(int argc, char **argv)
     return OS_OK;
 }
 
-int os_worker_start()
+
+int worker_process_init()
 {
-    int          result = 0;
-    record      *rec;
-    int          listenfd = 0;
-    int          rc = 0;
-
-    if (cf_daemon) {    
-        rc = fork();
-        if (rc > 0) {
-            return OS_OK;
-        }
-
-        _proctitle_setting(worker_title);
-    }
-    
-    result = config_parse_file("record.config");
-
     eventprocessor_init(DEFAULT_THREADS);
 
     application_protocol_init("HTTP");
     
     acceptor_init();
 
-    if (cf_daemon) {
-        for (;;) {
-            sleep(1);
-            //event_notify_wait(); // todo process errno
-        }
+    return OS_OK;
+}
+
+int os_worker_start()
+{
+    record      *rec;
+    int          listenfd = 0;
+    int          rc = 0;
+
+    if (!cf_daemon) {
+        return OS_OK;
+    }
+
+    switch (rc = fork()) {
+    case -1:
+        return OS_ERR;
+    case 0:
+        break;
+    default:
+        return rc;
+        
+    }
+
+    _proctitle_setting(worker_title);
+    
+    config_parse_file("record.config");
+    
+    worker_process_init();
+
+    for (;;) {
+        sleep(1);
+        //event_notify_wait(); // todo process errno
     }
 }
 
@@ -229,6 +241,8 @@ void proctitle_setting(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+    int       result;
+    
     sigset_t  set;
 
     pthread_key_create(&thread_private_key, NULL);
@@ -240,6 +254,8 @@ int main(int argc, char **argv)
     if (cf_daemon) {
         os_daemon();
     }
+
+    config_parse_file("record.config");
 
     // todo some other things
 
@@ -258,10 +274,15 @@ int main(int argc, char **argv)
 
     sigemptyset(&set);
     
-    os_worker_start();
+    result = os_worker_start();
+    if (result == OS_OK) {
+        worker_process_init();
+    }
     
     for (;;) {
+        
         sigsuspend(&set);
+        
         printf("receive a signal\n");
         //if (reconfig) {
         //    event_notify_signal();

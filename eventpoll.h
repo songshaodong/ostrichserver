@@ -39,6 +39,8 @@ typedef struct {
 
 epbase *epoll_init(int size);
 int epoll_event_start(event *e, int flag);
+int epoll_event_add(event *e, int flag);
+
 
 #endif
 

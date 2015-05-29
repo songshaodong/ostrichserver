@@ -27,13 +27,11 @@ _eventprocessor acceptor;
 
 int do_accept_loop = 1;
 
-int handle_accept(event *ev) 
+void handle_accept(event *ev) 
 {
     continuation  *cont = ev->cont;
 
     accept_block_loop(cont);
-
-    return OS_OK;
 }
 
 int accept_block_loop(continuation *cont)
@@ -111,7 +109,7 @@ int acceptor_init()
         staticevent = rtpool[i].static_event;
         staticevent->cont = &netacceptor->cont;
         staticevent->t = &rtpool[i].thread;
-        staticevent->type = ACCEPTEVENT;
+        staticevent->type = ACCEPT_EVENT;
         
         thread_create(&rtpool[i], STACK_SIZE, 1);
     }

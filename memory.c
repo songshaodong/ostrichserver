@@ -29,6 +29,16 @@ void *os_malloc(size_t size)
     return ptr;
 }
 
+void *os_realloc(void *p, size_t size)
+{
+    void *ptr;
+    
+    ptr = realloc(p, size);
+    
+    return ptr;
+}
+
+
 void *os_calloc(size_t size)
 {
     void *ptr;

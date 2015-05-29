@@ -30,5 +30,7 @@ typedef struct timespec hrtime_t;
 
 hrtime_t get_current_time();
 
+#define add_timer event_add_timer
+#define del_timer event_del_timer
 
 #endif

@@ -62,13 +62,15 @@ struct thread_event {
     evthread     *t;
     continuation *cont;
     void        (*schedule)(event *e, int eventtype);
+	unsigned      timer_set:1;
+	unsigned	  timedout:1;
+	unsigned 	  error:1;
 };
 
 typedef struct {
     continuation         cont;
     int                  pollfd;
     int                  pesize;
-    //int                eflags;
     int                  timeout;
     pelist              *evlist;
     int                (*eventpoll)(int fd, pelist *l, int size, int tm);
@@ -78,5 +80,16 @@ typedef struct {
 inline continuation *event_init(event *e);
 pollbase  *pollbase_init(int size);
 
+static inline void
+add_timer(event *ev, msec ter)
+{
+	
+}
+
+static inline void
+del_timer(event *ev, msec ter)
+{
+	
+}
 
 #endif
