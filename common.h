@@ -119,10 +119,12 @@ typedef void (*conthandler)(event *);
 #include "osbuf.h"
 #include "oserrno.h"
 #include "arrays.h"
+#include "dict.h"
 
 
 extern _eventprocessor evprocessor;
-extern hashtable *config_record_hashtable;
+//extern hashtable *config_record_hashtable;
+extern dict *config_hashtable;
 extern thread_key_t thread_private_key;
 extern __thread priority_queue event_priority_queue;
 extern int workerid;

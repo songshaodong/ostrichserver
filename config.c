@@ -20,7 +20,7 @@
 #include "config.h"
 #include <string.h>
 
-hashtable *config_record_hashtable;
+//hashtable *config_record_hashtable;
 
 #define iter_to_next_line(curline, nextline)         \
         do {                                         \
@@ -28,6 +28,18 @@ hashtable *config_record_hashtable;
             strtok_r(NULL, "\n", &nextline);         \
         } while (0);
 
+dict *config_hashtable;
+
+dict_type config_httype = {
+    config_hash_key,
+    NULL,
+    NULL,
+    dict_gen_key_compare,
+    NULL,
+    NULL
+};
+
+/*
 int config_hashtable_init(int size)
 {
     int result;
@@ -45,6 +57,15 @@ int config_hashtable_init(int size)
     }
 
     return OS_OK;
+}
+*/
+
+// todo 
+unsigned int config_hash_key(void *key)
+{
+    string *str = key;
+    
+    return dict_casestring_key(str->data, str->len);
 }
 
 int get_filesize(int fd)
@@ -128,7 +149,9 @@ int config_parse_file(char *path)
     char   *value = NULL;
     record *rc = NULL;
 
-    config_hashtable_init(1);
+    //config_hashtable_init(1);
+
+    config_hashtable = dict_create(&config_httype, NULL);
     
     result = config_init(path, &pbuf);
 
@@ -155,15 +178,16 @@ int config_parse_file(char *path)
 
         value = strtok_r(NULL, " \t", &nextblk);
 
-        if (hashtable_isexist(name, config_record_hashtable) != -1) {
-            return OS_ERR; // duplicate config.
-        }
+        //if (hashtable_isexist(name, config_record_hashtable) != -1) {
+        //    return OS_ERR; // duplicate config.
+        //}
 
         if (record_make(&rc, name, type, value) == OS_ERR) {
             return OS_ERR;
         }
-        
-        hashtable_add(name, rc, config_record_hashtable);
+
+        dict_add(config_hashtable, name, rc);
+        //hashtable_add(name, rc, config_record_hashtable);
 
         if (*nextblk != '\0') { // todo: support more than tree args.
             return OS_ERR;
@@ -173,6 +197,7 @@ int config_parse_file(char *path)
     }
 }
 
+/*
 inline record *get_config_record(char *str)
 {
     int       index;
@@ -191,5 +216,19 @@ inline record *get_config_record(char *str)
     assert(rc != NULL);
 
     return rc;   
+}
+*/
+
+inline record *get_config_record(char *str)
+{
+    dict_entry *de;
+
+    de = dict_find(config_hashtable, str);
+
+    if (!de) {
+        return NULL;
+    }
+
+    de->v.val;
 }
 

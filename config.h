@@ -39,8 +39,9 @@ typedef struct {
 } record;
 
 inline record *get_config_record(char *str);
+unsigned int config_hash_key(void *key);
 
-int config_hashtable_init();
+//int config_hashtable_init();
 
 int config_parse_file();
     

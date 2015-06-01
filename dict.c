@@ -21,6 +21,78 @@
 
 #define DICT_RESIZE_RATIO    5  
 
+uint32_t dict_hash_function_seed = 5381;
+
+/* MurmurHash2, by Austin Appleby. */
+unsigned int
+dict_gen_key(void * key, int len) {
+
+    uint32_t seed = dict_hash_function_seed;
+    const uint32_t m = 0x5bd1e995;
+    const int r = 24;
+
+    uint32_t h = seed ^ len;
+
+    const unsigned char *data = (const unsigned char *)key;
+
+    while(len >= 4) {
+        uint32_t k = *(uint32_t*)data;
+
+        k *= m;
+        k ^= k >> r;
+        k *= m;
+
+        h *= m;
+        h ^= k;
+
+        data += 4;
+        len -= 4;
+    }
+
+    switch(len) {
+    case 3: h ^= data[2] << 16;
+    case 2: h ^= data[1] << 8;
+    case 1: h ^= data[0]; h *= m;
+    };
+
+    h ^= h >> 13;
+    h *= m;
+    h ^= h >> 15;
+
+    return (unsigned int)h;
+}
+
+unsigned int 
+dict_casestring_key(const unsigned char *buf, int len) {
+
+    unsigned int hash = (unsigned int)dict_hash_function_seed;
+
+    while (len--)
+        hash = ((hash << 5) + hash) + (tolower(*buf++)); /* hash * 33 + c */
+    return hash;
+}
+
+unsigned int dict_int_key(unsigned int key)
+{
+    key += ~(key << 15);
+    key ^=  (key >> 10);
+    key +=  (key << 3);
+    key ^=  (key >> 6);
+    key += ~(key << 11);
+    key ^=  (key >> 16);
+    return key;
+}
+
+int dict_gen_key_compare(void *privdata, void *key1, void *key2)
+{
+    (void) privdata;
+}
+
+int dict_string_key_compare(void *privdata, void *key1, void *key2)
+{
+    (void) privdata;
+}
+
 void _dict_reset(dictht *ht)
 {
     ht->table = NULL;
@@ -29,12 +101,12 @@ void _dict_reset(dictht *ht)
     ht->used = 0;
 }
 
-int _dict_init(dict *d, dict_func *f, void *privdata)
+int _dict_init(dict *d, dict_type *f, void *privdata)
 {
     _dict_reset(&d->ht[0]);
     _dict_reset(&d->ht[1]);
 
-    d->handler = f;
+    d->type = f;
     d->privdata = privdata;
     d->rehashidx = -1;
     d->iterators = 0;
@@ -57,7 +129,7 @@ unsigned long _dict_next_power(unsigned long size)
     }
 }
 
-dict *dict_create(dict_func *func, void *privdata)
+dict *dict_create(dict_type *func, void *privdata)
 {
     dict *d = os_malloc(sizeof(dict));
 

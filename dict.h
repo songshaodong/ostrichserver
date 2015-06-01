@@ -32,14 +32,14 @@ typedef struct dict_entry {
     struct dict_entry  *next;
 } dict_entry;
 
-typedef struct dict_func {
-    int     (*hash)(void *key);
-    void   *(*key_dup)(void *privdata, void *key);
-    void   *(*val_dup)(void *privdata, void *key);
-    int     (*key_cmp)(void *privdata, void *key1, void *key2);
-    void    (*key_free)(void *privdata, void *key);
-    void    (*val_free)(void *privdata, void *key);
-} dict_func;
+typedef struct dict_type {
+    unsigned int     (*hash)(void *key);
+    void            *(*key_dup)(void *privdata, void *key);
+    void            *(*val_dup)(void *privdata, void *key);
+    int              (*key_cmp)(void *privdata, void *key1, void *key2);
+    void             (*key_free)(void *privdata, void *key);
+    void             (*val_free)(void *privdata, void *key);
+} dict_type;
 
 typedef struct dictht {
     dict_entry  **table;
@@ -49,7 +49,7 @@ typedef struct dictht {
 } dictht; 
 
 typedef struct dict {
-    dict_func *handler;
+    dict_type *type;
     void      *privdata;
     dictht     ht[2];
     int        rehashidx;
@@ -66,15 +66,15 @@ typedef struct dict_iterator {
     dict_entry  *next_entry;  
 } dict_iterator;
 
-#define    DICT_HT_SIZE    11
+#define    DICT_HT_SIZE    100
 
 #define dict_free_val(d, entry)                                        \
-    if ((d)->handler->val_free)                                        \
-        (d)->handler->val_free((d)->privdata, (entry)->v.val)
+    if ((d)->type->val_free)                                        \
+        (d)->type->val_free((d)->privdata, (entry)->v.val)
 
 #define dict_set_val(d, entry, _val) do {                              \
-        if ((d)->handler->val_dup)                                     \
-            entry->v.val = (d)->handler->val_dup((d)->privdata, _val); \
+        if ((d)->type->val_dup)                                     \
+            entry->v.val = (d)->type->val_dup((d)->privdata, _val); \
         else                                                           \
             entry->v.val = (_val);                                     \
     } while (0)
@@ -90,23 +90,23 @@ typedef struct dict_iterator {
         } while (0);
 
 #define dict_free_key(d, entry)                \
-        if ((d)->handler->key_free)            \
-            (d)->handler->key_free((d)->privdata, (entry)->key)
+        if ((d)->type->key_free)            \
+            (d)->type->key_free((d)->privdata, (entry)->key)
             
 #define dict_set_key(d, entry, _key)                                     \
         do {                                                             \
-            if ((d)->handler->key_dup)                                   \
-                entry->key = (d)->handler->key_dup((d)->privdata, _key); \
+            if ((d)->type->key_dup)                                   \
+                entry->key = (d)->type->key_dup((d)->privdata, _key); \
             else                                                         \
                 entry->key = (_key);                                     \
         } while (0);
            
 #define dict_cmp_key(d, k1, k2)                                          \
-        ((d)->handler->key_cmp) ?                                        \
-            (d)->handler->key_cmp((d)->privdata, k1, k2) : (k1 == k2) 
+        ((d)->type->key_cmp) ?                                        \
+            (d)->type->key_cmp((d)->privdata, k1, k2) : (k1 == k2) 
 
 
-#define dict_hash_key(d, key) (d)->handler->hash(key)
+#define dict_hash_key(d, key) (d)->type->hash(key)
 #define dict_get_key(he)   (he)->key
 #define dict_get_val(he)   (he)->v.val
 #define dict_get_signint_val(he) (he)->v.s64
@@ -115,7 +115,7 @@ typedef struct dict_iterator {
 #define dict_size(d)    ((d)->ht[0].used + (d)->ht[1].used)
 #define dict_isrehashing(ht)  ((ht)->rehashidx != -1)
 
-dict *dict_create(dict_func *func, void *privdata);
+dict *dict_create(dict_type *func, void *privdata);
 int   dict_expand(dict *d, unsigned long size);
 int   dict_add(dict *d, void *key, void *val);
 dict_entry *dict_add_raw(dict *d, void *key);
@@ -129,6 +129,11 @@ void *dict_fetch_value(dict *d, void *key);
 int   dict_resize(dict *d);
 void dict_empty(dict *d);
 int dict_rehash(dict *d, int n);
+unsigned int dict_int_key(unsigned int key);
+unsigned int dict_casestring_key(const unsigned char *buf, int len);
+unsigned int dict_gen_key(void * key, int len);
+int dict_gen_key_compare(void *privdata, void *key1, void *key2);
+int dict_string_key_compare(void *privdata, void *key1, void *key2);
 
 
 #endif
