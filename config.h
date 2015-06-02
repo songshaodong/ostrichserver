@@ -35,10 +35,10 @@ enum {
 typedef struct {
     config_data data;
     int         type;
-    char       *name;
+    string      name;
 } record;
 
-inline record *get_config_record(char *str);
+inline record *get_config_record(string *str);
 unsigned int config_hash_key(void *key);
 
 //int config_hashtable_init();

@@ -116,7 +116,7 @@ int os_worker_start()
 
     _proctitle_setting(worker_title);
     
-    config_parse_file("record.config");
+    //config_parse_file("record.config");
     
     worker_process_init();
 

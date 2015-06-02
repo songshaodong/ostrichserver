@@ -67,7 +67,7 @@ http_close_connection(connection* c){
 		return;
 	}
 
-	printf(GREEN "[%x] close http connection: %d \n" GRAY, 
+	printf(GREEN "[%lu] close http connection: %d \n" GRAY, 
 			pthread_self(), c->fd);
 	
 	close(c->fd);
@@ -87,12 +87,12 @@ http_close_request(http_request *r, int rc)
 	c = get_connection(r);
 
 
-	printf(GREEN "[%x] http request count:%d \n" GRAY, 
+	printf(GREEN "[%lu] http request count:%d \n" GRAY, 
 			pthread_self(), r->count);
 
     if (r->count == 0) {
 
-		printf(RED "[%x] http request count is zero \n" GRAY, pthread_self());
+		printf(RED "[%lu] http request count is zero \n" GRAY, pthread_self());
     }
 
     r->count--;
@@ -108,7 +108,7 @@ http_close_request(http_request *r, int rc)
 void
 http_finalize_request(http_request *r, int rc)
 {
-	printf(GREEN "[%x] http finalize request \n" GRAY, pthread_self());
+	printf(GREEN "[%lu] http finalize request \n" GRAY, pthread_self());
 }
 
 void
@@ -152,7 +152,7 @@ http_wait_request_handler(event *ev)
 
 	if (n == OS_ERR) {
 
-	   printf(RED "[%x] recv error: %s \n" GRAY, 
+	   printf(RED "[%lu] recv error: %s \n" GRAY, 
 			   pthread_self(), strerror(os_socket_errno));
 
 	   http_close_connection(c);
@@ -189,7 +189,7 @@ http_read_request_header(http_request *r)
     connection              *c;
 	msec	                 client_header_timeout;
 
-    printf(GREEN "[%x] read request \n" GRAY, pthread_self());
+    printf(GREEN "[%lu] read request \n" GRAY, pthread_self());
 
     c = get_connection(r);
 	rev = c->read;
@@ -220,7 +220,7 @@ http_read_request_header(http_request *r)
 
     if (n == 0) {
 
-		printf(RED "[%x] client prematurely closed connection. \n" GRAY, pthread_self());
+		printf(RED "[%lu] client prematurely closed connection. \n" GRAY, pthread_self());
     }
 
     if (n == 0 || n == OS_ERR) {
@@ -246,10 +246,10 @@ http_process_request_line(event *rev)
 	r = (http_request *)rev->cont;
 	c = get_connection(r);
 
-   	printf(GREEN "[%x] http process request line \n" GRAY, pthread_self());
+   	printf(GREEN "[%lu] http process request line \n" GRAY, pthread_self());
    
     if (rev->timedout) {
-   		printf(GREEN "[%x] client timed out \n" GRAY, pthread_self());
+   		printf(GREEN "[%lu] client timed out \n" GRAY, pthread_self());
 
         c->timedout = 1;
         http_close_request(r, OS_HTTP_REQUEST_TIME_OUT);
@@ -327,14 +327,14 @@ http_process_request_line(event *rev)
 static void
 http_process_request_headers(event *ev)
 {
-	printf(GREEN "[%x] http process request headers \n" GRAY, pthread_self());
+	printf(GREEN "[%lu] http process request headers \n" GRAY, pthread_self());
 }
 
 
 void
 http_process_request(http_request *r)
 {
-	printf(GREEN "[%x] http process request \n" GRAY, pthread_self());
+	printf(GREEN "[%lu] http process request \n" GRAY, pthread_self());
 }
 
 

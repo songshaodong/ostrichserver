@@ -45,7 +45,8 @@ os_recv(connection *c, u_char *buf, int size)
 
         if (err == EAGAIN || err == EINTR) {
 
-			printf(GREEN "recv() not ready \n" GRAY, c->fd, n, size);
+			printf(GREEN "recv() not ready, fd: %d, return:%d, sent: %d, \n" GRAY, 
+                c->fd, n, size);
             n = OS_AGAIN;
 
         } else {

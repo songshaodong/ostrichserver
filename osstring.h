@@ -22,6 +22,7 @@
 #include "common.h"
 
 #define null_string   { 0, NULL }
+#define string_make(str)     { str, strlen(str) }
 #define os_tolower(c)      (u_char) ((c >= 'A' && c <= 'Z') ? (c | 0x20) : c)
 #define os_toupper(c)      (u_char) ((c >= 'a' && c <= 'z') ? (c & ~0x20) : c)
 

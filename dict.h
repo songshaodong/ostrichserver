@@ -102,8 +102,8 @@ typedef struct dict_iterator {
         } while (0);
            
 #define dict_cmp_key(d, k1, k2)                                          \
-        ((d)->type->key_cmp) ?                                        \
-            (d)->type->key_cmp((d)->privdata, k1, k2) : (k1 == k2) 
+        ((d)->type->key_cmp ?                                        \
+            (d)->type->key_cmp((d)->privdata, k1, k2) : (k1 == k2))
 
 
 #define dict_hash_key(d, key) (d)->type->hash(key)

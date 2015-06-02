@@ -34,7 +34,7 @@ dict_type config_httype = {
     config_hash_key,
     NULL,
     NULL,
-    dict_gen_key_compare,
+    dict_string_key_compare,
     NULL,
     NULL
 };
@@ -116,7 +116,8 @@ int record_make(record **rc, char *name, char *type, char *value)
 
     pr = os_calloc(sizeof(record));
 
-    pr->name = os_strdup(name);
+    pr->name.data = os_strdup(name);
+    pr->name.len = strlen(name);
     
     if (!strcmp(type, "STRING")) {
         pr->data.config_string = os_strdup(value);
@@ -148,6 +149,7 @@ int config_parse_file(char *path)
     char   *type = NULL;
     char   *value = NULL;
     record *rc = NULL;
+    string  key;
 
     //config_hashtable_init(1);
 
@@ -185,8 +187,8 @@ int config_parse_file(char *path)
         if (record_make(&rc, name, type, value) == OS_ERR) {
             return OS_ERR;
         }
-
-        dict_add(config_hashtable, name, rc);
+        
+        dict_add(config_hashtable, &rc->name, rc);
         //hashtable_add(name, rc, config_record_hashtable);
 
         if (*nextblk != '\0') { // todo: support more than tree args.
@@ -195,6 +197,8 @@ int config_parse_file(char *path)
 
         iter_to_next_line(line, nextln);
     }
+
+    os_free(pbuf);
 }
 
 /*
@@ -219,7 +223,7 @@ inline record *get_config_record(char *str)
 }
 */
 
-inline record *get_config_record(char *str)
+inline record *get_config_record(string *str)
 {
     dict_entry *de;
 
@@ -229,6 +233,6 @@ inline record *get_config_record(char *str)
         return NULL;
     }
 
-    de->v.val;
+    return de->v.val;
 }
 

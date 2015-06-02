@@ -91,6 +91,15 @@ int dict_gen_key_compare(void *privdata, void *key1, void *key2)
 int dict_string_key_compare(void *privdata, void *key1, void *key2)
 {
     (void) privdata;
+
+    string *k1 = key1;
+    string *k2 = key2;
+
+    if (k1->len != k2->len) {
+        return -1;
+    }
+
+    return strncmp(k1->data, k2->data, k1->len);
 }
 
 void _dict_reset(dictht *ht)
@@ -336,7 +345,7 @@ dict_entry *dict_find(dict *d, void *key)
         he = d->ht[table].table[idx];
 
         while (he) {
-            if (dict_cmp_key(d, key, he->key)) {
+            if (!dict_cmp_key(d, key, he->key)) {
                 return he;
             }
 

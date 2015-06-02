@@ -76,8 +76,12 @@ int acceptor_init()
     netconnection *conn;
     record        *rc;
     int            port = DEF_SERVER_PORT;
+    string         key;
 
-    rc = get_config_record("net.tcp.listen");
+    key.data = "net.tcp.listen";
+    key.len = strlen(key.data);
+    
+    rc = get_config_record(&key);
 
     if (rc) {
         port = rc->data.config_int;
