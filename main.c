@@ -20,6 +20,7 @@
 #include "config.h"
 #include "application.h"
 #include "signals.h"
+#include "reconfig.h"
 
 int  workerid;
 int  workerstatus;
@@ -86,6 +87,8 @@ int os_parse_options(int argc, char **argv)
 int worker_process_init()
 {
     eventprocessor_init(DEFAULT_THREADS);
+    
+    reconfig_thread_init();
 
     application_protocol_init("HTTP");
     
@@ -264,7 +267,7 @@ int main(int argc, char **argv)
     sigemptyset(&set);
     sigaddset(&set, SIGCHLD);
     sigaddset(&set, SIGTERM);
-    //sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGINT);
     sigaddset(&set, SIGPIPE);
     sigaddset(&set, SIGSYS);
     sigaddset(&set, SIGUSR1);

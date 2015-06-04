@@ -122,6 +122,17 @@ void *make_threads_pool(int type, int num)
     }
 }
 
+void *make_thread(threadproc exec)
+{
+    evthread  *t = NULL;
+
+    t = os_calloc(sizeof(*t));
+
+    t->execute = exec;
+    
+    thread_create(t, STACK_SIZE, 1);
+}
+
 inline void thread_event_wakeup(evthread *thr)
 {
     externalq *queue;

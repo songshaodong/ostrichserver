@@ -43,6 +43,7 @@
 #include <sys/eventfd.h>
 #include <stdint.h>
 #include <limits.h>
+#include <sys/un.h>
 
 #ifndef likely
 #define likely(x)	__builtin_expect (!!(x), 1)
