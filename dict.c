@@ -111,7 +111,9 @@ void _dict_reset(dictht *ht)
 }
 
 int _dict_init(dict *d, dict_type *f, void *privdata)
-{
+{ 
+    int err;
+	
     _dict_reset(&d->ht[0]);
     _dict_reset(&d->ht[1]);
 
@@ -119,6 +121,9 @@ int _dict_init(dict *d, dict_type *f, void *privdata)
     d->privdata = privdata;
     d->rehashidx = -1;
     d->iterators = 0;
+	
+    err = pthread_rwlock_init(&d->lock, NULL);
+    assert(!err);
 }
 
 unsigned long _dict_next_power(unsigned long size)
@@ -182,6 +187,7 @@ void _dict_rehash_step(dict *d)
 
 int dict_rehash(dict *d, int n)
 {
+    pthread_rwlock_wrlock(&d->lock);
     if (!dict_isrehashing(d)) {
         return 0;
     }
@@ -199,10 +205,12 @@ int dict_rehash(dict *d, int n)
             d->rehashidx = -1;
 
             return 0;
-        }
-        
-        while (d->ht[0].size > d->rehashidx) {
-            d->rehashidx++;
+        }             
+
+	if (d->ht[0].size > d->rehashidx ) {
+	    while(d->ht[0].table[d->rehashidx] == NULL) {
+	        d->rehashidx++;
+            }
         }
 
         de = d->ht[0].table[d->rehashidx];
@@ -210,8 +218,13 @@ int dict_rehash(dict *d, int n)
         while (de) {
             unsigned int h;
             denext = de->next;
+			
             h = dict_hash_key(d, de->key) & d->ht[1].sizemask;
+			
             de->next = d->ht[1].table[h];
+			
+			d->ht[1].table[h] = de;
+			
             d->ht[0].used--;
             d->ht[1].used++;
 
@@ -222,7 +235,9 @@ int dict_rehash(dict *d, int n)
 
         d->rehashidx++;
     }
-    
+
+    pthread_rwlock_unlock(&d->lock);
+
     return 1; 
 }
 
@@ -283,11 +298,7 @@ dict_entry *dict_add_raw(dict *d, void *key)
     int          index;
     dict_entry  *entry;
     dictht      *ht;
-
-    if (dict_isrehashing(d)) {
-        _dict_rehash_step(d);
-    }
-
+	
     if ((index = _dict_key_index(d, key)) == -1) {
         return NULL;
     }
@@ -295,6 +306,10 @@ dict_entry *dict_add_raw(dict *d, void *key)
     ht = dict_isrehashing(d) ? &d->ht[1] : &d->ht[0];
 
     entry = os_malloc(sizeof(*entry));
+
+    assert(entry);
+
+    entry->lock = 0;
 
     entry->next = ht->table[index];
     
@@ -309,13 +324,18 @@ dict_entry *dict_add_raw(dict *d, void *key)
 
 int dict_add(dict *d, void *key, void *val)
 {
+    pthread_rwlock_wrlock(&d->lock);
+	
     dict_entry  *entry = dict_add_raw(d, key);
 
-    if (!entry) {
+    if (entry == NULL) {
+        pthread_rwlock_unlock(&d->lock);
         return OS_ERR;
-    }
+    } 
 
     dict_set_val(d, entry, val);
+	
+    pthread_rwlock_unlock(&d->lock);
 
     return OS_OK;
 }
@@ -328,12 +348,10 @@ dict_entry *dict_find(dict *d, void *key)
     unsigned int idx;
     unsigned int table;
 
+    pthread_rwlock_rdlock(&d->lock);
+
     if (d->ht[0].size == 0) {
         return NULL;
-    }
-
-    if (dict_isrehashing(d)) {
-        _dict_rehash_step(d);
     }
 
     h = dict_hash_key(d, key);
@@ -346,7 +364,7 @@ dict_entry *dict_find(dict *d, void *key)
 
         while (he) {
             if (!dict_cmp_key(d, key, he->key)) {
-                return he;
+	        goto done;
             }
 
             he = he->next;
@@ -357,7 +375,14 @@ dict_entry *dict_find(dict *d, void *key)
         }  
     }
 
+    pthread_rwlock_unlock(&d->lock);
     return NULL;
+
+done:
+
+    pthread_rwlock_unlock(&d->lock);
+    return he;
+
 }
 
 int dict_replace(dict *d, void *key, void *val)
@@ -371,11 +396,15 @@ int dict_replace(dict *d, void *key, void *val)
 
     entry = dict_find(d, key);
 
+    _lock(&entry->lock);
+	
     auxentry = *entry;
     
     dict_set_val(d, entry, val);
     
     dict_free_val(d, &auxentry);
+
+    _unlock(&entry->lock);
 
     return 0;
 }
@@ -425,5 +454,7 @@ void dict_release(dict *d)
     _dict_clear(d, &d->ht[0]);
     _dict_clear(d, &d->ht[1]);
 
+    pthread_rwlock_destroy(&d->lock);
+	
     os_free(d);
 }

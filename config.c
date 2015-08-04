@@ -129,7 +129,7 @@ int record_make(record **rc, char *name, char *type, char *value)
         pr->data.config_float = atof(value);
         pr->type = RECORD_FLOAT;
     } else {
-        return OS_ERR;;
+        return OS_ERR;
     }
     
     *rc = pr;

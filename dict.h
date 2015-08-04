@@ -30,6 +30,7 @@ typedef struct dict_entry {
     } v;
 
     struct dict_entry  *next;
+    atomic_t	lock;
 } dict_entry;
 
 typedef struct dict_type {
@@ -44,16 +45,17 @@ typedef struct dict_type {
 typedef struct dictht {
     dict_entry  **table;
     unsigned long size;
-    unsigned long sizemask;
+    unsigned long sizemask; /* size -1 */
     unsigned long used;
 } dictht; 
 
 typedef struct dict {
     dict_type *type;
-    void      *privdata;
+    void      *privdata;  /* unused */
     dictht     ht[2];
-    int        rehashidx;
-    int        iterators;
+    int        rehashidx; /* if '0' then do rehash, def '-1' */
+    int        iterators; /* unused */
+    pthread_rwlock_t  lock;
 } dict;
 
 typedef struct dict_iterator {

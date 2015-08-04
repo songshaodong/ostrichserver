@@ -23,4 +23,6 @@ int init_signals();
 void sig_term(int signum);
 void sig_child(int signum);
 
+int sig_send(int pid, int signum);
+
 #endif

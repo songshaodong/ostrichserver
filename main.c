@@ -33,6 +33,9 @@ int reconfig;
 int restart;
 int cf_daemon = 1;
 
+int cpu_num = 4;
+int pid = -1;
+
 char  *old_argv_last;
 char **old_argv;
 char **new_argv;
@@ -287,9 +290,9 @@ int main(int argc, char **argv)
         sigsuspend(&set);
         
         printf("receive a signal\n");
-        //if (reconfig) {
-        //    event_notify_signal();
-        //}
+        if (reconfig) {
+            event_notify_signal();
+        }
     }
     
     return 0;

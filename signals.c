@@ -104,3 +104,28 @@ int init_signals()
 }
 
 
+int
+sig_send(int pid, int signum)
+{
+	char	err[128] = {'\0'};
+	int		fd = STDERR_FILENO;
+	
+	printf(GREEN "send_signal: pid = %u, signum = %d \n" GRAY, pid, signum);
+	
+	if(pid == -1) {
+		return OS_OK;
+	}
+
+    if (kill(pid, signum) != -1) {
+        return OS_OK;
+    }
+	
+	sprintf(err, "kill(pid = %u, signum = %d) failed \n", pid, signum);
+	write(fd, err, strlen(err));
+
+	perror("kill");
+	
+    return OS_ERR;
+}
+
+

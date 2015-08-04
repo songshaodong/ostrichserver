@@ -84,6 +84,10 @@ typedef uint32_t msec;
 #define bool int
 #define os_uint_t uint32_t
 
+#define INT16_LEN    (sizeof("-32768") - 1)
+#define INT32_LEN    (sizeof("-2147483648") - 1)
+#define INT64_LEN    (sizeof("-9223372036854775808") - 1)
+
 // typedef struct lists
 typedef struct thread evthread;
 typedef struct external_queue   externalq;
@@ -135,6 +139,9 @@ extern int quiet;
 extern int reconfig;
 extern int restart;
 extern int cf_daemon;
+
+extern int cpu_num;
+extern int pid;
 
 int os_daemon();
 
