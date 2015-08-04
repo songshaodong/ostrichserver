@@ -16,8 +16,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _NOTIFY_H_
+#define _NOTIFY_H_
 
+#include "common.h"
+
+int event_notify_init();
+int event_notify_signal();
+int event_notify_wait();
 
 #endif

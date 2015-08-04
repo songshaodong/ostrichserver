@@ -16,8 +16,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _SERVER_H_
+#define _SERVER_H_
 
+#include "common.h"
+
+#define DEF_SERVER_PORT    8080
+#define DEF_LSTEN_BACKLOG  1000
+
+
+int protocol_listen_open(int domain, int type, int protocal, char *ipstr, int port);
 
 #endif

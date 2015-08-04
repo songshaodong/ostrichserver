@@ -16,24 +16,283 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <config.h>
-#include <hashtable.h>
+#include "common.h"
+#include "config.h"
+#include "application.h"
+#include "signals.h"
+#include "reconfig.h"
 
-extern hashtable *config_record_hashtable;
+int  workerid;
+int  workerstatus;
+int  masterid;
 
-int main()
+int show_version;
+int show_help;
+int quiet;
+int reconfig;
+int restart;
+int cf_daemon = 1;
+
+int cpu_num = 4;
+int pid = -1;
+
+char  *old_argv_last;
+char **old_argv;
+char **new_argv;
+extern char **environ;
+
+char *master_title = "manager";
+char *worker_title = "worker";
+
+int os_parse_options(int argc, char **argv)
 {
-    int         rc = 0;
-    hashitem   *hi;
+    int   i;
+    char *p;
+
+    for (i = 1; i < argc; i++) {
+        p = argv[i];
+
+        if (*p++ != '-') {
+            return OS_ERR;
+        }
+
+        while (*p) {
+            switch (*p++) {
+                case '?':
+                case 'h':
+                    show_help = 1;
+                    break;
+                case 'v':
+                case 'V':
+                    show_version = 1;
+                    break;
+                //case 'q':
+                //    quiet = 1;
+                //    break;
+                //case 'r':
+                //    reconfig = 1;
+                //    break;
+                //case 's':
+                //    restart = 1;
+                case 't':
+                    cf_daemon = 0;
+                    break;
+            }
+        }
+
+        continue;
+    }
+
+    return OS_OK;
+}
+
+
+int worker_process_init()
+{
+    eventprocessor_init(DEFAULT_THREADS);
     
-    rc = config_parse_file("a.txt");
+    reconfig_thread_init();
 
-    rc = hashtable_isexist("net.tcp.connection", config_record_hashtable);
+    application_protocol_init("HTTP");
+    
+    acceptor_init();
 
-    if (rc != -1) {
-        hi = config_record_hashtable->buckets + rc;
-        printf("name: %s\n", ((record *)hi->data)->name);
+    return OS_OK;
+}
+
+int os_worker_start()
+{
+    record      *rec;
+    int          listenfd = 0;
+    int          rc = 0;
+
+    if (!cf_daemon) {
+        return OS_OK;
+    }
+
+    switch (rc = fork()) {
+    case -1:
+        return OS_ERR;
+    case 0:
+        break;
+    default:
+        return rc;
+        
+    }
+
+    _proctitle_setting(worker_title);
+    
+    //config_parse_file("record.config");
+    
+    worker_process_init();
+
+    for (;;) {
+        sleep(1);
+        //event_notify_wait(); // todo process errno
+    }
+}
+
+int _proctitle_setting(char *title)
+{
+    char  *p;
+    char  *head = "ostrichserver: ";
+    
+    old_argv[1] = NULL;
+
+    p = old_argv[0];
+
+    p = strncpy(p, "ostrichserver: ", old_argv_last - old_argv[0]);
+
+    p += strlen(head);
+
+    p = strncpy(p, title, old_argv_last - p);
+
+    p += sizeof(title);
+
+    if (old_argv_last - p) {
+        memset(p, '\0', old_argv_last - p);
+    }
+
+    return OS_OK;
+}
+
+int os_init_proctitle()
+{
+    char    *p;
+    size_t   size = 0;
+    int      i;
+
+    for (i = 0; environ[i]; i++) {
+        size += strlen(environ[i]) + 1;
+    }
+
+    p  = os_calloc(size);
+
+    old_argv_last = old_argv[0];
+
+    for (i = 0; old_argv[i]; i++) {
+        if (old_argv_last == old_argv[i]) {
+            old_argv_last = old_argv[i] + strlen(old_argv[i]) + 1;
+        }
+    }
+
+    for (i = 0; environ[i]; i++) {
+        if (old_argv_last == environ[i]) {
+            size = strlen(environ[i]) + 1;
+            old_argv_last = environ[i] + size;
+
+            strncpy(p, environ[i], size);
+            environ[i] = p;
+            p += size;
+        }
+    }
+
+    old_argv_last--;
+
+    return OS_OK;
+}
+
+int os_save_argv(int argc, char **argv)
+{
+    int       i;
+    size_t    len;
+    
+    old_argv = argv;
+
+    new_argv = os_calloc((argc + 1) * sizeof(char *));
+
+    for (i = 0; i < argc; i++) {
+        
+        len = strlen(argv[i]) + 1;
+
+        new_argv[i] = os_calloc(len);
+        
+        strncpy(new_argv[i], old_argv[i], len);
+    }
+
+    new_argv[i] = NULL;
+}
+
+void proctitle_setting(int argc, char **argv)
+{
+    int       i;
+    size_t    size;
+    char     *title;
+    char     *p;
+        
+    os_save_argv(argc, argv);
+    
+    os_init_proctitle();
+
+    size = strlen(master_title);
+
+    for (i = 0; i < argc; i++) {
+        size += strlen(new_argv[i]) + 1;
+    }
+
+    title = os_calloc(size);
+
+    p = title;
+
+    memcpy(p, master_title, strlen(master_title));
+    p += strlen(master_title);
+    for (i = 0; i < argc; i++) {
+        *p++ = ' ';
+        strncpy(p, new_argv[i], strlen(new_argv[i]));
+        p += strlen(new_argv[i]);
+    }
+    
+    _proctitle_setting(title);
+}
+
+int main(int argc, char **argv)
+{
+    int       result;
+    
+    sigset_t  set;
+
+    pthread_key_create(&thread_private_key, NULL);
+
+    init_signals();
+
+    os_parse_options(argc, argv);
+
+    if (cf_daemon) {
+        os_daemon();
+    }
+
+    config_parse_file("record.config");
+
+    // todo some other things
+
+    proctitle_setting(argc, argv);
+
+    sigemptyset(&set);
+    sigaddset(&set, SIGCHLD);
+    sigaddset(&set, SIGTERM);
+    sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGPIPE);
+    sigaddset(&set, SIGSYS);
+    sigaddset(&set, SIGUSR1);
+    sigaddset(&set, SIGUSR2);
+
+    sigprocmask(SIG_BLOCK, &set, NULL);
+
+    sigemptyset(&set);
+    
+    result = os_worker_start();
+    if (result == OS_OK) {
+        worker_process_init();
+    }
+    
+    for (;;) {
+        
+        sigsuspend(&set);
+        
+        printf("receive a signal\n");
+        if (reconfig) {
+            event_notify_signal();
+        }
     }
     
     return 0;

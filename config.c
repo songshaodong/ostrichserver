@@ -16,10 +16,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <config.h>
+#include "common.h"
+#include "config.h"
+#include <string.h>
 
-hashtable *config_record_hashtable;
+//hashtable *config_record_hashtable;
 
 #define iter_to_next_line(curline, nextline)         \
         do {                                         \
@@ -27,6 +28,18 @@ hashtable *config_record_hashtable;
             strtok_r(NULL, "\n", &nextline);         \
         } while (0);
 
+dict *config_hashtable;
+
+dict_type config_httype = {
+    config_hash_key,
+    NULL,
+    NULL,
+    dict_string_key_compare,
+    NULL,
+    NULL
+};
+
+/*
 int config_hashtable_init(int size)
 {
     int result;
@@ -44,6 +57,15 @@ int config_hashtable_init(int size)
     }
 
     return OS_OK;
+}
+*/
+
+// todo 
+unsigned int config_hash_key(void *key)
+{
+    string *str = key;
+    
+    return dict_casestring_key(str->data, str->len);
 }
 
 int get_filesize(int fd)
@@ -94,7 +116,8 @@ int record_make(record **rc, char *name, char *type, char *value)
 
     pr = os_calloc(sizeof(record));
 
-    pr->name = os_strdup(name);
+    pr->name.data = os_strdup(name);
+    pr->name.len = strlen(name);
     
     if (!strcmp(type, "STRING")) {
         pr->data.config_string = os_strdup(value);
@@ -106,7 +129,7 @@ int record_make(record **rc, char *name, char *type, char *value)
         pr->data.config_float = atof(value);
         pr->type = RECORD_FLOAT;
     } else {
-        return OS_ERR;;
+        return OS_ERR;
     }
     
     *rc = pr;
@@ -126,8 +149,11 @@ int config_parse_file(char *path)
     char   *type = NULL;
     char   *value = NULL;
     record *rc = NULL;
+    string  key;
 
-    config_hashtable_init(1);
+    //config_hashtable_init(1);
+
+    config_hashtable = dict_create(&config_httype, NULL);
     
     result = config_init(path, &pbuf);
 
@@ -154,15 +180,16 @@ int config_parse_file(char *path)
 
         value = strtok_r(NULL, " \t", &nextblk);
 
-        if (hashtable_isexist(name, config_record_hashtable) != -1) {
-            return OS_ERR; // duplicate config.
-        }
+        //if (hashtable_isexist(name, config_record_hashtable) != -1) {
+        //    return OS_ERR; // duplicate config.
+        //}
 
         if (record_make(&rc, name, type, value) == OS_ERR) {
             return OS_ERR;
         }
         
-        hashtable_add(name, rc, config_record_hashtable);
+        dict_add(config_hashtable, &rc->name, rc);
+        //hashtable_add(name, rc, config_record_hashtable);
 
         if (*nextblk != '\0') { // todo: support more than tree args.
             return OS_ERR;
@@ -170,5 +197,42 @@ int config_parse_file(char *path)
 
         iter_to_next_line(line, nextln);
     }
+
+    os_free(pbuf);
+}
+
+/*
+inline record *get_config_record(char *str)
+{
+    int       index;
+    hashitem *hi;
+    record   *rc;
+
+    index = hashtable_isexist(str, config_record_hashtable);
+    if (index == -1) {
+        return NULL;
+    }
+    
+    hi = config_record_hashtable->buckets + index;
+
+    rc = hi->data;
+
+    assert(rc != NULL);
+
+    return rc;   
+}
+*/
+
+inline record *get_config_record(string *str)
+{
+    dict_entry *de;
+
+    de = dict_find(config_hashtable, str);
+
+    if (!de) {
+        return NULL;
+    }
+
+    return de->v.val;
 }
 

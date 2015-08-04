@@ -16,8 +16,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _EVENTPOLL_H_
+#define _EVENTPOLL_H_
+
+#include "common.h"
+
+enum EPTRIGGER {
+    EPLEVEL = 0x00000001,
+    EPEDGE = 0x00000002
+};
+
+#define  EPREAD     EPOLLIN
+#define  EPWRITE    EPOLLOUT
+#define  EPTIMEOUT          1000      // ms
+
+typedef struct {
+    int                 epfd;
+    int                 evsize;
+    int                 eflags;
+    struct epoll_event *evlist;
+} epbase;
+
+epbase *epoll_init(int size);
+int epoll_event_start(event *e, int flag);
+int epoll_event_add(event *e, int flag);
 
 
 #endif
+

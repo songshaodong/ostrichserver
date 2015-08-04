@@ -16,8 +16,21 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _TIMER_H_
+#define _TIMER_H_
 
+#include "common.h"
+
+typedef struct timespec hrtime_t;
+
+#define get_sec_time(ht)  (ht.tv_sec)
+#define get_msec_time(ht) (ht.tv_sec * 1000 + ht.tv_nsec / 1000 / 1000)
+#define get_usec_time(ht) (ht.tv_sec * 1000 * 1000 + ht.tv_nsec / 1000)
+#define get_nsec_time(ht) (ht.tv_sec * 1000 * 1000 * 1000 + ht.tv_nsec)
+
+hrtime_t get_current_time();
+
+#define add_timer event_add_timer
+#define del_timer event_del_timer
 
 #endif

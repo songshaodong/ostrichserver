@@ -16,8 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _SESSION_H_
+#define _SESSION_H_
 
+int init_session();
 
 #endif

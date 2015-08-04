@@ -15,9 +15,30 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _ATOMIC_H_
+#define _ATOMIC_H_
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include "common.h"
 
+typedef int64_t atomic_int;
+typedef uint64_t atomic_uint;
+typedef volatile atomic_uint atomic_t;
+
+/* old "as" does not support "pause" opcode */
+#define cpu_pause()         __asm__ (".byte 0xf3, 0x90")
+
+void spin_lock(atomic_t *lock, atomic_int value);
+
+#define _lock(lock)	    spin_lock(lock, 1)
+#define _trylock(lock)  (*(lock) == 0 && atomic_cas(lock, 0, 1))
+#define _unlock(lock)    *(lock) = 0
+
+
+#define atomic_cas(val, old, new)   \
+    __sync_bool_compare_and_swap(val, old, new)
+
+
+#define atomic_fetch_add(value, add)  \
+    __sync_fetch_and_add(value, add)
 
 #endif

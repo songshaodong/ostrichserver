@@ -19,6 +19,14 @@
 #ifndef _ACCEPTOR_H_
 #define _ACCEPTOR_H_
 
+#include "common.h"
+#include "server.h"
 
+#define MAX_ACCEPTOR_THREADS 1
+
+typedef struct {
+    continuation     cont;
+    int              serverfd;
+} tcp_acceptor;
 
 #endif

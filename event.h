@@ -19,23 +19,77 @@
 #ifndef _EVENT_H_
 #define _EVENT_H_
 
-#include <common.h>
-#include <thread.h>
+#include "common.h"
+#include "eventpoll.h"
+#include "continuation.h"
+#include "event.h"
+
+
+#define  DEFAULT_EVENTLIST  32768
+
+#define   pollfd_create(size)   epoll_create(size)
+#define   pelist                struct epoll_event
+#define   pollevent_handle      epoll_wait
+#define   pollevent_start(e, type)  epoll_event_start(e, type)
+#define   poll_init_event()       (EPOLLIN | EPOLLOUT)
+#define   poll_timeout()          EPTIMEOUT
+
+
+#define  EVENT_IMM   0x00000000
+#define  EVENT_IDLE  0x00000001
+#define  EVENT_REDO  0x00000002
+
+
+#define qlink  event  // todo
+#define getlnknext(link) (link->ln.next) //todo 
+
 
 struct evtype {
     type_handler  set; 
 };
 
-struct ioevent {
-    int      type;
-    ioctx    ctx;
-    thread  *t;
-    evtype   want;
+struct event_list {
+    event *next;
 };
 
-struct ioctx {
-    int    fd;
-    void  *private_data;
+struct thread_event {
+    evlink        ln;
+    int           type;
+    int           active;
+    int           flag;
+    int           redo;
+    int64_t       timeout;
+    evthread     *t;
+    continuation *cont;
+    void        (*schedule)(event *e, int eventtype);
+	unsigned      timer_set:1;
+	unsigned	  timedout:1;
+	unsigned 	  error:1;
 };
+
+typedef struct {
+    continuation         cont;
+    int                  pollfd;
+    int                  pesize;
+    int                  timeout;
+    pelist              *evlist;
+    int                (*eventpoll)(int fd, pelist *l, int size, int tm);
+    int                  result;
+} pollbase;
+
+inline continuation *event_init(event *e);
+pollbase  *pollbase_init(int size);
+
+static inline void
+add_timer(event *ev, msec ter)
+{
+	
+}
+
+static inline void
+del_timer(event *ev, msec ter)
+{
+	
+}
 
 #endif

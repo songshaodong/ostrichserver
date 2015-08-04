@@ -16,39 +16,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _NET_H_
-#define _NET_H_
-
 #include "common.h"
-#include "connection.h"
 
-enum  {
-    INIT_POLL,
-    ACCEPT_EVENT,
-    NEW_CONNECTION,
-    WAIT_FOR_READ,
-    READ_DATA,
-    WAIT_FOR_WRITE,
-    WRITE_DATA,
-};
+void spin_lock(atomic_t *lock, atomic_int value)
+{
 
-#define EVENT_STARTUP  (NEW_CONNECTION)
+    uint32_t  i, n;
 
-typedef struct {
-    struct sockaddr  cliaddr;
-    socklen_t        cliaddrlen;
-    int              fd;
-} conninfo;
+    for ( ;; ) {
 
-typedef struct {
-    connection       c;
-	void			*deal; /*mutual, can http, rtmp */
-	conninfo	     ci;
-    int              status;
-} netconnection;
+        if (*lock == 0 && atomic_cas(lock, 0, value)) {
+            return;
+        }
 
-netconnection *init_connection(int fd, conninfo *ci);
-void netio_init(event *ev);
-void netio_pollevent(event *e);
+        if (cpu_num > 1) {
 
-#endif
+            for (n = 1; n < pid; n <<= 1) {
+
+                for (i = 0; i < n; i++) {
+                    cpu_pause();
+                }
+
+                if (*lock == 0 && atomic_cas(lock, 0, value)) {
+                    return;
+                }
+            }
+        }
+
+        /*   causes the calling thread to relinquish the CPU.  
+		  *  The thread is moved to the end of the queue for its static priority and a new thread gets to run.
+		  */
+       sched_yield();
+    }
+}
+

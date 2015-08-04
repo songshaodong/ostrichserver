@@ -16,8 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
-#include <memory.h>
+#include "common.h"
+#include "memory.h"
+#include <string.h>
 
 void *os_malloc(size_t size)
 {
@@ -27,6 +28,16 @@ void *os_malloc(size_t size)
     
     return ptr;
 }
+
+void *os_realloc(void *p, size_t size)
+{
+    void *ptr;
+    
+    ptr = realloc(p, size);
+    
+    return ptr;
+}
+
 
 void *os_calloc(size_t size)
 {

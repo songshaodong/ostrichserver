@@ -16,8 +16,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include "common.h"
+#include "log_sync.h"
 
-
-#endif
+int log_sync_thread_init()
+{
+    return OS_OK;
+}

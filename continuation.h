@@ -16,8 +16,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _CONTINUATION_H_
+#define _CONTINUATION_H_
 
+#include "common.h"
+#include "mutex.h"
+
+struct continuation {
+    conthandler   event_handler;
+    void         *private_data;
+    mutex_t      *lock;
+};
 
 #endif

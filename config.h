@@ -18,8 +18,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include <hashtable.h>
-#include <config.h>
+#include "common.h"
 
 typedef union {
     int     config_int;
@@ -36,10 +35,13 @@ enum {
 typedef struct {
     config_data data;
     int         type;
-    char       *name;
+    string      name;
 } record;
 
-int config_hashtable_init();
+inline record *get_config_record(string *str);
+unsigned int config_hash_key(void *key);
+
+//int config_hashtable_init();
 
 int config_parse_file();
     

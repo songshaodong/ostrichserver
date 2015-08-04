@@ -16,8 +16,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _PROCESSOR_H_
+#define _PROCESSOR_H_
 
+#include "common.h"
+#include "mutex.h"
+#include "atomiclist.h"
+
+struct thread_processor {
+};
+
+typedef struct {
+    processor    base;
+    void       (*schedule)(continuation *cont, int eventtype);
+    evthread  *(*assign_thread)();
+    void        *eventthread; // todo support other type threads
+    int          n_threads;
+    int          next_thread;
+} _eventprocessor;
 
 #endif

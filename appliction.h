@@ -1,3 +1,4 @@
+
 /* 
    Copyright (c) 2014-2015 ostrichserver
 
@@ -15,9 +16,11 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef  _APPLICATION_H_
+#define  _APPLICATION_H_
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include "common.h"
 
+void application_protocol_init(char *p);
 
 #endif

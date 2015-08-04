@@ -16,64 +16,40 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common.h>
+#include "common.h"
 
-char *os_strdup(char *str)
+int os_daemon()
 {
-    size_t  size;
-    char   *ptr;
-
-    size = strlen(str);
+    if (!cf_daemon) {
+        return OS_OK;
+    }
     
-    ptr = os_malloc(size + 1);
-
-    memcpy(ptr, str, size);
-
-    ptr[size] = '\0';
+    int fd = fork();
     
-    return ptr; 
-}
-
-char *os_strndup(char *str, size_t n)
-{
-    char *ptr;
-
-    ptr = os_malloc(n + 1);
-
-    memcpy(ptr, str, n);
-
-    ptr[n] = '\0';
-    
-    return ptr;
-}
-
-ssize_t
-os_natoi(char *line, size_t n)
-{
-    ssize_t  value;
-
-    if (n == 0) {
+    if (fd < 0) {
         return OS_ERR;
     }
 
-    for (value = 0; n--; line++) {
-        if (*line < '0' || *line > '9') {
-            return OS_ERR;
-        }
-
-        value = value * 10 + (*line - '0');
+    if (fd > 0) {
+        exit(0);
     }
 
-    if (value < 0) {
+    masterid = getpid();
+
+    if(setsid() == -1) {
         return OS_ERR;
-    } else {
-        return value;
     }
+
+    umask(0);
+
+    fd = open("/dev/null", O_RDWR);
+    if (fd == -1) {
+        return OS_ERR;
+    }
+
+    dup2(fd, STDIN_FILENO);
+    dup2(fd, STDOUT_FILENO);
+
+    return OS_OK;
 }
 
-ssize_t os_atoi(char *line)
-{
-    size_t   n = strlen(line);
-
-    return os_natoi(line, n);
-}

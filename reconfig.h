@@ -16,8 +16,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#ifndef _RECONFIG_H_
+#define _RECONFIG_H_
 
+#include "common.h"
+
+int reconfig_thread_init();
 
 #endif

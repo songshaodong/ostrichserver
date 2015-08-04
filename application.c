@@ -16,8 +16,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include "common.h"
+#include "application.h"
+#include "http.h"
 
-
-#endif
+void application_protocol_init(char *p)
+{
+    init_session();
+    
+    if (!strcmp(p, "HTTP")) {
+        http_init();
+    } else {
+        
+    }
+}

@@ -16,8 +16,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SCHEDULER_H_
-#define _SCHEDULER_H_
+#include "common.h"
+#include "timer.h"
 
+// return microseconds
+hrtime_t get_current_time()
+{
+    //struct timeval tv;
+    
+    //gettimeofday(&tv, NULL);
+    
+    //return (tv.tv_sec * 1000 * 1000  + tv.tv_usec);
 
-#endif
+    hrtime_t tm;
+
+    clock_gettime(CLOCK_REALTIME, &tm);
+
+    return tm;
+}
+
