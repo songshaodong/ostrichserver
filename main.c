@@ -264,6 +264,7 @@ int main(int argc, char **argv)
     config_parse_file("record.config");
 
     // todo some other things
+    // todo create pid file
 
     proctitle_setting(argc, argv);
 
